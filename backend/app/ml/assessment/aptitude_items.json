@@ -1,0 +1,25 @@
+[
+  {"id": "N1", "dimension": "num", "text_en": "3 + 5 x 2 = ?", "text_hi": "3 + 5 x 2 = ?", "options": ["13", "16", "10", "11"], "answer": "13"},
+  {"id": "N2", "dimension": "num", "text_en": "Half of 250 is?", "text_hi": "250 का आधा कितना?", "options": ["100", "125", "150", "175"], "answer": "125"},
+  {"id": "N3", "dimension": "num", "text_en": "If 4 shirts cost 1200, one shirt costs?", "text_hi": "अगर 4 शर्ट की कीमत 1200 है, तो एक शर्ट?", "options": ["200", "300", "400", "250"], "answer": "300"},
+  {"id": "N4", "dimension": "num", "text_en": "20% of 150 is?", "text_hi": "150 का 20% कितना?", "options": ["25", "30", "35", "40"], "answer": "30"},
+  {"id": "N5", "dimension": "num", "text_en": "7 x 8 = ?", "text_hi": "7 x 8 = ?", "options": ["54", "56", "48", "64"], "answer": "56"},
+
+  {"id": "V1", "dimension": "verbal", "text_en": "Pick the OPPOSITE of 'increase':", "text_hi": "'बढ़ाना' का विपरीत चुनें:", "options": ["grow", "reduce", "raise", "add"], "answer": "reduce"},
+  {"id": "V2", "dimension": "verbal", "text_en": "Which word does NOT belong: Apple, Mango, Banana, Carrot", "text_hi": "कौन शब्द अलग है: सेब, आम, केला, गाजर", "options": ["Apple", "Mango", "Banana", "Carrot"], "answer": "Carrot"},
+  {"id": "V3", "dimension": "verbal", "text_en": "'Doctor' is to 'hospital' as 'teacher' is to:", "text_hi": "'डॉक्टर' के लिए 'अस्पताल' जैसे 'शिक्षक' के लिए:", "options": ["book", "school", "student", "lesson"], "answer": "school"},
+  {"id": "V4", "dimension": "verbal", "text_en": "Pick the closest meaning of 'urgent':", "text_hi": "'urgent' का निकटतम अर्थ चुनें:", "options": ["later", "important now", "optional", "rare"], "answer": "important now"},
+  {"id": "V5", "dimension": "verbal", "text_en": "Which is spelled correctly?", "text_hi": "कौन सही वर्तनी में है?", "options": ["recieve", "receive", "receve", "riceive"], "answer": "receive"},
+
+  {"id": "P1", "dimension": "spatial", "text_en": "A cube has how many faces?", "text_hi": "एक घन (cube) में कितने फलक होते हैं?", "options": ["4", "6", "8", "12"], "answer": "6"},
+  {"id": "P2", "dimension": "spatial", "text_en": "If you fold a square paper in half twice, how many layers?", "text_hi": "अगर वर्ग कागज़ को दो बार आधा मोड़ें, कितनी परतें?", "options": ["2", "3", "4", "8"], "answer": "4"},
+  {"id": "P3", "dimension": "spatial", "text_en": "Which shape has NO corners: circle, square, triangle", "text_hi": "किस आकृति में कोई कोना नहीं: वृत्त, वर्ग, त्रिभुज", "options": ["circle", "square", "triangle", "none"], "answer": "circle"},
+  {"id": "P4", "dimension": "spatial", "text_en": "Looking from the top, a standing cylinder looks like a:", "text_hi": "ऊपर से देखने पर खड़ा बेलनाकार (cylinder) दिखता है:", "options": ["circle", "square", "triangle", "line"], "answer": "circle"},
+  {"id": "P5", "dimension": "spatial", "text_en": "Rotate an arrow pointing UP by 90 degrees clockwise; it now points:", "text_hi": "ऊपर इशारा करते तीर को 90 डिग्री घड़ी की दिशा में घुमाएँ; अब इशारा:", "options": ["right", "left", "down", "up"], "answer": "right"},
+
+  {"id": "M1", "dimension": "mech", "text_en": "Which tool is used to drive a nail?", "text_hi": "कील ठोकने के लिए कौन औज़ार?", "options": ["hammer", "screwdriver", "spanner", "pliers"], "answer": "hammer"},
+  {"id": "M2", "dimension": "mech", "text_en": "A lever helps you to:", "text_hi": "लीवर (उत्तोलक) किसमें मदद करता है?", "options": ["lift heavy loads with less force", "measure length", "cook food", "paint walls"], "answer": "lift heavy loads with less force"},
+  {"id": "M3", "dimension": "mech", "text_en": "Which gear turns faster: a small gear or a large gear it drives?", "text_hi": "कौन गियर तेज़ घूमता है: छोटा या बड़ा जो वह चलाता है?", "options": ["small", "large", "same speed", "depends on colour"], "answer": "small"},
+  {"id": "M4", "dimension": "mech", "text_en": "A pulley is mainly used to:", "text_hi": "चरखी (pulley) मुख्यतः किसके लिए?", "options": ["lift loads with a rope", "cut wood", "measure weight", "polish metal"], "answer": "lift loads with a rope"},
+  {"id": "M5", "dimension": "mech", "text_en": "Which material conducts electricity best?", "text_hi": "कौन सी धातु बिजली का सबसे अच्छा संचालन करती है?", "options": ["copper", "rubber", "wood", "plastic"], "answer": "copper"}
+]

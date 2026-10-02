@@ -19,6 +19,12 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
 
+[tool.ruff.lint.per-file-ignores]
+# Alembic auto-generates these; long sa.Column lines are expected.
+"app/db/migrations/versions/*" = ["E501", "E402", "I001", "F401", "B", "UP"]
+# FastAPI idiom: Depends()/Query()/body defaults live in the signature.
+"app/api/routes/*" = ["B008"]
+
 [tool.mypy]
 python_version = "3.12"
 ignore_missing_imports = true

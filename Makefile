@@ -1,5 +1,5 @@
 # KaushalPath dev entrypoints. POSIX shells (Linux/macOS/Git Bash/CI).
-.PHONY: install dev test lint typecheck eval check seed
+.PHONY: install dev test lint typecheck eval check seed data-report
 
 VENV ?= backend/.venv
 # Activate helper differs by OS; CI is Linux.
@@ -26,9 +26,13 @@ test:
 
 check: lint test
 
-# Eval + seed are wired in later phases (PHASE_1 data, PHASE_4 eval harness).
+# Eval wired in PHASE_4. Seed (PHASE_1 data layer) runs the loaders.
 eval:
 	@echo "Phase 4 provides eval/scripts/run_eval.py. Not wired at Phase 0."
 
+# Build schema (if needed) + load demo/merged reference data. Idempotent.
 seed:
-	@echo "Phase 1 provides loaders (scripts/load_*.py). No seed data at Phase 0."
+	$(ACT) && python scripts/seed_all.py
+
+data-report:
+	$(ACT) && python scripts/data_report.py

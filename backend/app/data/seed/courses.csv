@@ -1,0 +1,101 @@
+occupation_name_en,name,nsqf_level,duration_months,min_edu,fee_inr,cert_body,source,source_year,is_demo,needs_review
+Fitter,ITI Fitter,5,12,10th,15000,NCVT,demo_synth_2026,2026,true,true
+Fitter,Diploma in Mechanical Engineering,6,36,10th,60000,State Board of Technical Education,demo_synth_2026,2026,true,true
+Turner,ITI Turner,5,12,10th,15000,NCVT,demo_synth_2026,2026,true,true
+Machinist,ITI Machinist,5,12,10th,16000,NCVT,demo_synth_2026,2026,true,true
+Welder,ITI Welder,4,12,10th,14000,NCVT,demo_synth_2026,2026,true,true
+Electrician,ITI Electrician,5,12,10th,15000,NCVT,demo_synth_2026,2026,true,true
+Electrician,Diploma in Electrical Engineering,6,36,10th,55000,State Board of Technical Education,demo_synth_2026,2026,true,true
+Electronics Mechanic,ITI Electronics Mechanic,5,12,10th,17000,NCVT,demo_synth_2026,2026,true,true
+Mechanic Motor Vehicle,ITI Motor Vehicle Mechanic,5,12,10th,18000,NCVT,demo_synth_2026,2026,true,true
+Mechanic Diesel,ITI Diesel Mechanic,5,12,10th,18000,NCVT,demo_synth_2026,2026,true,true
+Plumber,ITI Plumber,4,12,10th,13000,NCVT,demo_synth_2026,2026,true,true
+Carpenter,ITI Carpenter,4,12,10th,13000,NCVT,demo_synth_2026,2026,true,true
+Mason,ITI Mason,3,12,10th,12000,NCVT,demo_synth_2026,2026,true,true
+Painter,ITI Painter,3,6,10th,9000,NCVT,demo_synth_2026,2026,true,true
+Refrigeration and AC Mechanic,ITI Refrigeration and AC Mechanic,5,12,10th,18000,NCVT,demo_synth_2026,2026,true,true
+Computer Hardware Maintenance,ITI Computer Hardware Maintenance,5,12,10th,20000,NCVT,demo_synth_2026,2026,true,true
+Instrument Mechanic,ITI Instrument Mechanic,5,12,10th,18000,NCVT,demo_synth_2026,2026,true,true
+CNC Turning Operator,ITI CNC Turning,5,12,10th,22000,NCVT,demo_synth_2026,2026,true,true
+Tool and Die Maker,ITI Tool and Die,6,24,12th,30000,NCVT,demo_synth_2026,2026,true,true
+Solar PV Technician,Solar PV Installer Certificate,5,6,10th,20000,NSDC,demo_synth_2026,2026,true,true
+Wind Turbine Technician,Wind Turbine Technician Course,5,12,12th,35000,NSDC,demo_synth_2026,2026,true,true
+HVAC Technician,HVAC Technician Certificate,5,9,10th,22000,NSDC,demo_synth_2026,2026,true,true
+Software Developer,Bachelor of Computer Applications,7,36,12th,80000,University,demo_synth_2026,2026,true,true
+Software Developer,Full Stack Development Bootcamp,7,6,12th,60000,NSDC,demo_synth_2026,2026,true,true
+Web Developer,Diploma in Web Development,6,12,12th,30000,State Board of Technical Education,demo_synth_2026,2026,true,true
+Mobile App Developer,Mobile App Development Certificate,6,6,12th,35000,NSDC,demo_synth_2026,2026,true,true
+Data Analyst,Data Analytics Programme,7,6,12th,50000,NSDC,demo_synth_2026,2026,true,true
+Data Scientist,Master of Science in Data Science,8,24,graduate,150000,University,demo_synth_2026,2026,true,true
+Database Administrator,Database Administration Certificate,7,4,12th,25000,NSDC,demo_synth_2026,2026,true,true
+Cloud Engineer,AWS Cloud Practitioner,7,3,12th,30000,NSDC,demo_synth_2026,2026,true,true
+Network Administrator,CCNA Networking,6,6,12th,35000,NSDC,demo_synth_2026,2026,true,true
+Cybersecurity Analyst,Cybersecurity Fundamentals,7,6,12th,45000,NSDC,demo_synth_2026,2026,true,true
+DevOps Engineer,DevOps Engineer Programme,7,6,graduate,50000,NSDC,demo_synth_2026,2026,true,true
+QA Test Engineer,Software Testing Certificate,6,4,12th,25000,NSDC,demo_synth_2026,2026,true,true
+UI UX Designer,UI UX Design Programme,6,6,12th,40000,NSDC,demo_synth_2026,2026,true,true
+AI ML Engineer,Machine Learning Specialisation,8,9,graduate,80000,University,demo_synth_2026,2026,true,true
+Graphic Designer,Diploma in Graphic Design,5,12,12th,35000,State Board of Technical Education,demo_synth_2026,2026,true,true
+Digital Marketer,Digital Marketing Certificate,6,6,12th,30000,NSDC,demo_synth_2026,2026,true,true
+Staff Nurse,General Nursing and Midwifery,7,36,12th,60000,Nursing Council,demo_synth_2026,2026,true,true
+Nursing Assistant,Nursing Assistant Training,5,24,10th,30000,NSDC,demo_synth_2026,2026,true,true
+Pharmacy Technician,Diploma in Pharmacy,5,24,12th,40000,Pharmacy Council,demo_synth_2026,2026,true,true
+Medical Lab Technician,BSc Medical Laboratory Technology,6,36,12th,70000,University,demo_synth_2026,2026,true,true
+Radiology Technician,Diploma in Radiology,6,24,12th,50000,University,demo_synth_2026,2026,true,true
+Physiotherapy Assistant,Diploma in Physiotherapy Assistance,5,24,12th,45000,State Board,demo_synth_2026,2026,true,true
+Paramedic,EMT Paramedic Course,5,24,12th,60000,Health Ministry,demo_synth_2026,2026,true,true
+ANM Midwife,Auxiliary Nurse Midwifery,5,24,12th,35000,Nursing Council,demo_synth_2026,2026,true,true
+Dental Hygienist,Diploma in Dental Hygiene,5,24,12th,50000,State Board,demo_synth_2026,2026,true,true
+Nutritionist,BSc Nutrition and Dietetics,6,36,12th,70000,University,demo_synth_2026,2026,true,true
+Optometrist,Diploma in Optometry,5,24,12th,45000,University,demo_synth_2026,2026,true,true
+Dialysis Technician,Dialysis Technician Certificate,5,12,12th,40000,NSDC,demo_synth_2026,2026,true,true
+School Teacher,Bachelor of Education,7,24,graduate,40000,NCERT,demo_synth_2026,2026,true,true
+Anganwadi Worker,Child Care Worker Training,3,6,10th,8000,NSDC,demo_synth_2026,2026,true,true
+Counsellor,Diploma in Guidance and Counselling,6,12,graduate,30000,University,demo_synth_2026,2026,true,true
+Social Worker,Bachelor of Social Work,6,36,12th,50000,University,demo_synth_2026,2026,true,true
+Special Educator,Diploma in Special Education,6,24,12th,40000,NCERT,demo_synth_2026,2026,true,true
+Librarian,Diploma in Library Science,5,12,12th,25000,University,demo_synth_2026,2026,true,true
+ASHA Worker,Community Health Training,3,3,10th,5000,Health Ministry,demo_synth_2026,2026,true,true
+Accountant,Diploma in Accounting,6,12,12th,30000,NSDC,demo_synth_2026,2026,true,true
+Bookkeeper,Bookkeeping Certificate,5,6,12th,15000,NSDC,demo_synth_2026,2026,true,true
+Bank Clerk,Banking Operations Certificate,5,6,12th,20000,NSDC,demo_synth_2026,2026,true,true
+Financial Advisor,Financial Planning Certificate,7,6,graduate,35000,NSDC,demo_synth_2026,2026,true,true
+HR Executive,HR Management Diploma,6,12,graduate,40000,University,demo_synth_2026,2026,true,true
+Sales Executive,Sales and Retail Management,5,6,12th,20000,NSDC,demo_synth_2026,2026,true,true
+Marketing Manager,MBA Marketing,8,24,graduate,120000,University,demo_synth_2026,2026,true,true
+Chartered Accountant,CA Foundation Course,8,48,12th,100000,ICAI,demo_synth_2026,2026,true,true
+Fashion Designer,Diploma in Fashion Design,6,24,12th,60000,NSDC,demo_synth_2026,2026,true,true
+Interior Designer,Diploma in Interior Design,6,24,12th,55000,State Board,demo_synth_2026,2026,true,true
+Photographer,Photography Certificate,5,6,12th,30000,NSDC,demo_synth_2026,2026,true,true
+Animator,Animation and VFX Diploma,6,24,12th,70000,NSDC,demo_synth_2026,2026,true,true
+Video Editor,Video Editing Certificate,5,6,12th,25000,NSDC,demo_synth_2026,2026,true,true
+Beautician,Beauty and Wellness Course,4,6,10th,20000,NSDC,demo_synth_2026,2026,true,true
+Hair Stylist,Hair Styling Certificate,3,6,10th,15000,NSDC,demo_synth_2026,2026,true,true
+Makeup Artist,Professional Makeup Course,4,6,12th,25000,NSDC,demo_synth_2026,2026,true,true
+Jewellery Designer,Jewellery Design Diploma,5,12,12th,45000,NSDC,demo_synth_2026,2026,true,true
+Agriculture Technician,Diploma in Agriculture,5,24,10th,40000,State Board,demo_synth_2026,2026,true,true
+Dairy Farmer,Dairy Farming Short Course,4,3,10th,10000,NSDC,demo_synth_2026,2026,true,true
+Poultry Farmer,Poultry Farming Training,4,3,10th,9000,NSDC,demo_synth_2026,2026,true,true
+Horticulturist,BSc Horticulture,6,36,12th,60000,University,demo_synth_2026,2026,true,true
+Food Processing Technician,Food Processing Certificate,5,12,12th,30000,NSDC,demo_synth_2026,2026,true,true
+Chef,Diploma in Food Production,5,12,10th,45000,NCVT,demo_synth_2026,2026,true,true
+Baker,Baking and Patisserie Course,4,6,10th,25000,NSDC,demo_synth_2026,2026,true,true
+Barista,Barista Training,3,3,10th,12000,NSDC,demo_synth_2026,2026,true,true
+Warehouse Manager,Supply Chain and Warehousing,6,6,12th,30000,NSDC,demo_synth_2026,2026,true,true
+Hotel Manager,BSc Hospitality Management,7,36,12th,90000,University,demo_synth_2026,2026,true,true
+Tour Guide,Tourism and Guide Course,4,6,12th,20000,Ministry of Tourism,demo_synth_2026,2026,true,true
+Civil Engineer,Bachelor of Civil Engineering,7,48,12th,100000,AICTE,demo_synth_2026,2026,true,true
+Mechanical Engineer,Bachelor of Mechanical Engineering,7,48,12th,110000,AICTE,demo_synth_2026,2026,true,true
+Electrical Engineer,Diploma in Electrical Engineering,6,36,10th,55000,State Board of Technical Education,demo_synth_2026,2026,true,true
+Electronics Engineer,Bachelor of Electronics Engineering,7,48,12th,100000,AICTE,demo_synth_2026,2026,true,true
+Architect,Bachelor of Architecture,8,60,12th,150000,Council of Architecture,demo_synth_2026,2026,true,true
+Environmental Engineer,BSc Environmental Science,7,36,12th,70000,University,demo_synth_2026,2026,true,true
+Industrial Engineer,Diploma in Industrial Engineering,6,36,10th,55000,State Board of Technical Education,demo_synth_2026,2026,true,true
+Clerk,Office Assistant Training,4,6,12th,12000,NSDC,demo_synth_2026,2026,true,true
+Data Entry Operator,Computer Data Entry Course,3,3,10th,8000,NSDC,demo_synth_2026,2026,true,true
+Quality Inspector,Quality Assurance Certificate,5,6,12th,25000,NSDC,demo_synth_2026,2026,true,true
+Safety Officer,Industrial Safety Diploma,6,12,12th,35000,NSDC,demo_synth_2026,2026,true,true
+Garment Worker,Stitching and Garment Course,3,6,10th,10000,NSDC,demo_synth_2026,2026,true,true
+Weaver,Handloom Weaver Training,3,6,10th,9000,NSDC,demo_synth_2026,2026,true,true
+Call Center Agent,Customer Support Training,4,3,12th,12000,NSDC,demo_synth_2026,2026,true,true
+Yoga Instructor,Yoga Teacher Training,4,3,12th,15000,NSDC,demo_synth_2026,2026,true,true
