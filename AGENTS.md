@@ -1,0 +1,12 @@
+# RULES (put in AGENTS.md / CLAUDE.md / tool rules file)
+- Read docs/PS_SPEC.md, docs/02_ARCHITECTURE.md and the current phase prompt before writing code.
+- One phase at a time. Do not build ahead. Do not rewrite finished phases unless a test fails.
+- Every file: one responsibility. Separate files for routes / services / schemas / models. Frontend: one component per file.
+- No hard-coded secrets. All config via .env (pydantic-settings). Provide .env.example.
+- No fake data presented as real. Demo/seed data must carry `source` and `is_demo=true`.
+- Hard constraints (eligibility, age, NSQF level, budget) are RULES, never left to the ML model.
+- Every recommendation must return reason codes + data source. No black-box output.
+- Type hints + docstrings in Python; TypeScript strict in frontend.
+- Each phase ends with: tests passing, `make check` green, acceptance commands run and output pasted, git commit.
+- If requirement is ambiguous: write assumption in docs/ASSUMPTIONS.md, do not silently guess.
+- Never claim an accuracy number that was not produced by `make eval`.
