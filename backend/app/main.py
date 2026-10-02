@@ -12,6 +12,7 @@ from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
+from app.api.routes import assessment as assessment_routes
 from app.core.config import get_settings
 from app.core.logging import configure_logging, get_logger, request_id_var
 
@@ -21,7 +22,7 @@ logger = get_logger("kaushalpath")
 
 app = FastAPI(
     title=settings.app_name,
-    version="0.0.0-phase0",
+    version="0.1.0-phase2",
     description=(
         "AI career counselling + family decision support "
         "for vocational education (SIH 2026, PSID 26241)."
@@ -61,6 +62,8 @@ class RequestIdMiddleware(BaseHTTPMiddleware):
 
 
 app.add_middleware(RequestIdMiddleware)
+
+app.include_router(assessment_routes.router)
 
 
 @app.get("/health", tags=["health"])

@@ -1,0 +1,86 @@
+occupation_name_en,state,avg_salary_inr,demand_index,placement_rate,year,source,source_year,is_demo,needs_review
+Fitter,Uttar Pradesh,18000,62,68,2026,demo_synth_2026,2026,true,true
+Fitter,Maharashtra,21000,70,76,2026,demo_synth_2026,2026,true,true
+Electrician,Uttar Pradesh,20000,68,74,2026,demo_synth_2026,2026,true,true
+Electrician,Gujarat,23000,74,80,2026,demo_synth_2026,2026,true,true
+Welder,West Bengal,19000,58,64,2026,demo_synth_2026,2026,true,true
+Mechanic Motor Vehicle,Delhi,22000,66,72,2026,demo_synth_2026,2026,true,true
+Plumber,Rajasthan,17000,60,66,2026,demo_synth_2026,2026,true,true
+Carpenter,Jharkhand,16000,52,58,2026,demo_synth_2026,2026,true,true
+Mason,Madhya Pradesh,15000,55,61,2026,demo_synth_2026,2026,true,true
+Solar PV Technician,Rajasthan,24000,80,86,2026,demo_synth_2026,2026,true,true
+Wind Turbine Technician,Gujarat,28000,78,84,2026,demo_synth_2026,2026,true,true
+HVAC Technician,Delhi,23000,72,78,2026,demo_synth_2026,2026,true,true
+Software Developer,Karnataka,55000,88,94,2026,demo_synth_2026,2026,true,true
+Software Developer,Telangana,50000,85,91,2026,demo_synth_2026,2026,true,true
+Web Developer,Maharashtra,38000,80,86,2026,demo_synth_2026,2026,true,true
+Mobile App Developer,Karnataka,45000,82,88,2026,demo_synth_2026,2026,true,true
+Data Analyst,Maharashtra,45000,83,89,2026,demo_synth_2026,2026,true,true
+Data Scientist,Karnataka,80000,90,95,2026,demo_synth_2026,2026,true,true
+Cloud Engineer,Telangana,60000,86,92,2026,demo_synth_2026,2026,true,true
+Network Administrator,Haryana,35000,70,76,2026,demo_synth_2026,2026,true,true
+Cybersecurity Analyst,Delhi,55000,84,90,2026,demo_synth_2026,2026,true,true
+DevOps Engineer,Karnataka,65000,85,91,2026,demo_synth_2026,2026,true,true
+QA Test Engineer,Telangana,38000,72,78,2026,demo_synth_2026,2026,true,true
+UI UX Designer,Karnataka,45000,78,84,2026,demo_synth_2026,2026,true,true
+AI ML Engineer,Karnataka,90000,92,95,2026,demo_synth_2026,2026,true,true
+Graphic Designer,Gujarat,28000,66,72,2026,demo_synth_2026,2026,true,true
+Digital Marketer,Maharashtra,35000,75,81,2026,demo_synth_2026,2026,true,true
+Staff Nurse,Tamil Nadu,28000,79,85,2026,demo_synth_2026,2026,true,true
+Staff Nurse,Uttar Pradesh,24000,74,80,2026,demo_synth_2026,2026,true,true
+Nursing Assistant,Kerala,20000,72,78,2026,demo_synth_2026,2026,true,true
+Pharmacy Technician,Andhra Pradesh,22000,68,74,2026,demo_synth_2026,2026,true,true
+Medical Lab Technician,West Bengal,23000,67,73,2026,demo_synth_2026,2026,true,true
+Physiotherapy Assistant,Maharashtra,25000,65,71,2026,demo_synth_2026,2026,true,true
+Paramedic,Delhi,26000,70,76,2026,demo_synth_2026,2026,true,true
+ANM Midwife,Bihar,18000,69,75,2026,demo_synth_2026,2026,true,true
+Nutritionist,Karnataka,30000,64,70,2026,demo_synth_2026,2026,true,true
+Optometrist,Telangana,26000,62,68,2026,demo_synth_2026,2026,true,true
+School Teacher,Madhya Pradesh,32000,73,79,2026,demo_synth_2026,2026,true,true
+Anganwadi Worker,Uttar Pradesh,9000,60,66,2026,demo_synth_2026,2026,true,true
+Counsellor,Delhi,35000,66,72,2026,demo_synth_2026,2026,true,true
+Social Worker,Delhi,25000,61,67,2026,demo_synth_2026,2026,true,true
+Special Educator,Karnataka,30000,63,69,2026,demo_synth_2026,2026,true,true
+Librarian,Rajasthan,20000,55,61,2026,demo_synth_2026,2026,true,true
+ASHA Worker,Bihar,8000,58,64,2026,demo_synth_2026,2026,true,true
+Accountant,Rajasthan,25000,64,70,2026,demo_synth_2026,2026,true,true
+Bookkeeper,Gujarat,20000,58,64,2026,demo_synth_2026,2026,true,true
+Bank Clerk,Maharashtra,28000,66,72,2026,demo_synth_2026,2026,true,true
+Financial Advisor,Maharashtra,45000,70,76,2026,demo_synth_2026,2026,true,true
+HR Executive,Karnataka,40000,71,77,2026,demo_synth_2026,2026,true,true
+Sales Executive,Delhi,30000,75,81,2026,demo_synth_2026,2026,true,true
+Marketing Manager,Maharashtra,70000,78,84,2026,demo_synth_2026,2026,true,true
+Chartered Accountant,Maharashtra,70000,80,86,2026,demo_synth_2026,2026,true,true
+Fashion Designer,Gujarat,32000,64,70,2026,demo_synth_2026,2026,true,true
+Interior Designer,Karnataka,35000,66,72,2026,demo_synth_2026,2026,true,true
+Photographer,Maharashtra,28000,62,68,2026,demo_synth_2026,2026,true,true
+Animator,Telangana,38000,68,74,2026,demo_synth_2026,2026,true,true
+Video Editor,Maharashtra,30000,65,71,2026,demo_synth_2026,2026,true,true
+Beautician,Punjab,20000,60,66,2026,demo_synth_2026,2026,true,true
+Makeup Artist,Delhi,28000,63,69,2026,demo_synth_2026,2026,true,true
+Jewellery Designer,Gujarat,30000,61,67,2026,demo_synth_2026,2026,true,true
+Agriculture Technician,Punjab,22000,64,70,2026,demo_synth_2026,2026,true,true
+Horticulturist,Maharashtra,25000,62,68,2026,demo_synth_2026,2026,true,true
+Food Processing Technician,Gujarat,23000,63,69,2026,demo_synth_2026,2026,true,true
+Chef,Andhra Pradesh,30000,68,74,2026,demo_synth_2026,2026,true,true
+Baker,Maharashtra,22000,60,66,2026,demo_synth_2026,2026,true,true
+Barista,Maharashtra,18000,64,70,2026,demo_synth_2026,2026,true,true
+Warehouse Manager,Uttar Pradesh,28000,67,73,2026,demo_synth_2026,2026,true,true
+Hotel Manager,Goa,35000,72,78,2026,demo_synth_2026,2026,true,true
+Tour Guide,Goa,22000,66,72,2026,demo_synth_2026,2026,true,true
+Civil Engineer,Madhya Pradesh,40000,74,80,2026,demo_synth_2026,2026,true,true
+Mechanical Engineer,Tamil Nadu,38000,73,79,2026,demo_synth_2026,2026,true,true
+Electrical Engineer,Assam,32000,68,74,2026,demo_synth_2026,2026,true,true
+Electronics Engineer,Kerala,40000,75,81,2026,demo_synth_2026,2026,true,true
+Architect,Gujarat,50000,70,76,2026,demo_synth_2026,2026,true,true
+Environmental Engineer,Karnataka,42000,68,74,2026,demo_synth_2026,2026,true,true
+Industrial Engineer,Maharashtra,40000,69,75,2026,demo_synth_2026,2026,true,true
+Clerk,Uttar Pradesh,16000,60,66,2026,demo_synth_2026,2026,true,true
+Data Entry Operator,Delhi,15000,58,64,2026,demo_synth_2026,2026,true,true
+Quality Inspector,Gujarat,26000,64,70,2026,demo_synth_2026,2026,true,true
+Safety Officer,Maharashtra,35000,66,72,2026,demo_synth_2026,2026,true,true
+Garment Worker,Uttar Pradesh,14000,59,65,2026,demo_synth_2026,2026,true,true
+Weaver,Uttar Pradesh,13000,50,56,2026,demo_synth_2026,2026,true,true
+Call Center Agent,Uttar Pradesh,20000,70,76,2026,demo_synth_2026,2026,true,true
+Yoga Instructor,Uttarakhand,18000,58,64,2026,demo_synth_2026,2026,true,true
+Event Photographer,Uttar Pradesh,20000,55,61,2026,demo_synth_2026,2026,true,true

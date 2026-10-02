@@ -32,6 +32,9 @@ coverage/
 # --- ML / data artifacts ---
 backend/app/data/processed/*
 !backend/app/data/processed/.gitkeep
+# large / licence-bound raw downloads: track only the manifest README
+backend/app/data/raw/**
+!backend/app/data/raw/README.md
 *.faiss
 *.bin
 *.joblib
