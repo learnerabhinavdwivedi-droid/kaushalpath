@@ -1,0 +1,13 @@
+{
+  "app": {
+    "title": "KaushalPath",
+    "tagline": "Career guidance for vocational education"
+  },
+  "home": {
+    "placeholder": "Phase 0 skeleton — assessment, recommendations and the Family Decision Room arrive in later phases.",
+    "startCta": "Get started"
+  },
+  "lang": {
+    "switchTo": "हिन्दी"
+  }
+}
