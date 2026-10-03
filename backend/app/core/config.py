@@ -36,8 +36,14 @@ class Settings(BaseSettings):
     # CORS — comma-separated origins
     cors_origins: str = "http://localhost:5173"
 
-    # Model metadata surfaced at /meta/model-version
-    model_version: str = "0.0.0-untrained"
+    # ML Models
+    embedder_model_name: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    
+    # Fallback ranker weights (if LightGBM model is not trained)
+    ranker_weight_riasec: float = 0.4
+    ranker_weight_aptitude: float = 0.2
+    ranker_weight_fee: float = -0.1
+    ranker_weight_retrieval: float = 0.3
 
     @property
     def cors_origin_list(self) -> list[str]:
