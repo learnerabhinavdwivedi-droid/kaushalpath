@@ -149,3 +149,60 @@ admins see the full trail.
 `eval/gold/` — the held-out evaluation set stays untouched so retraining on live feedback
 cannot leak into the metrics (RULES: eval stays independent).
 
+---
+
+# Phase 9 (hardening, privacy, deployment, final audit) assumptions
+
+## A21 — Production demo stays on SQLite (single node); Postgres is a driver swap
+`docs/02_ARCHITECTURE.md` names Postgres for prod, but no PG driver is in
+`requirements.txt` and the acceptance target is "works on a clean machine with one
+command". The prod stack therefore runs the app's SQLAlchemy engine against a
+**SQLite file on a named Docker volume** (`DATABASE_URL=sqlite:////data/...`), with
+consistent online-backups (`make backup`). Moving to Postgres is a driver install +
+`DATABASE_URL` change — no application code changes (documented in
+`infra/env.prod.example`). We did not add a DB server we cannot validate here.
+
+## A22 — ML/web dependency advisories are documented, not force-upgraded
+`make security` (pip-audit) flags transitive advisories (`starlette` via FastAPI,
+`transformers` via sentence-transformers, `pyasn1`/`ecdsa` via python-jose) and ML
+pickle/DoS notes (`lightgbm`, `scikit-learn`). We bumped only the two **safe, direct,
+high-value** pins (`python-multipart` 0.0.12→0.0.31, `python-jose` 3.3.0→3.4.0) and
+froze the rest: upgrading the ML stack is a coordinated major migration that must be
+re-validated against the eval gates, so slipping it in at the release freeze trades a
+reproducible build for unquantified risk. Every remaining advisory is recorded with a
+threat-model rationale in `docs/SECURITY.md` rather than hidden. (The HS256-only JWT
+means the ECDSA/ASN.1 code paths are never executed.)
+
+## A23 — R12 accessibility is an automated audit, not a WCAG-AA certification
+PS R12 ("design for low-literacy / low-digital-familiarity users") was held at 0.5 in
+earlier phases for being "designed-for but not instrumented". Phase 9 instruments it
+with a **real axe-core audit in CI** (`frontend/src/components/accessibility.test.tsx`).
+Honest scope: jsdom has no layout engine, so `color-contrast` is excluded and there is
+**no manual screen-reader / AT testing** and **no Lighthouse score**. R12 is scored 1
+because the requirement (design orientation) is met with a running artefact, not
+because a full WCAG 2.2 AA conformance claim is made — that would be an overclaim.
+
+## A24 — `ps_audit` 100 % means "every requirement has an artefact", not perfection
+The weighted alignment in `docs/PS_TRACEABILITY.md` is **self-scored** against the PS
+with the rule that any row marked complete must cite real evidence (a test, an eval
+gate, or a demo artefact); `scripts/ps_audit.py` fails the run otherwise. The score is
+reproducible but the weights (3 = explicit, 2 = implied, 1 = nice-to-have) are a
+judgement call, so 100 % is read as "implemented + evidenced", with the persistent
+limitations (demo outcome data, synthetic labels, coverage gap) stated on the same page.
+
+## A25 — `make demo` serves locally; the Docker prod stack is the separate path
+The acceptance line is "`make demo` works on a clean machine". It runs
+`alembic upgrade head` + `seed_all` + `uvicorn` against the local venv (verified on a
+fresh DB) and is **offline-safe** (deterministic fallback scorer, no-op loaders, no
+model download). It does not require Docker (unavailable in the build environment);
+the hardened container path is provided and separately validated as YAML via
+`docker-compose.prod.yml` + `infra/nginx.conf`.
+
+## A26 — Single-origin Nginx; CSP allows inline styles but not inline scripts
+The SPA is built with `VITE_API_BASE=/api` and Nginx reverse-proxies `/api` -> the
+backend, so the browser makes **no cross-origin calls** and needs no client CORS.
+The CSP (`script-src 'self'`) forbids inline/eval scripts (the app ships none) but
+permits `style-src 'unsafe-inline'` because React sets inline `style` attributes on
+elements; this is a deliberate, documented narrowing rather than a blanket `'unsafe-inline'`.
+
+

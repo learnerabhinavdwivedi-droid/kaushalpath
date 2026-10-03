@@ -1,0 +1,84 @@
+# KaushalPath PRODUCTION stack (Phase 9 — deployment).
+#
+#   docker compose -f docker-compose.prod.yml up -d --build
+#   # load the demo dataset into the shared volume (one-shot):
+#   docker compose -f docker-compose.prod.yml --profile demo run --rm seed
+#
+# Differences from the dev docker-compose.yml:
+#   * no source bind-mounts and no --reload (immutable, baked images)
+#   * backend runs migrations on boot via entrypoint.prod.sh, as a non-root
+#     user, with a readiness healthcheck and a restart policy
+#   * Nginx serves the SPA + reverse-proxies /api -> backend so the browser is
+#     same-origin (the SPA is built with VITE_API_BASE=/api)
+#   * APP_ENV=prod activates the config fail-fast guards (secret / CORS / debug)
+# Secrets come from .env (see .env.prod.example). The API is not published to
+# the host — only Nginx (port 80) is.
+
+name: kaushalpath-prod
+
+services:
+  backend:
+    build: ./backend
+    image: kaushalpath-backend:1.0.0
+    container_name: kaushalpath-backend-prod
+    init: true                       # reap zombie PIDs / forward SIGTERM
+    entrypoint: ["/app/entrypoint.prod.sh"]
+    env_file: .env
+    environment:
+      APP_ENV: prod                  # enforce the prod hardening guards
+      DEBUG: "false"
+      API_DOCS_ENABLED: "false"      # no Swagger in prod (set true to debug)
+      DATABASE_URL: sqlite:////data/kaushalpath.db
+      # Single-origin behind Nginx; still must be a concrete, non-'*' value so
+      # the CORS guard passes. Override PUBLIC_ORIGIN for a real domain.
+      CORS_ORIGINS: ${PUBLIC_ORIGIN:-http://localhost}
+    volumes:
+      - kp_data:/data               # SQLite lives on a named, backed-up volume
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=3).status==200 else 1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE: /api         # route all API calls through Nginx
+    image: kaushalpath-frontend:1.0.0
+    container_name: kaushalpath-frontend-prod
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "80:80"
+    volumes:
+      - ./infra/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+  # One-shot demo-data loader. Kept on APP_ENV=dev so it does not need the prod
+  # SECRET_KEY (it only writes the DB) but points at the SAME /data volume, so
+  # the running backend immediately sees the seeded rows.
+  seed:
+    profiles: ["demo"]
+    build: ./backend
+    image: kaushalpath-backend:1.0.0
+    entrypoint: ["sh", "-c", "cd /repo/backend && alembic upgrade head && python /repo/scripts/seed_all.py"]
+    environment:
+      APP_ENV: dev
+      DATABASE_URL: sqlite:////data/kaushalpath.db
+    volumes:
+      - kp_data:/data
+      - .:/repo                     # loaders read seed CSVs + write the shared DB
+    restart: "no"
+
+volumes:
+  kp_data:

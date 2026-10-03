@@ -37,6 +37,8 @@ class Settings(BaseSettings):
     refresh_token_expire_days: int = 7
     # slowapi rate limiting on auth endpoints. Tests force this off via conftest.
     rate_limit_enabled: bool = True
+    # Serve OpenAPI + Swagger UI. Defaults to off in prod; set True to force on.
+    api_docs_enabled: bool | None = None
 
     # Database (SQLite for dev per docs/02_ARCHITECTURE.md)
     database_url: str = "sqlite:///./kaushalpath.db"
@@ -76,6 +78,34 @@ class Settings(BaseSettings):
     ranker_weight_fee: float = 0.10
     ranker_weight_nsqf: float = 0.05
     ranker_weight_distance: float = 0.10
+
+    @model_validator(mode="after")
+    def _prod_hardening(self) -> Settings:
+        """Fail fast if prod is misconfigured (Phase 9 security pass).
+
+        These are the classic demo-to-prod foot-guns: shipping the dev secret
+        key, a wildcard CORS origin with credentials, or an exposed debug/stack
+        trace. Rather than silently running insecure, we refuse to boot.
+        """
+        if self.app_env.lower() == "prod":
+            if self.secret_key == "dev-only-insecure-change-me":
+                raise ValueError("SECRET_KEY must be overridden in prod (see .env.example).")
+            if "*" in self.cors_origin_list:
+                raise ValueError("CORS_ORIGINS must not contain '*' in prod.")
+            if self.debug:
+                raise ValueError("DEBUG must be false in prod.")
+        return self
+
+    @property
+    def is_production(self) -> bool:
+        return self.app_env.lower() == "prod"
+
+    @property
+    def docs_enabled(self) -> bool:
+        """Swagger/OpenAPI: on outside prod unless explicitly overridden."""
+        if self.api_docs_enabled is None:
+            return not self.is_production
+        return self.api_docs_enabled
 
     @property
     def cors_origin_list(self) -> list[str]:

@@ -1,0 +1,12 @@
+# Keep the frontend build context small: deps and prior builds are re-created
+# inside the image (npm ci + vite build) and must not be copied from the host.
+node_modules/
+dist/
+dist-ssr/
+.vite/
+coverage/
+# Playwright / vitest artefacts
+e2e/
+test-results/
+playwright-report/
+*.log

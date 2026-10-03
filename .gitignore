@@ -59,3 +59,6 @@ Thumbs.db
 # --- Logs / tmp ---
 *.log
 tmp/
+
+# --- DB backups (scripts/backup_db.py output) ---
+backups/
