@@ -33,3 +33,22 @@
            focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-light;
   }
 }
+
+/* Print / PDF export: keep the family plan clean, hide interactive controls. */
+.no-print {
+  display: block;
+}
+
+@media print {
+  body {
+    background: #ffffff;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .card {
+    box-shadow: none;
+    border: 1px solid #d1d5db;
+    break-inside: avoid;
+  }
+}

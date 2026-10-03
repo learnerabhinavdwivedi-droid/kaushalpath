@@ -128,3 +128,162 @@ export const getRecommendations = (studentId: number, topK = 3) =>
     method: 'POST',
     body: JSON.stringify({ student_id: studentId, top_k: topK })
   });
+
+// --- Phase 7: Family Decision Room contracts ------------------------------
+
+export interface RoomMember {
+  user_id: number;
+  role: string;
+}
+
+export interface MemberWeights {
+  user_id: number;
+  cost: number;
+  duration: number;
+  salary: number;
+  local_jobs: number;
+  distance: number;
+}
+
+export interface RoomVote {
+  user_id: number;
+  occupation_id: number;
+  score: number;
+}
+
+export interface ObjectionTag {
+  id: number;
+  raised_by_user_id: number;
+  occupation_id: number | null;
+  topic: string;
+  sentiment: string;
+}
+
+export interface RoomSnapshot {
+  code: string;
+  student_id: number;
+  members: RoomMember[];
+  weights: MemberWeights[];
+  votes: RoomVote[];
+  objections: ObjectionTag[];
+}
+
+export interface WeightsInput {
+  cost: number;
+  duration: number;
+  salary: number;
+  local_jobs: number;
+  distance: number;
+}
+
+export interface CompareCriteria {
+  cost: number;
+  duration: number;
+  salary: number;
+  local_jobs: number;
+  distance: number;
+}
+
+export interface CompareResultItem {
+  occupation_id: number;
+  occupation_name: string;
+  criteria: CompareCriteria;
+  member_totals: Record<string, number>;
+  family_score: number;
+  spread: number;
+}
+
+export interface Disagreement {
+  occupation_id: number | null;
+  criterion: string | null;
+  detail: string;
+}
+
+export interface CompareResponse {
+  results: CompareResultItem[];
+  disagreement: Disagreement;
+}
+
+export interface ConsensusRanking {
+  occupation_id: number;
+  avg_score: number;
+}
+
+export interface ConsensusResult {
+  ranking: ConsensusRanking[];
+  agreement_index: number;
+  next_step: string;
+}
+
+export interface RoadmapStep {
+  step: number;
+  type: string;
+  detail: string;
+}
+
+export interface RoadmapResult {
+  occupation_id: number;
+  occupation_name: string;
+  district: string | null;
+  is_demo: boolean;
+  source: string | null;
+  expected: string | null;
+  steps: RoadmapStep[];
+}
+
+export type ObjectionTopic = 'income' | 'security' | 'social' | 'safety' | 'other';
+export type ObjectionSentiment = 'concern' | 'neutral' | 'positive';
+
+export const createRoom = () =>
+  apiRequest<{ code: string; student_id: number }>('/rooms', { method: 'POST' });
+
+export const joinRoom = (code: string) =>
+  apiRequest<{ status: string; room_code: string }>(`/rooms/${code}/join`, { method: 'POST' });
+
+export const getRoom = (code: string) => apiRequest<RoomSnapshot>(`/rooms/${code}`);
+
+export const updateWeights = (code: string, weights: WeightsInput) =>
+  apiRequest<{ status: string }>(`/rooms/${code}/weights`, {
+    method: 'PUT',
+    body: JSON.stringify(weights)
+  });
+
+export const castVote = (code: string, occupationId: number, score: number) =>
+  apiRequest<{ status: string }>(`/rooms/${code}/vote`, {
+    method: 'POST',
+    body: JSON.stringify({ occupation_id: occupationId, score })
+  });
+
+export const getConsensus = (code: string) =>
+  apiRequest<ConsensusResult>(`/rooms/${code}/consensus`);
+
+export const compareOccupations = (code: string, occupationIds: number[]) =>
+  apiRequest<CompareResponse>(`/rooms/${code}/compare`, {
+    method: 'POST',
+    body: JSON.stringify({ occupation_ids: occupationIds })
+  });
+
+export const recordObjection = (
+  code: string,
+  payload: {
+    topic: ObjectionTopic;
+    sentiment: ObjectionSentiment;
+    occupation_id?: number | null;
+    note?: string | null;
+  }
+) =>
+  apiRequest<ObjectionTag>(`/rooms/${code}/objection`, {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  });
+
+export const escalateRoom = (code: string, reason: string, occupationId?: number | null) =>
+  apiRequest<{ id: number; room_code: string; status: string; reason: string }>(
+    `/rooms/${code}/escalate`,
+    { method: 'POST', body: JSON.stringify({ reason, occupation_id: occupationId ?? null }) }
+  );
+
+export const getRoadmap = (occupationId: number, district?: string | null) =>
+  apiRequest<RoadmapResult>(
+    `/roadmap/${occupationId}${district ? `?district=${encodeURIComponent(district)}` : ''}`
+  );

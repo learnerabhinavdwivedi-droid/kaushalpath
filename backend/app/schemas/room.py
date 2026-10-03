@@ -1,5 +1,7 @@
 """Phase 5: Room schemas."""
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+
+from app.models.human import OBJECTION_SENTIMENTS, OBJECTION_TOPICS
 
 
 class RoomCreate(BaseModel):
@@ -38,3 +40,61 @@ class ConsensusResponse(BaseModel):
     ranking: list[dict]
     agreement_index: float
     next_step: str
+
+
+class RoomMemberOut(BaseModel):
+    user_id: int
+    role: str
+
+
+class MemberWeightsOut(BaseModel):
+    user_id: int
+    cost: float
+    duration: float
+    salary: float
+    local_jobs: float
+    distance: float
+
+
+class RoomVoteOut(BaseModel):
+    user_id: int
+    occupation_id: int
+    score: int
+
+
+class ObjectionOut(BaseModel):
+    id: int
+    raised_by_user_id: int
+    occupation_id: int | None
+    topic: str
+    sentiment: str
+
+
+class RoomSnapshotResponse(BaseModel):
+    code: str
+    student_id: int
+    members: list[RoomMemberOut]
+    weights: list[MemberWeightsOut]
+    votes: list[RoomVoteOut]
+    objections: list[ObjectionOut]
+
+
+class ObjectionCreate(BaseModel):
+    topic: str = Field(default="other")
+    sentiment: str = Field(default="concern")
+    occupation_id: int | None = None
+    note: str | None = None
+
+    @field_validator("topic")
+    @classmethod
+    def _topic_known(cls, v: str) -> str:
+        if v not in OBJECTION_TOPICS:
+            raise ValueError(f"topic must be one of {OBJECTION_TOPICS}")
+        return v
+
+    @field_validator("sentiment")
+    @classmethod
+    def _sentiment_known(cls, v: str) -> str:
+        if v not in OBJECTION_SENTIMENTS:
+            raise ValueError(f"sentiment must be one of {OBJECTION_SENTIMENTS}")
+        return v

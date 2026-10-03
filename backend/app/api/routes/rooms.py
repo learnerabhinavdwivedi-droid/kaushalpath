@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
 from app.db.session import get_db
-from app.models.human import CounsellorAssignment, Escalation
+from app.models.human import CounsellorAssignment, Escalation, Objection
 from app.models.room import CriteriaWeight, Room, RoomMember
 from app.models.student import Student
 from app.models.user import User
@@ -18,7 +18,10 @@ from app.schemas.room import (
     ConsensusResponse,
     EscalationCreate,
     EscalationResponse,
+    ObjectionCreate,
+    ObjectionOut,
     RoomResponse,
+    RoomSnapshotResponse,
     VoteCreate,
     WeightsUpdate,
 )
@@ -223,6 +226,82 @@ def compare_options(
         member_user_ids=_member_user_ids(room.id, db),
         occupation_ids=req.occupation_ids,
     )
+
+
+@router.get("/{code}", response_model=RoomSnapshotResponse)
+def get_room(
+    code: str, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+):
+    """Room snapshot for the UI: members, each member's weights, votes and
+    recorded objections. Personal identity is never leaked — members are shown
+    only by ``(user_id, role)``."""
+    room = get_room_and_verify_member(code, current_user.id, db)
+
+    members = db.query(RoomMember).filter(RoomMember.room_id == room.id).all()
+    weights = db.query(CriteriaWeight).filter(CriteriaWeight.room_id == room.id).all()
+    votes = db.query(Vote).filter(Vote.room_id == room.id).all()
+    objections = db.query(Objection).filter(Objection.room_id == room.id).all()
+
+    return {
+        "code": room.code,
+        "student_id": room.student_id,
+        "members": [{"user_id": m.user_id, "role": m.role} for m in members],
+        "weights": [
+            {
+                "user_id": w.user_id,
+                "cost": w.cost,
+                "duration": w.duration,
+                "salary": w.salary,
+                "local_jobs": w.local_jobs,
+                "distance": w.distance,
+            }
+            for w in weights
+        ],
+        "votes": [
+            {"user_id": v.user_id, "occupation_id": v.occupation_id, "score": v.score}
+            for v in votes
+        ],
+        "objections": [
+            {
+                "id": o.id,
+                "raised_by_user_id": o.raised_by_user_id,
+                "occupation_id": o.occupation_id,
+                "topic": o.topic,
+                "sentiment": o.sentiment,
+            }
+            for o in objections
+        ],
+    }
+
+
+@router.post("/{code}/objection", response_model=ObjectionOut)
+def record_objection(
+    code: str,
+    req: ObjectionCreate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Tag a parental objection raised from the deterministic conversation
+    surface (topic + sentiment). Feeds the Phase 8 admin resistance dashboard."""
+    room = get_room_and_verify_member(code, current_user.id, db)
+    obj = Objection(
+        room_id=room.id,
+        raised_by_user_id=current_user.id,
+        occupation_id=req.occupation_id,
+        topic=req.topic,
+        sentiment=req.sentiment,
+        note=req.note,
+    )
+    db.add(obj)
+    db.commit()
+    db.refresh(obj)
+    return {
+        "id": obj.id,
+        "raised_by_user_id": obj.raised_by_user_id,
+        "occupation_id": obj.occupation_id,
+        "topic": obj.topic,
+        "sentiment": obj.sentiment,
+    }
 
 
 @router.post("/{code}/escalate", response_model=EscalationResponse)

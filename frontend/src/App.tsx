@@ -7,6 +7,9 @@ import { AssessmentPage } from './pages/AssessmentPage';
 import { ResultsPage } from './pages/ResultsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { CareerDetailPage } from './pages/CareerDetailPage';
+import { RoomCreatePage } from './pages/RoomCreatePage';
+import { RoomJoinPage } from './pages/RoomJoinPage';
+import { RoomHomePage } from './pages/RoomHomePage';
 
 export const App: React.FC = () => {
   return (
@@ -24,6 +27,9 @@ export const App: React.FC = () => {
         <Route path="/results" component={ResultsPage} />
         <Route path="/settings" component={SettingsPage} />
         <Route path="/career/:id" component={CareerDetailPage} />
+        <Route path="/room/new" component={RoomCreatePage} />
+        <Route path="/room/join" component={RoomJoinPage} />
+        <Route path="/room/:code" component={RoomHomePage} />
         <Route>
           {/* 404 Route */}
           <div className="flex flex-col items-center justify-center min-h-screen">

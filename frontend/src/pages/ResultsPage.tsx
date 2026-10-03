@@ -32,6 +32,15 @@ export const ResultsPage: React.FC = () => {
           ))}
         </div>
       )}
+
+      <div className="card mt-6 flex flex-col gap-3">
+        <Link href="/room/new" className="btn-primary">
+          {t('room.create_button')}
+        </Link>
+        <Link href="/room/join" className="btn-secondary">
+          {t('room.join_button')}
+        </Link>
+      </div>
     </div>
   );
 };
