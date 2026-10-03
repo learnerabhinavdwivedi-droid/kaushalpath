@@ -157,6 +157,9 @@ export const AssessmentPage: React.FC = () => {
 
 function mapRecommendations(recs: RecommendationOut[]) {
   return recs.map((r) => ({
+    // Primary key of the *stored* recommendation (Phase 8 feedback loop);
+    // optional so legacy/localStorage rows still render.
+    recId: r.id,
     occupation: {
       id: r.occupation_id,
       title: r.occupation_name,

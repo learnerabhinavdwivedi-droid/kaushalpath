@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ReasonChip } from './ReasonChip';
 import { SourceBadge } from './SourceBadge';
+import { FeedbackBar } from './FeedbackBar';
 import { Volume2, ChevronRight } from 'lucide-react';
 import { Link } from 'wouter';
 
@@ -51,6 +52,9 @@ export const CareerCard: React.FC<CareerCardProps> = ({ career }) => {
           {t('results.view_details')} <ChevronRight className="w-5 h-5" />
         </Link>
       </div>
+
+      {/* Phase 8 feedback loop — hidden for demo rows without a stored id. */}
+      <FeedbackBar recommendationId={career.recId} />
     </div>
   );
 };

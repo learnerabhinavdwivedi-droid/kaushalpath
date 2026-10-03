@@ -164,5 +164,107 @@
     "print": "PDF डाउनलोड करें (प्रिंट)",
     "whatsapp": "WhatsApp पर साझा करें",
     "summary": "कौशलपथ पारिवारिक योजना — सुझाया गया विकल्प: {{choice}}।"
+  },
+  "guard": {
+    "denied_title": "प्रवेश अस्वीकृत",
+    "denied_body": "इस पृष्ठ को देखने का अनुमति आपके पास नहीं है।",
+    "back_home": "होम पर वापस जाएँ"
+  },
+  "footer": {
+    "model_version": "मॉडल संस्करण"
+  },
+  "feedback": {
+    "question": "क्या यह सिफारिश उपयोगी थी?",
+    "helpful": "उपयोगी",
+    "chosen": "हमने यह चुना",
+    "concern": "चिंता",
+    "thanks": "प्रतिक्रिया के लिए धन्यवाद!",
+    "error": "प्रतिक्रिया सहेजी नहीं जा सकी।",
+    "topic_none": "कोई नहीं",
+    "topic_income": "आय",
+    "topic_security": "नौकरी की सुरक्षा",
+    "topic_social": "सामाजिक प्रतिष्ठा",
+    "topic_safety": "सुरक्षा"
+  },
+  "override": {
+    "title": "ओवरराइड सुझाएँ",
+    "hint": "ओवरराइड ऑडिट ट्रेल में दर्ज होते हैं। व्यवसाय चुनें और कारण बताएँ।",
+    "occupation": "व्यवसाय",
+    "pick_occupation": "व्यवसाय चुनें",
+    "reason": "कारण",
+    "reason_placeholder": "यह छात्र के लिए बेहतर क्यों है?",
+    "reason_required": "कारण आवश्यक है।",
+    "submit": "ओवरराइड दर्ज करें"
+  },
+  "cohort": {
+    "title": "मेरा समूह",
+    "filter_district": "ज़िला",
+    "filter_edu": "शिक्षा का स्तर",
+    "filter_language": "भाषा",
+    "filter_status": "स्थिति",
+    "status_assessed": "मूल्यांकन पूर्ण",
+    "status_pending": "लंबित",
+    "nav_analytics": "विश्लेषण",
+    "nav_resistance": "असहमति",
+    "nav_audit": "ऑडिट ट्रेल",
+    "empty": "इन फ़िल्टरों से कोई छात्र मेल नहीं खाता।",
+    "has_room": "कक्ष मौजूद है",
+    "escalations": "खुली समीक्षाएँ"
+  },
+  "student": {
+    "title": "छात्र",
+    "override_button": "ओवरराइड",
+    "profile": "प्रोफ़ाइल",
+    "budget": "बजट",
+    "assessment": "मूल्यांकन",
+    "items": "प्रश्न",
+    "confidence": "विश्वास",
+    "no_assessment": "अभी कोई मूल्यांकन पूरा नहीं हुआ।",
+    "recommendations": "शीर्ष सिफारिशें",
+    "no_recs": "अभी कोई सिफारिश नहीं।",
+    "room": "पारिवारिक कक्ष",
+    "room_code": "कोड",
+    "members": "सदस्य",
+    "votes": "मत",
+    "objections": "आपत्तियाँ",
+    "consensus_yes": "सहमति बनी",
+    "consensus_no": "अभी सहमति नहीं",
+    "no_room": "अभी कोई पारिवारिक निर्णय कक्ष नहीं।",
+    "overrides": "ओवरराइड इतिहास",
+    "no_overrides": "कोई ओवरराइड दर्ज नहीं।"
+  },
+  "analytics": {
+    "title": "समूह विश्लेषण",
+    "back_cohort": "समूह पर वापस",
+    "started": "शुरू किए",
+    "dropoff": "छोड़ने की दर",
+    "rooms_consensus": "कक्ष / सहमति",
+    "avg_items": "औसत पूछे गए प्रश्न",
+    "riasec": "RIASEC वितरण",
+    "top_trades": "शीर्ष अनुशंसित व्यवसाय",
+    "district_mismatch": "ज़िला मांग असंगति",
+    "no_data": "दिखाने के लिए पर्याप्त डेटा नहीं।",
+    "district": "ज़िला",
+    "students": "छात्र",
+    "top_trade": "शीर्ष व्यवसाय",
+    "recs": "सिफारिशें",
+    "suppressed": "{{n}} समूह छिपाए गए (५ से कम छात्र)"
+  },
+  "resistance": {
+    "title": "पारिवारिक असहमति डैशबोर्ड",
+    "back_cohort": "समूह पर वापस",
+    "total": "कुल आपत्तियाँ",
+    "by_topic": "विषय अनुसार आपत्तियाँ",
+    "concern_by_topic": "विषय अनुसार चिंताएँ",
+    "by_district": "ज़िला अनुसार आपत्तियाँ",
+    "by_trade": "व्यवसाय अनुसार आपत्तियाँ"
+  },
+  "audit": {
+    "title": "ऑडिट ट्रेल",
+    "back_cohort": "समूह पर वापस",
+    "empty": "अभी कोई ऑडिट प्रविष्टि नहीं।",
+    "actor": "कर्ता",
+    "action_override": "सिफारिश ओवरराइड",
+    "action_data_deletion": "डेटा हटाना"
   }
 }

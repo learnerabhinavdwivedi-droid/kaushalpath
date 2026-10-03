@@ -108,3 +108,44 @@ aptitude items, so it is PII-adjacent — do not expose raw in responses.
 Routes take `student_id` as a query param and auto-create a placeholder `User`/`Student`
 (email `student_{id}@example.test`, `hashed_password="demo-no-auth"`). This is wired to real
 auth + DPDP consent in Phase 5; do not treat the id as authenticated.
+
+---
+
+# Phase 8 (counsellor dashboard + feedback loop) assumptions
+
+## A16 — Dashboard charts stay dependency-free (no Recharts)
+`docs/02_ARCHITECTURE.md` listed Recharts, but the project deliberately ships **no** chart
+library: Phase 7 hand-rolled the radar to keep the PWA bundle lean and the render
+deterministic, and Phase 8 keeps that convention with `components/BucketChart.tsx`
+(horizontal bars) instead of pulling Recharts. Minimal-change rule respected — no new
+dependency added; the stack line was corrected to match reality.
+
+## A17 — Small-group suppression threshold is 5 distinct students
+`analytics_svc.MIN_GROUP = 5`: every aggregate (RIASEC distribution, top trades,
+district demand-mismatch, resistance topic/district/trade buckets) drops any bucket
+backed by fewer than 5 distinct students and reports only how many were hidden
+(`suppressed_groups`). The PS/eval plan does not fix a k-anonymity number, so 5 is the
+customary public-health-dashboard floor; it is a single constant, trivially tunable.
+
+## A18 — "District demand mismatch" interpretation
+The PS asks for regional insight but never defines "mismatch" concretely. Phase 8 reads it
+as: per district, the count of students, the most-recommended trade, and total
+recommendations — surfaced so a counsellor can spot a district funnelling everyone into one
+trade. It is a descriptive aggregate over stored recommendations, **not** a comparison to
+real labour-market vacancy data (that data is demo, per A5), so the table carries no
+real-demand claim.
+
+## A19 — Audit trail is append-only and never stores deleted payloads
+`audit_logs` records `override` and `data_deletion` events. A deletion row stores only
+*that* and *by whom* a student was deleted (`entity_id` = the id, `detail` = role/actor),
+never the removed personal data — otherwise deleting a student would silently retain their
+PII (DPDP). The counsellor audit view is scoped to their own cohort's `student` entries;
+admins see the full trail.
+
+## A20 — Feedback retraining export is isolated from eval/gold
+`POST /feedback` stores helpful/chosen + a Phase 7 sentiment topic + `model_version`; 
+`feedback_export_svc` folds this into `data/processed/retrain_feedback.jsonl` (relevance:
+2 = chosen, 1 = helpful, 0 = neither) for a *future* ranker retrain. It never writes into
+`eval/gold/` — the held-out evaluation set stays untouched so retraining on live feedback
+cannot leak into the metrics (RULES: eval stays independent).
+

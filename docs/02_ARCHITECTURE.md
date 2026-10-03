@@ -3,7 +3,7 @@
 ## Stack (reuses your known stack)
 - Backend: FastAPI + Uvicorn, SQLAlchemy 2 + Alembic, SQLite (dev) / PostgreSQL (prod), Pydantic v2, pydantic-settings, JWT (python-jose), slowapi
 - ML: sentence-transformers (multilingual MiniLM / e5), FAISS (CPU), LightGBM, scikit-learn, SHAP (or custom reason codes), pandas
-- Frontend: React 18 + Vite + TypeScript, Tailwind, Zustand, react-i18next, Recharts, vite-plugin-pwa
+- Frontend: React 18 + Vite + TypeScript, Tailwind, Zustand, react-i18next, vite-plugin-pwa (charts are hand-rolled and dependency-free — see A16)
 - Infra: Docker, docker-compose, Makefile, GitHub Actions
 - Optional: Whisper (voice), IndicTrans2 / Bhashini for translation, LLM API for explanation text
 
@@ -59,7 +59,8 @@ kaushalpath/
 - counsellor_assignments(counsellor_id, student_id) ; counsellor_override(counsellor_id, student_id, occupation_id, note)
 - objections(id, room_id, raised_by_user_id, occupation_id, topic[income|security|social|safety|other], sentiment[concern|neutral|positive], note)
 - recommendations(id, student_id, occupation_id, rank, score, reasons_json, model_version)
-- feedback(id, recommendation_id, helpful, chosen)
+- feedback(id, recommendation_id, user_id, helpful, chosen, topic, sentiment, model_version)
+- audit_logs(id, actor_user_id, action[override|data_deletion], entity_type, entity_id, detail_json, created_at)
 
 ## API (v1)
 POST /auth/register | /auth/login
@@ -72,4 +73,28 @@ POST /rooms/{code}/objection  (topic + sentiment tag for a parental objection; f
 POST /rooms/{code}/escalate
 GET  /roadmap/{occupation_id}?district=
 GET  /counsellor/cohort | POST /counsellor/override
+GET  /counsellor/students/{id} | GET /counsellor/analytics | GET /counsellor/resistance | GET /counsellor/audit
+POST /feedback
 GET  /health | GET /meta/model-version
+
+## Phase 8 — Counsellor dashboard + feedback loop
+Counsellor/admin-only surfaces (backend re-checks role; the React `RequireRole` guard only avoids
+rendering an authorised-looking screen for the wrong role).
+- **Cohort scoping** — every aggregate/row is limited to students in `counsellor_assignments` for
+  the calling counsellor; admins see the whole population (`analytics_svc` + `/counsellor/*`).
+- **Analytics** (`/counsellor/analytics`, `analytics_svc`) — RIASEC distribution, top recommended
+  trades, assessment drop-off, avg items asked, room/consensus counts and a district demand-mismatch
+  table. **Small-group suppression:** any aggregate bucket backed by fewer than `MIN_GROUP = 5`
+  distinct students is dropped server-side and only its count is reported (`suppressed_groups`), so
+  the dashboard can never reveal an individual.
+- **Resistance dashboard** (`/counsellor/resistance`) — aggregates the Phase 7 objection taxonomy
+  (topic × sentiment) by topic, district and trade, with the same <5 suppression.
+- **Override** (`POST /counsellor/override`) — a reason note is required and each override writes an
+  `audit_logs` row (append-only trail).
+- **Audit trail** (`/counsellor/audit`) — overrides and self/admin data deletions are logged. The
+  deletion entry records *that* a deletion happened and by whom, never the deleted payload (DPDP).
+- **Feedback loop** (`POST /feedback` + `feedback_export_svc` / `scripts/export_feedback.py`) —
+  "was this helpful / did you choose it?" plus a sentiment topic on each recommendation card feeds a
+  JSONL retraining export (`data/processed/retrain_feedback.jsonl`). The export never writes to the
+  eval/gold set; `recommend` now returns the stored recommendation `id` so the UI can rate it, and a
+  `ModelVersionFooter` surfaces which model produced the list.
