@@ -10,6 +10,15 @@ import { CareerDetailPage } from './pages/CareerDetailPage';
 import { RoomCreatePage } from './pages/RoomCreatePage';
 import { RoomJoinPage } from './pages/RoomJoinPage';
 import { RoomHomePage } from './pages/RoomHomePage';
+import { RequireRole } from './components/RequireRole';
+import { ModelVersionFooter } from './components/ModelVersionFooter';
+import { CohortPage } from './pages/CohortPage';
+import { StudentDetailPage } from './pages/StudentDetailPage';
+import { AnalyticsPage } from './pages/AnalyticsPage';
+import { ResistancePage } from './pages/ResistancePage';
+import { AuditPage } from './pages/AuditPage';
+
+const STAFF_ROLES = ['counsellor', 'admin'];
 
 export const App: React.FC = () => {
   return (
@@ -30,6 +39,42 @@ export const App: React.FC = () => {
         <Route path="/room/new" component={RoomCreatePage} />
         <Route path="/room/join" component={RoomJoinPage} />
         <Route path="/room/:code" component={RoomHomePage} />
+        {/* Phase 8: counsellor/admin dashboard, guarded client-side; backend re-checks. */}
+        <Route path="/counsellor">
+          {() => (
+            <RequireRole roles={STAFF_ROLES}>
+              <CohortPage />
+            </RequireRole>
+          )}
+        </Route>
+        <Route path="/counsellor/analytics">
+          {() => (
+            <RequireRole roles={STAFF_ROLES}>
+              <AnalyticsPage />
+            </RequireRole>
+          )}
+        </Route>
+        <Route path="/counsellor/resistance">
+          {() => (
+            <RequireRole roles={STAFF_ROLES}>
+              <ResistancePage />
+            </RequireRole>
+          )}
+        </Route>
+        <Route path="/counsellor/audit">
+          {() => (
+            <RequireRole roles={STAFF_ROLES}>
+              <AuditPage />
+            </RequireRole>
+          )}
+        </Route>
+        <Route path="/counsellor/students/:id">
+          {() => (
+            <RequireRole roles={STAFF_ROLES}>
+              <StudentDetailPage />
+            </RequireRole>
+          )}
+        </Route>
         <Route>
           {/* 404 Route */}
           <div className="flex flex-col items-center justify-center min-h-screen">
@@ -38,6 +83,7 @@ export const App: React.FC = () => {
           </div>
         </Route>
       </Switch>
+      <ModelVersionFooter />
     </div>
   );
 };

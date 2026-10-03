@@ -1,5 +1,6 @@
 """Import all models so `Base.metadata` is fully populated (Alembic + create_all)."""
 from app.models.assessment import Assessment
+from app.models.audit import AuditLog
 from app.models.centre import Centre
 from app.models.course import Course
 from app.models.feedback import Feedback
@@ -35,4 +36,5 @@ __all__ = [
     "CounsellorAssignment",
     "CounsellorOverride",
     "Objection",
+    "AuditLog",
 ]

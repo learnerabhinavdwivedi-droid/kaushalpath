@@ -119,7 +119,11 @@ class RecommendService:
                 model_version=self.ranker.model_version,
             )
             self.db.add(rec)
+            # Flush so ``rec.id`` is populated — the feedback loop (Phase 8)
+            # rates a *stored* recommendation and needs its primary key.
+            self.db.flush()
             final_recs.append({
+                "id": rec.id,
                 "rank": rank,
                 "occupation_id": occupation.id,
                 "occupation_name": occupation.name_en,

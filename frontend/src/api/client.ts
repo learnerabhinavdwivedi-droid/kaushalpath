@@ -90,9 +90,11 @@ export interface ReasonOut {
   description: string;
   evidence?: number | null;
   source?: string;
+  type?: 'positive' | 'negative' | 'neutral';
 }
 
 export interface RecommendationOut {
+  id?: number;
   rank: number;
   occupation_id: number;
   occupation_name: string;
@@ -287,3 +289,138 @@ export const getRoadmap = (occupationId: number, district?: string | null) =>
   apiRequest<RoadmapResult>(
     `/roadmap/${occupationId}${district ? `?district=${encodeURIComponent(district)}` : ''}`
   );
+
+// --- Phase 8: counsellor dashboard, feedback loop, audit --------------------
+
+export interface CohortRow {
+  student_id: number;
+  district: string;
+  edu_level: string;
+  language: string;
+  status: string;
+  has_room: boolean;
+  open_escalations: number;
+}
+
+export interface CohortFilters {
+  district?: string;
+  edu_level?: string;
+  language?: string;
+  status?: string;
+}
+
+export interface RecommendationRow {
+  occupation_id: number;
+  occupation_name: string;
+  rank: number;
+  score: number;
+  reasons: ReasonOut[];
+  is_demo: boolean;
+}
+
+export interface RoomStatusOut {
+  code: string | null;
+  members: number;
+  votes: number;
+  objections: number;
+  consensus_reached: boolean;
+}
+
+export interface StudentDetail {
+  student_id: number;
+  district: string;
+  state: string;
+  edu_level: string;
+  language: string;
+  budget_band: string;
+  assessment: {
+    status: string;
+    items_answered: number;
+    confidence: number;
+    riasec: Record<string, number>;
+  } | null;
+  recommendations: RecommendationRow[];
+  overrides: {
+    occupation_id: number;
+    occupation_name: string;
+    note: string;
+    counsellor_id: number;
+    created_at: string | null;
+  }[];
+  room: RoomStatusOut | null;
+}
+
+export interface CountBucket {
+  label: string;
+  count: number;
+}
+
+export interface AnalyticsResponse {
+  riasec: { distribution: CountBucket[]; suppressed_groups: number };
+  top_trades: { top_trades: CountBucket[]; suppressed_groups: number };
+  dropoff: { started: number; completed: number; dropped: number; dropoff_rate: number };
+  rooms: { rooms_created: number; consensus_reached: number };
+  avg_items: { average_items: number; n: number };
+  district_mismatch: {
+    districts: { district: string; n_students: number; top_trade: string; recommendations: number }[];
+    suppressed_groups: number;
+  };
+}
+
+export interface ResistanceResponse {
+  total_objections: number;
+  by_topic: CountBucket[];
+  by_district: CountBucket[];
+  by_trade: CountBucket[];
+  concern_by_topic: CountBucket[];
+  suppressed_groups: number;
+}
+
+export interface AuditEntry {
+  id: number;
+  actor_user_id: number | null;
+  action: string;
+  entity_type: string;
+  entity_id: string | null;
+  detail: Record<string, unknown> | null;
+  created_at: string | null;
+}
+
+export interface FeedbackPayload {
+  recommendation_id: number;
+  helpful: boolean;
+  chosen: boolean;
+  topic?: string;
+  sentiment?: string;
+}
+
+export const getCohort = (filters: CohortFilters = {}) => {
+  const qs = new URLSearchParams(
+    Object.entries(filters).filter(([, v]) => v) as [string, string][]
+  ).toString();
+  return apiRequest<CohortRow[]>(`/counsellor/cohort${qs ? `?${qs}` : ''}`);
+};
+
+export const getStudentDetail = (studentId: number) =>
+  apiRequest<StudentDetail>(`/counsellor/students/${studentId}`);
+
+export const submitOverride = (studentId: number, occupationId: number, note: string) =>
+  apiRequest<{ status: string; override_id: number }>('/counsellor/override', {
+    method: 'POST',
+    body: JSON.stringify({ student_id: studentId, occupation_id: occupationId, note })
+  });
+
+export const getAnalytics = () => apiRequest<AnalyticsResponse>('/counsellor/analytics');
+
+export const getResistance = () => apiRequest<ResistanceResponse>('/counsellor/resistance');
+
+export const getAuditLog = () => apiRequest<AuditEntry[]>('/counsellor/audit');
+
+export const sendFeedback = (payload: FeedbackPayload) =>
+  apiRequest<{ id: number } & FeedbackPayload>('/feedback', {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  });
+
+export const getModelVersion = () =>
+  apiRequest<{ model_version: string }>('/meta/model-version');

@@ -19,6 +19,7 @@ from app.db.session import get_db
 from app.models.student import Student
 from app.models.user import User
 from app.schemas.auth import MeOut, RefreshRequest, Token, UserCreate
+from app.services.audit_svc import record_audit
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 settings = get_settings()
@@ -140,6 +141,18 @@ def delete_student_me(
 ):
     if current_user.role != "student":
         raise HTTPException(status_code=403, detail="Not a student")
+
+    student = db.query(Student).filter(Student.user_id == current_user.id).first()
+    # Phase 8: data deletions must leave an audit trace. Only non-identifying
+    # counts are stored (DPDP: the trail must not preserve the deleted data).
+    record_audit(
+        db,
+        actor_user_id=current_user.id,
+        action="data_deletion",
+        entity_type="student",
+        entity_id=student.id if student else None,
+        detail={"deleted_by": "self", "role": current_user.role},
+    )
 
     db.delete(current_user)
     db.commit()

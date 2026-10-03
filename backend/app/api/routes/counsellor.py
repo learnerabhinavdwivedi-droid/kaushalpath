@@ -1,15 +1,37 @@
-"""Phase 5: Counsellor routes — cohort, escalation queue, audited overrides."""
+"""Phase 5/8: Counsellor routes — cohort, escalation queue, audited overrides,
+student detail, analytics, resistance dashboard and the audit trail."""
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
 from app.db.session import get_db
-from app.models.assessment import Assessment
-from app.models.human import CounsellorAssignment, CounsellorOverride, Escalation
-from app.models.student import Student
-from app.models.user import User
+from app.models import (
+    Assessment,
+    CounsellorAssignment,
+    CounsellorOverride,
+    Escalation,
+    Objection,
+    Occupation,
+    Recommendation,
+    Room,
+    RoomMember,
+    Student,
+    User,
+    Vote,
+)
+from app.schemas.counsellor import (
+    AnalyticsOut,
+    AuditEntryOut,
+    CohortRow,
+    RecommendationRow,
+    ResistanceOut,
+    RoomStatusOut,
+    StudentDetailOut,
+)
+from app.services import analytics_svc
+from app.services.audit_svc import record_audit
 
 router = APIRouter(prefix="/counsellor", tags=["counsellor"])
 
@@ -31,37 +53,73 @@ def _require_counsellor_or_admin(user: User) -> None:
 
 
 def _assigned_student_ids(user: User, db: Session) -> list[int]:
-    stmt = select(CounsellorAssignment.student_id)
-    if user.role != "admin":
-        stmt = stmt.where(CounsellorAssignment.counsellor_id == user.id)
+    """Cohort scope: counsellor = assigned students; admin = every student."""
+    if user.role == "admin":
+        return list(db.scalars(select(Student.id)).all())
+    stmt = select(CounsellorAssignment.student_id).where(
+        CounsellorAssignment.counsellor_id == user.id
+    )
     return list(db.scalars(stmt).all())
 
 
-@router.get("/cohort")
+@router.get("/cohort", response_model=list[CohortRow])
 def get_cohort(
-    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+    district: str | None = None,
+    edu_level: str | None = None,
+    language: str | None = None,
+    status: str | None = None,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
-    """Students assigned to this counsellor (admin sees the whole cohort)."""
+    """Students assigned to this counsellor (admin sees the whole cohort),
+    filterable by district / education level / language / assessment status."""
     _require_counsellor_or_admin(current_user)
     student_ids = _assigned_student_ids(current_user, db)
     if not student_ids:
         return []
 
-    assessed = set(
-        db.scalars(
-            select(Assessment.student_id).where(Assessment.student_id.in_(student_ids))
+    assessed = dict(
+        db.execute(
+            select(Assessment.student_id, func.count(Assessment.id))
+            .where(Assessment.student_id.in_(student_ids))
+            .group_by(Assessment.student_id)
         ).all()
     )
-    cohort = []
+    rooms = dict(
+        db.execute(
+            select(Room.student_id, func.count(Room.id))
+            .where(Room.student_id.in_(student_ids))
+            .group_by(Room.student_id)
+        ).all()
+    )
+    open_esc = dict(
+        db.execute(
+            select(Escalation.student_id, func.count(Escalation.id))
+            .where(Escalation.student_id.in_(student_ids), Escalation.status == "open")
+            .group_by(Escalation.student_id)
+        ).all()
+    )
+
+    cohort: list[dict] = []
     for student in db.scalars(select(Student).where(Student.id.in_(student_ids))).all():
-        cohort.append(
-            {
-                "student_id": student.id,
-                "district": student.district,
-                "edu_level": student.edu_level,
-                "status": "assessed" if student.id in assessed else "pending_assessment",
-            }
-        )
+        row = {
+            "student_id": student.id,
+            "district": student.district,
+            "edu_level": student.edu_level,
+            "language": student.language,
+            "status": "assessed" if student.id in assessed else "pending_assessment",
+            "has_room": student.id in rooms,
+            "open_escalations": open_esc.get(student.id, 0),
+        }
+        if district and row["district"].lower() != district.lower():
+            continue
+        if edu_level and row["edu_level"] != edu_level:
+            continue
+        if language and row["language"] != language:
+            continue
+        if status and row["status"] != status:
+            continue
+        cohort.append(row)
     return cohort
 
 
@@ -177,6 +235,20 @@ def override_recommendation(
     db.commit()
     db.refresh(override)
 
+    # Phase 8: overrides must also land in the general audit trail.
+    record_audit(
+        db,
+        actor_user_id=current_user.id,
+        action="override",
+        entity_type="student",
+        entity_id=req.student_id,
+        detail={
+            "override_id": override.id,
+            "occupation_id": req.occupation_id,
+            "note": req.note,
+        },
+    )
+
     return {
         "status": "overridden",
         "override_id": override.id,
@@ -188,3 +260,156 @@ def override_recommendation(
             "created_at": override.created_at.isoformat(),
         },
     }
+
+
+@router.get("/students/{student_id}", response_model=StudentDetailOut)
+def student_detail(
+    student_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Full picture for one cohort student: profile, assessment, recommendations
+    with reasons, recorded overrides and room status. Only assigned students are
+    visible (PHASE_8 DO NOT: no leaks to non-assigned counsellors)."""
+    _require_counsellor_or_admin(current_user)
+    if current_user.role != "admin":
+        assigned = db.scalars(
+            select(CounsellorAssignment).where(
+                CounsellorAssignment.counsellor_id == current_user.id,
+                CounsellorAssignment.student_id == student_id,
+            )
+        ).first()
+        if not assigned:
+            raise HTTPException(status_code=403, detail="Student not in your cohort")
+
+    student = db.get(Student, student_id)
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+
+    assessment = db.scalars(
+        select(Assessment)
+        .where(Assessment.student_id == student_id)
+        .order_by(Assessment.id.desc())
+    ).first()
+    occ_name = dict(db.execute(select(Occupation.id, Occupation.name_en)).all())
+    occ_demo = dict(db.execute(select(Occupation.id, Occupation.is_demo)).all())
+    recs = [
+        RecommendationRow(
+            occupation_id=r.occupation_id,
+            occupation_name=occ_name.get(r.occupation_id, str(r.occupation_id)),
+            rank=r.rank,
+            score=r.score,
+            reasons=r.reasons_json or [],
+            is_demo=bool(occ_demo.get(r.occupation_id, True)),
+        )
+        for r in db.scalars(
+            select(Recommendation)
+            .where(Recommendation.student_id == student_id)
+            .order_by(Recommendation.id, Recommendation.rank)
+        ).all()
+        if r.rank <= 3  # latest run only
+    ]
+    overrides = [
+        {
+            "occupation_id": o.occupation_id,
+            "occupation_name": occ_name.get(o.occupation_id, str(o.occupation_id)),
+            "note": o.note,
+            "counsellor_id": o.counsellor_id,
+            "created_at": o.created_at.isoformat() if o.created_at else None,
+        }
+        for o in db.scalars(
+            select(CounsellorOverride)
+            .where(CounsellorOverride.student_id == student_id)
+            .order_by(CounsellorOverride.id.desc())
+        ).all()
+    ]
+
+    room = db.scalars(
+        select(Room).where(Room.student_id == student_id).order_by(Room.id.desc())
+    ).first()
+    room_out: RoomStatusOut | None = None
+    if room:
+        votes = db.scalars(select(Vote).where(Vote.room_id == room.id)).all()
+        objections = db.scalars(select(Objection).where(Objection.room_id == room.id)).all()
+        members = db.scalars(select(RoomMember).where(RoomMember.room_id == room.id)).all()
+        room_out = RoomStatusOut(
+            code=room.code,
+            members=len(members),
+            votes=len(votes),
+            objections=len(objections),
+            consensus_reached=any(m.role == "counsellor" for m in members)
+            or len(votes) >= 2,
+        )
+
+    return StudentDetailOut(
+        student_id=student.id,
+        district=student.district,
+        state=student.state,
+        edu_level=student.edu_level,
+        language=student.language,
+        budget_band=student.budget_band,
+        assessment=(
+            {
+                "status": assessment.status,
+                "items_answered": assessment.items_answered,
+                "confidence": assessment.confidence,
+                "riasec": {
+                    "R": assessment.riasec_r,
+                    "I": assessment.riasec_i,
+                    "A": assessment.riasec_a,
+                    "S": assessment.riasec_s,
+                    "E": assessment.riasec_e,
+                    "C": assessment.riasec_c,
+                },
+            }
+            if assessment
+            else None
+        ),
+        recommendations=recs,
+        overrides=overrides,
+        room=room_out,
+    )
+
+
+def _scoped_student_ids(user: User, db: Session) -> list[int]:
+    """Cohort scope for aggregate views (admin: everyone)."""
+    return _assigned_student_ids(user, db)
+
+
+@router.get("/analytics", response_model=AnalyticsOut)
+def analytics(
+    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+):
+    """Cohort-level impact metrics. Groups smaller than 5 students are hidden
+    server-side (small-group suppression)."""
+    _require_counsellor_or_admin(current_user)
+    ids = _scoped_student_ids(current_user, db)
+    return {
+        "riasec": analytics_svc.riasec_distribution(db, ids),
+        "top_trades": analytics_svc.top_trades(db, ids),
+        "dropoff": analytics_svc.assessment_dropoff(db, ids),
+        "rooms": analytics_svc.rooms_stats(db, ids),
+        "avg_items": analytics_svc.avg_items_asked(db, ids),
+        "district_mismatch": analytics_svc.district_mismatch(db, ids),
+    }
+
+
+@router.get("/resistance", response_model=ResistanceOut)
+def resistance_dashboard(
+    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+):
+    """Where and why family resistance concentrates (topic / district / trade),
+    built from the Phase 7 objection tags."""
+    _require_counsellor_or_admin(current_user)
+    ids = _scoped_student_ids(current_user, db)
+    return analytics_svc.resistance(db, ids)
+
+
+@router.get("/audit", response_model=list[AuditEntryOut])
+def audit_log(
+    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+):
+    """Override + data-deletion trail (admin: all; counsellor: own cohort)."""
+    _require_counsellor_or_admin(current_user)
+    ids = None if current_user.role == "admin" else _scoped_student_ids(current_user, db)
+    return analytics_svc.list_audit(db, ids)

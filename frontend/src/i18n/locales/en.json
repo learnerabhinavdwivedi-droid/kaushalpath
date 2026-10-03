@@ -164,5 +164,107 @@
     "print": "Download PDF (print)",
     "whatsapp": "Share on WhatsApp",
     "summary": "KaushalPath family plan — suggested choice: {{choice}}."
+  },
+  "guard": {
+    "denied_title": "Access denied",
+    "denied_body": "You do not have permission to view this page.",
+    "back_home": "Back to home"
+  },
+  "footer": {
+    "model_version": "Model version"
+  },
+  "feedback": {
+    "question": "Was this recommendation useful?",
+    "helpful": "Helpful",
+    "chosen": "We chose this",
+    "concern": "Concern",
+    "thanks": "Thanks for the feedback!",
+    "error": "Could not save feedback.",
+    "topic_none": "None",
+    "topic_income": "Income",
+    "topic_security": "Job security",
+    "topic_social": "Social status",
+    "topic_safety": "Safety"
+  },
+  "override": {
+    "title": "Suggest an override",
+    "hint": "Overrides are recorded in the audit trail. Choose the occupation and explain why.",
+    "occupation": "Occupation",
+    "pick_occupation": "Pick an occupation",
+    "reason": "Reason",
+    "reason_placeholder": "Why is this a better fit for the student?",
+    "reason_required": "A reason is required.",
+    "submit": "Record override"
+  },
+  "cohort": {
+    "title": "My cohort",
+    "filter_district": "District",
+    "filter_edu": "Education level",
+    "filter_language": "Language",
+    "filter_status": "Status",
+    "status_assessed": "Assessed",
+    "status_pending": "Pending",
+    "nav_analytics": "Analytics",
+    "nav_resistance": "Resistance",
+    "nav_audit": "Audit trail",
+    "empty": "No students match these filters.",
+    "has_room": "Has a room",
+    "escalations": "Open escalations"
+  },
+  "student": {
+    "title": "Student",
+    "override_button": "Override",
+    "profile": "Profile",
+    "budget": "Budget",
+    "assessment": "Assessment",
+    "items": "items",
+    "confidence": "Confidence",
+    "no_assessment": "No assessment completed yet.",
+    "recommendations": "Top recommendations",
+    "no_recs": "No recommendations yet.",
+    "room": "Family room",
+    "room_code": "Code",
+    "members": "members",
+    "votes": "votes",
+    "objections": "objections",
+    "consensus_yes": "consensus reached",
+    "consensus_no": "no consensus yet",
+    "no_room": "No family decision room yet.",
+    "overrides": "Override history",
+    "no_overrides": "No overrides recorded."
+  },
+  "analytics": {
+    "title": "Cohort analytics",
+    "back_cohort": "Back to cohort",
+    "started": "Started",
+    "dropoff": "Drop-off rate",
+    "rooms_consensus": "Rooms / consensus",
+    "avg_items": "Avg items asked",
+    "riasec": "RIASEC distribution",
+    "top_trades": "Top recommended trades",
+    "district_mismatch": "District demand mismatch",
+    "no_data": "Not enough data to show.",
+    "district": "District",
+    "students": "Students",
+    "top_trade": "Top trade",
+    "recs": "Recommendations",
+    "suppressed": "{{n}} group(s) hidden (fewer than 5 students)"
+  },
+  "resistance": {
+    "title": "Family resistance dashboard",
+    "back_cohort": "Back to cohort",
+    "total": "Total objections",
+    "by_topic": "Objections by topic",
+    "concern_by_topic": "Concerns by topic",
+    "by_district": "Objections by district",
+    "by_trade": "Objections by trade"
+  },
+  "audit": {
+    "title": "Audit trail",
+    "back_cohort": "Back to cohort",
+    "empty": "No audit entries yet.",
+    "actor": "Actor",
+    "action_override": "Recommendation override",
+    "action_data_deletion": "Data deletion"
   }
 }
