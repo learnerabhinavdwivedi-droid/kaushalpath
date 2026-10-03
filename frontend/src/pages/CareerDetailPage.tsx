@@ -4,6 +4,7 @@ import { useLocation, useRoute } from 'wouter';
 import { useResultsStore } from '../store/useStore';
 import { ReasonChip } from '../components/ReasonChip';
 import { SourceBadge } from '../components/SourceBadge';
+import { AskBox } from '../components/AskBox';
 import { ArrowLeft, Volume2 } from 'lucide-react';
 
 export const CareerDetailPage: React.FC = () => {
@@ -15,7 +16,7 @@ export const CareerDetailPage: React.FC = () => {
   if (!match) return null;
 
   const careerId = params?.id;
-  const career = recommendations.find((r: any) => r.occupation.id === careerId);
+  const career = recommendations.find((r: any) => String(r.occupation.id) === String(careerId));
 
   if (!career) {
     return (
@@ -48,7 +49,7 @@ export const CareerDetailPage: React.FC = () => {
         <div className="flex justify-between items-start">
           <h2 className="text-3xl font-bold text-accent">{career.occupation.title}</h2>
           <div className="flex gap-2">
-            <SourceBadge isDemo={true} />
+            <SourceBadge isDemo={career.is_demo ?? true} />
             {typeof window !== 'undefined' && 'speechSynthesis' in window && (
               <button 
                 onClick={speakText} 
@@ -66,7 +67,11 @@ export const CareerDetailPage: React.FC = () => {
         <div className="bg-gray-50 p-4 rounded-lg flex justify-between">
           <div>
             <p className="text-sm text-gray-500 font-bold uppercase">{t('profile.duration')}</p>
-            <p className="font-semibold text-lg">{t('career.duration', { months: career.occupation.typical_duration_months })}</p>
+            <p className="font-semibold text-lg">
+              {career.occupation.typical_duration_months
+                ? t('career.duration', { months: career.occupation.typical_duration_months })
+                : '—'}
+            </p>
           </div>
           <div>
             <p className="text-sm text-gray-500 font-bold uppercase">{t('career.salary').split('/')[0]}</p>
@@ -82,6 +87,10 @@ export const CareerDetailPage: React.FC = () => {
             ))}
           </div>
         </div>
+      </div>
+
+      <div className="mt-6">
+        <AskBox careerTitle={career.occupation.title} />
       </div>
     </div>
   );

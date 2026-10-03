@@ -24,6 +24,16 @@ class VoteCreate(BaseModel):
 class CompareRequest(BaseModel):
     occupation_ids: list[int]
 
+class EscalationCreate(BaseModel):
+    reason: str = Field(min_length=1)
+    occupation_id: int | None = None
+
+class EscalationResponse(BaseModel):
+    id: int
+    room_code: str
+    status: str
+    reason: str
+
 class ConsensusResponse(BaseModel):
     ranking: list[dict]
     agreement_index: float

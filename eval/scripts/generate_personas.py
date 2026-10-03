@@ -15,11 +15,11 @@ RIASEC_LETTERS = ["R", "I", "A", "S", "E", "C"]
 
 def generate_riasec_profile():
     # Randomize RIASEC scores
-    scores = {l: random.uniform(1.0, 10.0) for l in RIASEC_LETTERS}
+    scores = {letter: random.uniform(1.0, 10.0) for letter in RIASEC_LETTERS}
     # Enhance top 2-3 to create clear archetypes
     top = random.sample(RIASEC_LETTERS, k=3)
-    for l in top:
-        scores[l] = random.uniform(7.0, 10.0)
+    for letter in top:
+        scores[letter] = random.uniform(7.0, 10.0)
     return scores
 
 def generate_aptitude_profile():
@@ -41,7 +41,9 @@ def main():
             "budget_band": random.choice(BUDGET_BANDS),
             "relocate_ok": random.choices([True, False], weights=[0.3, 0.7])[0],
             "language": random.choice(LANGUAGES),
-            "max_duration_months": random.choices([6, 12, 24, None], weights=[0.2, 0.4, 0.3, 0.1])[0],
+            "max_duration_months": random.choices(
+                [6, 12, 24, None], weights=[0.2, 0.4, 0.3, 0.1]
+            )[0],
             "riasec": generate_riasec_profile(),
             "aptitude": generate_aptitude_profile()
         }

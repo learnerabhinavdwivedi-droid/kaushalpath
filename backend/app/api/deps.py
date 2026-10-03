@@ -29,7 +29,7 @@ def get_current_user(
             raise credentials_exception
         user_id = int(user_id_str)
     except (JWTError, ValueError):
-        raise credentials_exception
+        raise credentials_exception from None
     
     user = db.get(User, user_id)
     if user is None:

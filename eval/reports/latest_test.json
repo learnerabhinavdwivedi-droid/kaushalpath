@@ -1,14 +1,14 @@
 {
-  "split": "val",
-  "n_personas_scored": 77,
-  "n_personas_with_strong_match": 62,
-  "coverage_pct": 0.8052,
+  "split": "test",
+  "n_personas_scored": 20,
+  "n_personas_with_strong_match": 16,
+  "coverage_pct": 0.8,
   "G1_violations_pct": 0.0,
   "G2_top3_hit_rate": 1.0,
-  "G3_ndcg_5": 0.9835,
+  "G3_ndcg_5": 0.9297,
   "G5_explanation_coverage": 1.0,
   "G6_slice_gap": 0.0,
-  "G7_latency_p95_ms": 60.64,
+  "G7_latency_p95_ms": 6.19,
   "slice_hit_rates": {
     "urban": 1.0,
     "rural": 1.0

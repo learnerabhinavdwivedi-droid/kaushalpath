@@ -1,10 +1,26 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
+
+// jsdom / SSR may expose no global localStorage; keep persistence a safe no-op
+// there instead of throwing on the first setState.
+const safeStorage = {
+  getItem: (name: string) =>
+    typeof localStorage !== 'undefined' ? localStorage.getItem(name) : null,
+  setItem: (name: string, value: string) => {
+    if (typeof localStorage !== 'undefined') localStorage.setItem(name, value);
+  },
+  removeItem: (name: string) => {
+    if (typeof localStorage !== 'undefined') localStorage.removeItem(name);
+  },
+};
+const storage = createJSONStorage(() => safeStorage);
 
 interface AuthState {
   token: string | null;
   role: string | null;
-  setAuth: (token: string, role: string) => void;
+  studentId: number | null;
+  setAuth: (token: string, role: string, studentId: number | null) => void;
+  setStudentId: (studentId: number | null) => void;
   logout: () => void;
 }
 
@@ -13,24 +29,28 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       token: null,
       role: null,
-      setAuth: (token, role) => {
-        localStorage.setItem('token', token);
-        set({ token, role });
+      studentId: null,
+      setAuth: (token, role, studentId) => {
+        if (typeof localStorage !== 'undefined') localStorage.setItem('token', token);
+        set({ token, role, studentId });
       },
+      setStudentId: (studentId) => set({ studentId }),
       logout: () => {
-        localStorage.removeItem('token');
-        set({ token: null, role: null });
+        if (typeof localStorage !== 'undefined') localStorage.removeItem('token');
+        set({ token: null, role: null, studentId: null });
       },
     }),
-    { name: 'auth-storage' }
+    { name: 'auth-storage', storage }
   )
 );
 
 interface ProfileState {
   edu_level: string;
   district: string;
+  state: string;
   budget: number;
   duration: number;
+  income_band: string;
   setProfile: (profile: Partial<ProfileState>) => void;
 }
 
@@ -39,17 +59,21 @@ export const useProfileStore = create<ProfileState>()(
     (set) => ({
       edu_level: '',
       district: '',
+      state: 'Maharashtra',
       budget: 0,
       duration: 0,
+      income_band: '',
       setProfile: (profile) => set((state) => ({ ...state, ...profile })),
     }),
-    { name: 'profile-storage' }
+    { name: 'profile-storage', storage }
   )
 );
 
 interface AssessmentState {
+  assessmentId: number | null;
   answers: Record<string, string>;
   currentQuestionIndex: number;
+  setAssessmentId: (id: number | null) => void;
   setAnswer: (questionId: string, answer: string) => void;
   nextQuestion: () => void;
   prevQuestion: () => void;
@@ -59,16 +83,18 @@ interface AssessmentState {
 export const useAssessmentStore = create<AssessmentState>()(
   persist(
     (set) => ({
+      assessmentId: null,
       answers: {},
       currentQuestionIndex: 0,
+      setAssessmentId: (assessmentId) => set({ assessmentId }),
       setAnswer: (questionId, answer) => set((state) => ({
         answers: { ...state.answers, [questionId]: answer }
       })),
       nextQuestion: () => set((state) => ({ currentQuestionIndex: state.currentQuestionIndex + 1 })),
       prevQuestion: () => set((state) => ({ currentQuestionIndex: Math.max(0, state.currentQuestionIndex - 1) })),
-      resetAssessment: () => set({ answers: {}, currentQuestionIndex: 0 }),
+      resetAssessment: () => set({ assessmentId: null, answers: {}, currentQuestionIndex: 0 }),
     }),
-    { name: 'assessment-storage' }
+    { name: 'assessment-storage', storage }
   )
 );
 
@@ -83,6 +109,6 @@ export const useResultsStore = create<ResultsState>()(
       recommendations: [],
       setRecommendations: (recommendations) => set({ recommendations }),
     }),
-    { name: 'results-storage' }
+    { name: 'results-storage', storage }
   )
 );
