@@ -28,7 +28,10 @@ check: lint test
 
 # Eval wired in PHASE_4. Seed (PHASE_1 data layer) runs the loaders.
 eval:
-	@echo "Phase 4 provides eval/scripts/run_eval.py. Not wired at Phase 0."
+	$(ACT) && python eval/scripts/run_eval.py val
+
+eval-final:
+	$(ACT) && python eval/scripts/run_eval.py test
 
 # Build schema (if needed) + load demo/merged reference data. Idempotent.
 seed:
