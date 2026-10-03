@@ -17,6 +17,12 @@ class Recommendation(Base, TimestampMixin):
     occupation_id: Mapped[int] = mapped_column(
         ForeignKey("occupations.id", ondelete="CASCADE"), index=True, nullable=False
     )
+    # The specific course that led to this occupation (a course/occupation pair
+    # is what the pipeline ranks). Nullable so historical occupation-only rows
+    # remain valid.
+    course_id: Mapped[int | None] = mapped_column(
+        ForeignKey("courses.id", ondelete="SET NULL"), index=True, nullable=True
+    )
     rank: Mapped[int] = mapped_column(Integer, nullable=False)
     score: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     # >=2 reason codes + data source per RULES (no black box).

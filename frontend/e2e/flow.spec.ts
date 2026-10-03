@@ -1,41 +1,60 @@
 import { test, expect } from '@playwright/test';
 
-test('register -> assessment -> results flow', async ({ page }) => {
-  // Mock the auth endpoint
+test('register -> profile -> assessment flow', async ({ page }) => {
+  // Auth + identity.
   await page.route('**/auth/register', route => route.fulfill({
     status: 200,
     contentType: 'application/json',
-    body: JSON.stringify({ access_token: 'fake-jwt-token' })
+    body: JSON.stringify({ access_token: 'fake-jwt-token', token_type: 'bearer' })
   }));
-  // Mock assessment completion
-  let questionCount = 0;
-  await page.route('**/assessment/next-question', async route => {
-    questionCount++;
-    if (questionCount > 1) {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({ is_complete: true })
-      });
-    } else {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          is_complete: false,
-          question: { id: 'q1', text: 'Do you like fixing things?', options: [{ id: 'o1', label: 'Option 1' }] }
-        })
-      });
-    }
-  });
-  // Mock recommend endpoint
+  await page.route('**/auth/me', route => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({ user_id: 1, email: 't@example.com', role: 'student', lang: 'en', student_id: 1 })
+  }));
+
+  // Constraint intake.
+  await page.route('**/assessment/student**', route => route.fulfill({
+    status: 201,
+    contentType: 'application/json',
+    body: JSON.stringify({})
+  }));
+
+  // Adaptive session: serve one interest item, then finish on answer.
+  await page.route('**/assessment/session**', route => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({
+      assessment_id: 1,
+      status: 'in_progress',
+      done: false,
+      items_answered: 0,
+      confidence: 0.0,
+      item: { id: 'q1', section: 'interest', text: 'Do you like fixing things?', scale: [1, 2, 3, 4, 5] }
+    })
+  }));
+  await page.route('**/assessment/answer', route => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({
+      assessment_id: 1, status: 'complete', done: true, items_answered: 1, confidence: 0.8, item: null
+    })
+  }));
+
+  // Recommendations (backend shape; the client maps it into cards).
   await page.route('**/recommend', route => route.fulfill({
     status: 200,
     contentType: 'application/json',
     body: JSON.stringify({
       recommendations: [{
-        occupation: { id: 'occ1', title: 'Electrician', description: 'Fix wires', typical_duration_months: 6 },
-        reasons: [{ description: 'Likes fixing', type: 'positive' }]
+        rank: 1,
+        occupation_id: 42,
+        occupation_name: 'Electrician',
+        course_id: 7,
+        course_name: 'ITI Electrician',
+        score: 0.82,
+        reasons: [{ code: 'INTEREST_MATCH', description: 'Matches your hands-on interest', source: 'Assessment' }],
+        is_demo: true
       }]
     })
   }));
@@ -44,23 +63,22 @@ test('register -> assessment -> results flow', async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => window.localStorage.clear());
   await page.goto('/');
-  await expect(page.locator('text=Welcome to KaushalPath')).toBeVisible();
-  await page.click('text=Get Started');
+  await expect(page.getByText('Welcome to KaushalPath')).toBeVisible();
+  await page.getByText('Get Started').click();
 
   // 2. Register
   await expect(page.getByRole('heading', { name: 'Register' })).toBeVisible();
-  const email = `test_${Date.now()}@example.com`;
-  await page.getByLabel('Email').fill(email);
+  await page.getByLabel('Email').fill(`test_${Date.now()}@example.com`);
   await page.getByLabel('Password').fill('password123');
-  // Check consent
   await page.check('input[type="checkbox"]');
   await page.getByRole('button', { name: 'Register' }).click();
 
-  // Wait for Profile
+  // 3. Profile
   await expect(page.getByRole('heading', { name: 'Your Profile' })).toBeVisible({ timeout: 10000 });
   await page.getByLabel('District').fill('Pune');
+  await page.getByLabel('State').fill('Maharashtra');
   await page.getByRole('button', { name: 'Next' }).click();
 
-  // 3. Assessment
-  await expect(page.getByText('Do you like fixing things?')).toBeVisible();
+  // 4. Assessment serves the first item.
+  await expect(page.getByText('Do you like fixing things?')).toBeVisible({ timeout: 10000 });
 });

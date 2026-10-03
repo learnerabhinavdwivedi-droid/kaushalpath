@@ -19,7 +19,14 @@ jobs:
       - run: pip install -r requirements.txt
       - run: ruff check .
       - run: pytest
-      - run: cd .. && python eval/scripts/run_eval.py val
+      # Eval needs the seeded catalogue + trained ranker; run from repo root so
+      # eval/scripts + backend are both importable. run_eval gates G1/G2/G3/G5/G6/G7
+      # and exits non-zero on any miss, failing the job.
+      - run: |
+          cd ..
+          backend/.venv/bin/python scripts/seed_all.py || python scripts/seed_all.py
+          python -m app.ml.ranking.train || (cd backend && python -m app.ml.ranking.train)
+          python eval/scripts/run_eval.py val
 
   frontend:
     runs-on: ubuntu-latest

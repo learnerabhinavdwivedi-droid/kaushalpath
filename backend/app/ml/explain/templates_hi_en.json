@@ -1,0 +1,34 @@
+{
+  "INTEREST_MATCH": {
+    "en": "Matches your top interests ({letters})",
+    "hi": "आपकी मुख्य रुचियों से मेल खाता है ({letters})"
+  },
+  "APTITUDE_STRONG": {
+    "en": "Your aptitude is strong for this field ({evidence}% match)",
+    "hi": "इस क्षेत्र के लिए आपकी योग्यता प्रबल है ({evidence}% मेल)"
+  },
+  "WITHIN_BUDGET": {
+    "en": "Fee (INR {fee}) is within your budget",
+    "hi": "फ़ीस (₹{fee}) आपके बजट के भीतर है"
+  },
+  "NEARBY_CENTRE": {
+    "en": "Available at a centre about {distance_km} km away",
+    "hi": "लगभग {distance_km} किमी दूर केंद्र पर उपलब्ध"
+  },
+  "HIGH_LOCAL_DEMAND": {
+    "en": "High local job demand here (index {demand})",
+    "hi": "यहां स्थानीय रोज़गार की मांग अधिक है (सूचकांक {demand})"
+  },
+  "GOOD_EARNINGS": {
+    "en": "Earnings rank in the top {salary_percentile}% for this field",
+    "hi": "इस क्षेत्र में कमाई शीर्ष {salary_percentile}% में है"
+  },
+  "NSQF_ALIGNED": {
+    "en": "NSQF level fits your current qualification",
+    "hi": "NSQF स्तर आपकी वर्तमान योग्यता के अनुरूप है"
+  },
+  "CAREER_MATCH": {
+    "en": "Overall strong fit for your profile",
+    "hi": "आपकी प्रोफ़ाइल के लिए कुल मिलाकर मज़बूत उपयुति"
+  }
+}

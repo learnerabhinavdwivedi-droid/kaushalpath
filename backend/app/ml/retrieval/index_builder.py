@@ -1,53 +1,67 @@
-"""Phase 3: FAISS Index builder for occupations."""
+"""Phase 3: FAISS Index builder for occupations.
+
+Text indexed = name + description + skills (the spec's field set). Writes go to
+the absolute `app/ml/paths.PROCESSED_DIR`, so the seed process and the API agree
+regardless of the working directory. `faiss`/numpy are imported lazily.
+"""
 import json
 import logging
 from pathlib import Path
 
-import faiss
-import numpy as np
-
-from app.ml.retrieval.embedder import get_embedder
+from app.ml.paths import OCCUPATION_INDEX_PATH, OCCUPATION_MAPPING_PATH
+from app.ml.retrieval.embedder import EmbedderUnavailable, get_embedder
 
 logger = logging.getLogger(__name__)
 
-INDEX_PATH = Path("data/processed/occupation_index.faiss")
-MAPPING_PATH = Path("data/processed/occupation_mapping.json")
 
-def build_index(occupations: list) -> None:
-    """Builds a FAISS index over occupation text and saves to disk."""
+def _occupation_text(occ) -> str:
+    parts = [occ.name_en or ""]
+    if getattr(occ, "description", None):
+        parts.append(occ.description)
+    skills = getattr(occ, "skills", None)
+    if skills:
+        parts.append(skills if isinstance(skills, str) else " ".join(map(str, skills)))
+    return ". ".join(p for p in parts if p).strip()
+
+
+def build_index(occupations: list) -> bool:
+    """Build + persist a FAISS index over occupation text.
+
+    Returns True on success. Returns False (and logs why) when the optional
+    native stack is unavailable so the seed step degrades instead of crashing.
+    """
     if not occupations:
         logger.warning("No occupations provided for index building.")
-        return
+        return False
 
     embedder = get_embedder()
-    
-    texts = []
-    mapping = {}
-    for i, occ in enumerate(occupations):
-        # Combine name and description for semantic search
-        name = occ.name_en or ""
-        desc = occ.description or ""
-        text = f"{name}. {desc}".strip()
-        texts.append(text)
-        mapping[i] = occ.id
+    occ_texts = [_occupation_text(o) for o in occupations]
+    try:
+        embeddings = embedder.encode(occ_texts, normalize_embeddings=True)
+    except EmbedderUnavailable as exc:
+        logger.warning("Embedder unavailable; skipping index build: %s", exc)
+        return False
 
-    logger.info(f"Encoding {len(texts)} occupations...")
-    embeddings = embedder.encode(texts, normalize_embeddings=True)
+    try:
+        import faiss
+        import numpy as np
+    except Exception as exc:  # native lib unavailable
+        logger.warning("faiss not importable; skipping index build: %s", exc)
+        return False
+
     embeddings_np = np.array(embeddings).astype("float32")
-
     dimension = embeddings_np.shape[1]
-    index = faiss.IndexFlatIP(dimension)  # Inner product since embeddings are normalized (Cosine similarity)
-    
-    logger.info("Adding vectors to FAISS index...")
+    index = faiss.IndexFlatIP(dimension)  # inner product == cosine for normalised vectors
     index.add(embeddings_np)
 
-    # Ensure dir exists
-    INDEX_PATH.parent.mkdir(parents=True, exist_ok=True)
+    Path(OCCUPATION_INDEX_PATH).parent.mkdir(parents=True, exist_ok=True)
+    faiss.write_index(index, str(OCCUPATION_INDEX_PATH))
 
-    logger.info(f"Writing index to {INDEX_PATH}")
-    faiss.write_index(index, str(INDEX_PATH))
-
-    with open(MAPPING_PATH, "w") as f:
+    mapping = {i: occ.id for i, occ in enumerate(occupations)}
+    with open(OCCUPATION_MAPPING_PATH, "w", encoding="utf-8") as f:
         json.dump(mapping, f)
-        
-    logger.info("Index building complete.")
+
+    logger.info(
+        "Wrote FAISS index for %d occupations to %s", len(occupations), OCCUPATION_INDEX_PATH
+    )
+    return True

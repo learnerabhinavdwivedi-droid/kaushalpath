@@ -7,9 +7,10 @@ interface QuestionCardProps {
   options: { id: string; label: string; icon?: React.ReactNode }[];
   onSelect: (optionId: string) => void;
   selectedId?: string;
+  locked?: boolean;
 }
 
-export const QuestionCard: React.FC<QuestionCardProps> = ({ questionText, options, onSelect, selectedId }) => {
+export const QuestionCard: React.FC<QuestionCardProps> = ({ questionText, options, onSelect, selectedId, locked }) => {
   const { i18n } = useTranslation();
 
   const speakText = () => {
@@ -40,11 +41,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ questionText, option
           <button
             key={opt.id}
             onClick={() => onSelect(opt.id)}
+            disabled={locked}
             className={`w-full p-4 rounded-xl text-left border-2 flex items-center gap-4 transition-colors ${
               selectedId === opt.id 
                 ? 'border-accent bg-accent-light' 
                 : 'border-gray-200 hover:border-accent-light hover:bg-gray-50'
-            }`}
+            } ${locked ? 'opacity-60 cursor-not-allowed' : ''}`}
           >
             {opt.icon && <span className="text-3xl">{opt.icon}</span>}
             <span className="text-xl font-medium">{opt.label}</span>

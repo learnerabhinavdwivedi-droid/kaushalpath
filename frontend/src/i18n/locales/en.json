@@ -61,5 +61,16 @@
     "language": "Language",
     "delete_account": "Delete My Data",
     "delete_confirm": "Are you sure you want to delete all your data? This cannot be undone."
+  },
+  "ask": {
+    "title": "Have a concern? Tap a question",
+    "q_cost": "It looks expensive",
+    "a_cost": "For {{career}}, the fee depends on the exact course. We only rank options that fit the budget you set — you can change that in your profile.",
+    "q_far": "The centre is too far",
+    "a_far": "We rank {{career}} higher when a centre is close to your district. Allowing relocation in your profile widens the options.",
+    "q_jobs": "Will I get a job?",
+    "a_jobs": "{{career}} is shown partly on local demand and placement signals from market data. These figures are demo data until real sources are loaded.",
+    "q_stable": "Is this career stable?",
+    "a_stable": "Stability for {{career}} is judged on demand index and NSQF alignment. You can ask a counsellor to review it for a human opinion."
   }
 }

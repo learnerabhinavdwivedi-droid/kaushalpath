@@ -24,6 +24,7 @@ select = ["E", "F", "I", "UP", "B"]
 "app/db/migrations/versions/*" = ["E501", "E402", "I001", "F401", "B", "UP"]
 # FastAPI idiom: Depends()/Query()/body defaults live in the signature.
 "app/api/routes/*" = ["B008"]
+"app/api/deps.py" = ["B008"]
 
 [tool.mypy]
 python_version = "3.12"

@@ -12,6 +12,7 @@ from __future__ import annotations
 import _common  # noqa: F401  # bootstraps sys.path so app.* + loader imports resolve
 import app.models  # noqa: F401  # register all tables on Base.metadata
 import build_occupation_master
+import build_retrieval_index
 import load_centres
 import load_courses
 import load_esco
@@ -34,6 +35,9 @@ def main() -> None:
     load_courses.main()
     load_centres.main()
     load_market.main()
+
+    # Retrieval artefact for Phase 3 (no-ops if the embedding stack is absent).
+    build_retrieval_index.main()
 
     print("seed_all: done")
 

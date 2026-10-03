@@ -32,12 +32,17 @@ def test_hard_constraints_filter():
 
 def test_ranker_fallback():
     ranker = Ranker()
-    # It should load the transparent scorer if no LGBM model is present
-    features1 = {"riasec_cosine": 0.9, "aptitude_fit": 0.8, "fee_ratio": 0.5, "retrieval_score": 0.9}
-    features2 = {"riasec_cosine": 0.4, "aptitude_fit": 0.4, "fee_ratio": 1.0, "retrieval_score": 0.4}
+    # Exercise the transparent weighted scorer directly so the assertion holds
+    # regardless of whether a trained LightGBM model file happens to be present.
+    features1 = {
+        "riasec_cosine": 0.9, "aptitude_fit": 0.8, "fee_ratio": 0.5, "retrieval_score": 0.9
+    }
+    features2 = {
+        "riasec_cosine": 0.4, "aptitude_fit": 0.4, "fee_ratio": 1.0, "retrieval_score": 0.4
+    }
 
-    score1 = ranker.score(features1)
-    score2 = ranker.score(features2)
+    score1 = ranker._fallback_score(features1)
+    score2 = ranker._fallback_score(features2)
 
     assert score1 > score2
 

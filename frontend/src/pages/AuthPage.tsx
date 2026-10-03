@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { apiRequest } from '../api/client';
+import { apiRequest, getMe } from '../api/client';
 import { useAuthStore } from '../store/useStore';
 import { useLocation } from 'wouter';
 
@@ -21,13 +21,14 @@ export const AuthPage: React.FC<{ mode: 'login' | 'register' }> = ({ mode }) => 
     setError('');
     setLoading(true);
     try {
+      let token: string;
       if (mode === 'register') {
         if (!consent) throw new Error(t('consent.description'));
         const res: any = await apiRequest('/auth/register', {
           method: 'POST',
           body: JSON.stringify({ email, password, role, give_consent: consent })
         });
-        setAuth(res.access_token, role);
+        token = res.access_token;
       } else {
         const formData = new URLSearchParams();
         formData.append('username', email);
@@ -37,10 +38,14 @@ export const AuthPage: React.FC<{ mode: 'login' | 'register' }> = ({ mode }) => 
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: formData.toString()
         });
-        // We might need to fetch the user profile to get the role, assuming student for now
-        setAuth(res.access_token, 'student');
+        token = res.access_token;
       }
-      setLocation(mode === 'register' ? '/profile' : '/assessment');
+      // Resolve identity (role + student_id) from the backend before routing.
+      localStorage.setItem('token', token);
+      const me = await getMe();
+      setAuth(token, me.role, me.student_id);
+      const isStudent = me.role === 'student';
+      setLocation(mode === 'register' && isStudent ? '/profile' : isStudent ? '/assessment' : '/results');
     } catch (err: any) {
       setError(err.message || t('common.error'));
     } finally {
