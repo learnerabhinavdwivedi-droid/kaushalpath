@@ -10,8 +10,10 @@ import uuid
 
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+from sqlalchemy import text
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
 from app.api.routes import assessment as assessment_routes
@@ -22,8 +24,11 @@ from app.api.routes import recommend as recommend_routes
 from app.api.routes import roadmap as roadmap_routes
 from app.api.routes import rooms as rooms_routes
 from app.core.config import get_settings
+from app.core.errors import register_error_handlers
 from app.core.logging import configure_logging, get_logger, request_id_var
+from app.core.middleware import SecurityHeadersMiddleware
 from app.core.rate_limit import limiter
+from app.db.session import engine
 
 settings = get_settings()
 configure_logging(settings.log_level)
@@ -31,24 +36,31 @@ logger = get_logger("kaushalpath")
 
 app = FastAPI(
     title=settings.app_name,
-    version="0.1.0-phase5",
+    version="1.0.0",
     description=(
         "AI career counselling + family decision support "
         "for vocational education (SIH 2026, PSID 26241)."
     ),
+    # Swagger/OpenAPI is a dev tool; hidden in prod unless explicitly re-enabled.
+    docs_url="/docs" if settings.docs_enabled else None,
+    redoc_url="/redoc" if settings.docs_enabled else None,
+    openapi_url="/openapi.json" if settings.docs_enabled else None,
 )
 
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+register_error_handlers(app)
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origin_list,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    # Explicit verbs/headers rather than '*' — tighter when credentials are on.
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Request-ID"],
     expose_headers=["X-Request-ID"],
 )
+app.add_middleware(SecurityHeadersMiddleware)
 
 
 class RequestIdMiddleware(BaseHTTPMiddleware):
@@ -88,6 +100,22 @@ app.include_router(feedback_routes.router)
 async def health() -> dict[str, str]:
     """Liveness probe. Acceptance gate: returns {"status":"ok"}."""
     return {"status": "ok", "env": settings.app_env}
+
+
+@app.get("/health/ready", tags=["health"])
+async def readiness() -> JSONResponse:
+    """Readiness probe: confirms the DB is reachable before serving traffic.
+
+    Returns 503 (not a bare exception) when the dependency is down so an
+    orchestrator can hold the pod out of rotation.
+    """
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+    except Exception:  # pragma: no cover - depends on infra failure
+        logger.exception("Readiness check failed: DB unreachable")
+        return JSONResponse(status_code=503, content={"status": "unavailable", "db": "down"})
+    return JSONResponse(content={"status": "ready", "db": "up"})
 
 
 @app.get("/meta/model-version", tags=["health"])

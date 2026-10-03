@@ -8,7 +8,6 @@ Run: python scripts/build_retrieval_index.py
 from __future__ import annotations
 
 import _common  # noqa: F401  # bootstraps sys.path so app.* resolves
-
 from app.db import SessionLocal
 from app.ml.retrieval.index_builder import build_index
 from app.services import data_repo

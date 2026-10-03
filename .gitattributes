@@ -1,0 +1,4 @@
+# Shell scripts must stay LF everywhere — they run inside Linux containers
+# (uvicorn entrypoint) where a CRLF shebang breaks the process. Windows
+# `core.autocrlf` checkouts would otherwise convert them.
+*.sh text eol=lf

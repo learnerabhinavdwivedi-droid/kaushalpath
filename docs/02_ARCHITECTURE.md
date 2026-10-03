@@ -75,7 +75,7 @@ GET  /roadmap/{occupation_id}?district=
 GET  /counsellor/cohort | POST /counsellor/override
 GET  /counsellor/students/{id} | GET /counsellor/analytics | GET /counsellor/resistance | GET /counsellor/audit
 POST /feedback
-GET  /health | GET /meta/model-version
+GET  /health | GET /health/ready | GET /meta/model-version
 
 ## Phase 8 — Counsellor dashboard + feedback loop
 Counsellor/admin-only surfaces (backend re-checks role; the React `RequireRole` guard only avoids
@@ -98,3 +98,32 @@ rendering an authorised-looking screen for the wrong role).
   JSONL retraining export (`data/processed/retrain_feedback.jsonl`). The export never writes to the
   eval/gold set; `recommend` now returns the stored recommendation `id` so the UI can rate it, and a
   `ModelVersionFooter` surfaces which model produced the list.
+
+## Phase 9 — Hardening, privacy, deployment
+
+One responsibility per module; every control below is exercised by `test_phase9.py`.
+
+- **Config guards** (`core/config.py::_prod_hardening`) — Pydantic `model_validator`
+  that *refuses to boot* in `APP_ENV=prod` with the dev secret key, wildcard CORS, or
+  debug on; `is_production` / `docs_enabled` derived flags (Swagger off in prod).
+- **Security headers** (`core/middleware.py`) — `SecurityHeadersMiddleware` sets
+  nosniff / X-Frame-Options DENY / Referrer-Policy / Permissions-Policy / no-store on
+  every API response; Nginx adds CSP + HSTS for the served HTML (`infra/nginx.conf`).
+- **Error envelope** (`core/errors.py`) — a `RequestValidationError` handler (422,
+  field names + constraint types only, never raw values) and a catch-all `Exception`
+  handler that logs the trace with the request id and returns a generic 500. No route
+  leaks internal exception strings (the old `recommend.py` catch-all was removed).
+- **Reliability** — `/health` (liveness) + `/health/ready` (readiness: `SELECT 1`,
+  503 on DB failure so an orchestrator holds traffic out of rotation); structured
+  logs with a per-request id; `scripts/backup_db.py` (consistent SQLite online-backup
+  snapshots → `backups/`, git-ignored); offline-safe demo mode (deterministic scorer
+  + no-op loaders) so `make demo` needs no external API/model.
+- **Deployment** (`docker-compose.prod.yml` + `backend/entrypoint.prod.sh`) — baked,
+  immutable images (no source mounts, no `--reload`); backend runs migrations on boot
+  as a non-root user, with a readiness healthcheck, `no-new-privileges`, `init`, and
+  *only Nginx:80 published*; the SPA is built with `VITE_API_BASE=/api` and proxied
+  same-origin (no browser CORS); a `demo`-profile one-shot seeds the shared volume.
+  `.dockerignore` keeps host `.venv`/`node_modules`/DBs out of the images.
+- **Cross-cutting docs** — `docs/SECURITY.md` (threat model + real pip-audit / npm
+  audit output), `docs/PRIVACY.md` (DPDP-aligned), `docs/EVAL_REPORT.md`,
+  `docs/DEMO_SCRIPT.md`, `docs/QA_ANSWERS.md`; alignment scored by `scripts/ps_audit.py`.

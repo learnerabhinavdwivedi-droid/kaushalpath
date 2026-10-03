@@ -8,7 +8,7 @@
   "G3_ndcg_5": 0.9297,
   "G5_explanation_coverage": 1.0,
   "G6_slice_gap": 0.0,
-  "G7_latency_p95_ms": 6.19,
+  "G7_latency_p95_ms": 2.94,
   "slice_hit_rates": {
     "urban": 1.0,
     "rural": 1.0

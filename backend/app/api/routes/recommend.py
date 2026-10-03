@@ -14,14 +14,14 @@ class RecommendRequest(BaseModel):
 
 @router.post("")
 def get_recommendations(req: RecommendRequest, db: Session = Depends(get_db)):
-    """Generate recommendations for a given student based on their profile and assessment."""
+    """Generate recommendations for a given student based on their profile and assessment.
+
+    A missing/unassessed student is a domain 404; anything else is an unexpected
+    error and is left to the global handler (which logs it and returns a
+    generic, non-leaking 500).
+    """
     svc = RecommendService(db)
     try:
-        results = svc.get_recommendations(req.student_id, req.top_k)
-        return results
+        return svc.get_recommendations(req.student_id, req.top_k)
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from e
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
-        ) from e
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from None

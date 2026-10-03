@@ -1,6 +1,7 @@
 """Phase 5: Demo Flow. Registers users, creates room, votes, prints consensus."""
-import httpx
 import time
+
+import httpx
 
 BASE_URL = "http://localhost:8000"
 
@@ -58,10 +59,18 @@ def main():
         
     # 5. Vote
     print("5. Casting votes...")
-    client.post(f"/rooms/{room_code}/vote", headers=student_headers, json={"occupation_id": 1, "score": 5})
-    client.post(f"/rooms/{room_code}/vote", headers=student_headers, json={"occupation_id": 2, "score": 3})
-    client.post(f"/rooms/{room_code}/vote", headers=parent_headers, json={"occupation_id": 1, "score": 4})
-    client.post(f"/rooms/{room_code}/vote", headers=parent_headers, json={"occupation_id": 2, "score": 1})
+    votes = [
+        (student_headers, 1, 5),
+        (student_headers, 2, 3),
+        (parent_headers, 1, 4),
+        (parent_headers, 2, 1),
+    ]
+    for headers, occ, score in votes:
+        client.post(
+            f"/rooms/{room_code}/vote",
+            headers=headers,
+            json={"occupation_id": occ, "score": score},
+        )
     
     # 6. Consensus
     print("6. Getting consensus...")
