@@ -19,6 +19,7 @@ jobs:
       - run: pip install -r requirements.txt
       - run: ruff check .
       - run: pytest
+      - run: cd .. && python eval/scripts/run_eval.py val
 
   frontend:
     runs-on: ubuntu-latest

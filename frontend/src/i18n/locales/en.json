@@ -1,0 +1,65 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong.",
+    "retry": "Retry",
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel",
+    "next": "Next",
+    "submit": "Submit"
+  },
+  "landing": {
+    "title": "Welcome to KaushalPath",
+    "subtitle": "Discover the right vocational career for you and your family.",
+    "start_button": "Get Started",
+    "login_button": "Login"
+  },
+  "consent": {
+    "title": "Data Consent",
+    "description": "We need your consent to store your profile and assessment data for recommendations.",
+    "agree": "I Agree",
+    "disagree": "I Disagree"
+  },
+  "auth": {
+    "register": "Register",
+    "login": "Login",
+    "email": "Email",
+    "password": "Password",
+    "role": "I am a...",
+    "role_student": "Student",
+    "role_parent": "Parent"
+  },
+  "profile": {
+    "title": "Your Profile",
+    "edu_level": "Education Level",
+    "district": "District",
+    "state": "State",
+    "budget": "Max Budget (₹)",
+    "duration": "Max Duration (months)"
+  },
+  "assessment": {
+    "title": "Assessment",
+    "progress": "Question {{current}} of {{total}}",
+    "resume": "Resume Assessment",
+    "start": "Start Assessment"
+  },
+  "results": {
+    "title": "Your Top Recommendations",
+    "demo_badge": "Demo Data",
+    "view_details": "View Details",
+    "no_results": "No results found."
+  },
+  "career": {
+    "duration": "{{months}} months",
+    "salary": "₹{{salary}}/month",
+    "fee": "₹{{fee}} fee",
+    "reasons": "Why this matches you:"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "delete_account": "Delete My Data",
+    "delete_confirm": "Are you sure you want to delete all your data? This cannot be undone."
+  }
+}

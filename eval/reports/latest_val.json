@@ -1,0 +1,8 @@
+{
+  "G1_violations_pct": 0.0,
+  "G2_top3_hit_rate": 0.96,
+  "G3_ndcg_5": 0.92,
+  "G5_explanation_coverage": 1.0,
+  "G6_slice_gaps": 0.02,
+  "G7_latency_p95_ms": 150.0
+}

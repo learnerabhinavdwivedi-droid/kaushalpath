@@ -2,11 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: light;
+@layer base {
+  body {
+    @apply bg-background text-textPrimary font-sans antialiased;
+  }
 }
 
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+@layer components {
+  /* Reusable component classes for consistent, accessible UI */
+  .btn-primary {
+    @apply min-h-touch min-w-touch px-6 py-3 bg-accent text-white rounded-lg font-bold text-lg 
+           hover:bg-accent-hover focus:outline-none focus:ring-4 focus:ring-accent-light
+           disabled:opacity-50 disabled:cursor-not-allowed transition-colors
+           flex items-center justify-center gap-2;
+  }
+  
+  .btn-secondary {
+    @apply min-h-touch min-w-touch px-6 py-3 bg-white text-accent border-2 border-accent rounded-lg font-bold text-lg 
+           hover:bg-accent-light focus:outline-none focus:ring-4 focus:ring-accent-light
+           disabled:opacity-50 disabled:cursor-not-allowed transition-colors
+           flex items-center justify-center gap-2;
+  }
+  
+  .card {
+    @apply bg-surface rounded-xl shadow-md p-6 border border-gray-200;
+  }
+  
+  .input-field {
+    @apply min-h-touch w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-lg
+           focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-light;
+  }
 }
