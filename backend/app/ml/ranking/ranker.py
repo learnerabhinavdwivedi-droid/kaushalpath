@@ -1,7 +1,6 @@
 """Phase 3: Ranker for Recommendations."""
 import logging
 import os
-from typing import Any
 
 import lightgbm as lgb
 import numpy as np

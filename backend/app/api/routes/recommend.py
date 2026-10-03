@@ -1,7 +1,7 @@
 """API routes for Phase 3 recommendations."""
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.services.recommend_svc import RecommendService

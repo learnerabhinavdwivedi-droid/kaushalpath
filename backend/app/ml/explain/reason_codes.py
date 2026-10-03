@@ -1,9 +1,10 @@
 """Phase 3: Reason codes generator for recommendations."""
 from typing import Any
 
-from app.models.student import Student
 from app.models.course import Course
 from app.models.occupation import Occupation
+from app.models.student import Student
+
 
 def generate_reason_codes(
     student: Student,

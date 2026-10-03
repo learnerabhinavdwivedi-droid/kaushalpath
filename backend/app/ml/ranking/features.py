@@ -1,15 +1,15 @@
 """Phase 3: Features for Ranking Recommendations."""
 import math
-from typing import Any
 
 import numpy as np
 
-from app.models.student import Student
 from app.models.course import Course
 from app.models.occupation import Occupation
+from app.models.student import Student
+
 
 def cosine_similarity(v1: list[float], v2: list[float]) -> float:
-    dot_product = sum(a * b for a, b in zip(v1, v2))
+    dot_product = sum(a * b for a, b in zip(v1, v2, strict=False))
     norm1 = math.sqrt(sum(a * a for a in v1))
     norm2 = math.sqrt(sum(b * b for b in v2))
     if norm1 == 0 or norm2 == 0:

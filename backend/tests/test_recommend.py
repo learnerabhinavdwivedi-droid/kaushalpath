@@ -1,11 +1,11 @@
 """Tests for Phase 3 recommendations."""
-import pytest
-from app.models.student import Student
-from app.models.course import Course
-from app.models.occupation import Occupation
+from app.ml.explain.reason_codes import generate_reason_codes
 from app.ml.ranking.filters import filter_courses
 from app.ml.ranking.ranker import Ranker
-from app.ml.explain.reason_codes import generate_reason_codes
+from app.models.course import Course
+from app.models.occupation import Occupation
+from app.models.student import Student
+
 
 def test_hard_constraints_filter():
     student = Student(

@@ -1,8 +1,8 @@
 """Phase 3: Hard constraints filtering for recommendations."""
 from typing import Any
 
-from app.models.student import Student
 from app.models.course import Course
+from app.models.student import Student
 
 EDU_HIERARCHY = {
     "8th": 1,

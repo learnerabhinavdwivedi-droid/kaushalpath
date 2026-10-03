@@ -2,7 +2,6 @@
 import json
 import logging
 from pathlib import Path
-from typing import Any
 
 import faiss
 import numpy as np
@@ -27,7 +26,7 @@ class Searcher:
             return
 
         self.index = faiss.read_index(str(INDEX_PATH))
-        with open(MAPPING_PATH, "r") as f:
+        with open(MAPPING_PATH) as f:
             mapping_str = json.load(f)
             self.mapping = {int(k): v for k, v in mapping_str.items()}
 

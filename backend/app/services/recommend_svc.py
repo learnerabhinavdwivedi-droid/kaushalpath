@@ -1,19 +1,19 @@
 """Phase 3: Recommendation orchestration service."""
 import logging
-from sqlalchemy.orm import Session
-from sqlalchemy import select
 
-from app.models.student import Student
-from app.models.course import Course
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+
+from app.ml.explain.reason_codes import generate_reason_codes
+from app.ml.ranking.features import extract_features
+from app.ml.ranking.filters import filter_courses
+from app.ml.ranking.ranker import Ranker
+from app.ml.retrieval.searcher import Searcher
 from app.models.assessment import Assessment
+from app.models.course import Course
 from app.models.occupation import Occupation
 from app.models.recommendation import Recommendation
-
-from app.ml.ranking.filters import filter_courses
-from app.ml.retrieval.searcher import Searcher
-from app.ml.ranking.features import extract_features
-from app.ml.ranking.ranker import Ranker
-from app.ml.explain.reason_codes import generate_reason_codes
+from app.models.student import Student
 
 logger = logging.getLogger(__name__)
 

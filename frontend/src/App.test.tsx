@@ -1,9 +1,22 @@
+import { test, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-
 import App from "./App";
-import "./i18n";
+import "./i18n/config";
 
-// Frontend smoke test (PHASE_0 task 9).
+vi.mock("react-i18next", () => ({
+  initReactI18next: {
+    type: '3rdParty',
+    init: vi.fn(),
+  },
+  useTranslation: () => ({
+    t: (key: string) => {
+      if (key === 'landing.title') return 'Welcome to KaushalPath';
+      return key;
+    },
+    i18n: { language: 'en', changeLanguage: vi.fn() }
+  })
+}));
+
 test("renders the app title heading", () => {
   render(<App />);
   expect(
