@@ -55,6 +55,9 @@ kaushalpath/
 - rooms(id, code, student_id, created_at) ; room_members(room_id, user_id, role)
 - criteria_weights(room_id, user_id, cost, duration, salary, local_jobs, distance)
 - votes(room_id, user_id, occupation_id, score)
+- escalations(id, room_id, raised_by_user_id, student_id, occupation_id, reason, status, assigned_counsellor_id)
+- counsellor_assignments(counsellor_id, student_id) ; counsellor_override(counsellor_id, student_id, occupation_id, note)
+- objections(id, room_id, raised_by_user_id, occupation_id, topic[income|security|social|safety|other], sentiment[concern|neutral|positive], note)
 - recommendations(id, student_id, occupation_id, rank, score, reasons_json, model_version)
 - feedback(id, recommendation_id, helpful, chosen)
 
@@ -63,8 +66,10 @@ POST /auth/register | /auth/login
 POST /students/profile | GET /students/me
 GET  /assessment/next | POST /assessment/answer | GET /assessment/result
 POST /recommend  -> top-k with reasons
-POST /rooms | POST /rooms/{code}/join | PUT /rooms/{code}/weights | POST /rooms/{code}/vote | GET /rooms/{code}/consensus
-POST /compare  (list of occupation ids + weights)
+POST /rooms | POST /rooms/{code}/join | GET /rooms/{code} (snapshot: members/weights/votes/objections) | PUT /rooms/{code}/weights | POST /rooms/{code}/vote | GET /rooms/{code}/consensus
+POST /rooms/{code}/compare  (occupation_ids -> normalised criteria + per-member totals + disagreement)
+POST /rooms/{code}/objection  (topic + sentiment tag for a parental objection; feeds Phase 8 dashboard)
+POST /rooms/{code}/escalate
 GET  /roadmap/{occupation_id}?district=
 GET  /counsellor/cohort | POST /counsellor/override
 GET  /health | GET /meta/model-version

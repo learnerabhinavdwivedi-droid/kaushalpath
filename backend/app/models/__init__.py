@@ -3,7 +3,12 @@ from app.models.assessment import Assessment
 from app.models.centre import Centre
 from app.models.course import Course
 from app.models.feedback import Feedback
-from app.models.human import CounsellorAssignment, CounsellorOverride, Escalation
+from app.models.human import (
+    CounsellorAssignment,
+    CounsellorOverride,
+    Escalation,
+    Objection,
+)
 from app.models.market import Market
 from app.models.occupation import Occupation
 from app.models.recommendation import Recommendation
@@ -29,4 +34,5 @@ __all__ = [
     "Escalation",
     "CounsellorAssignment",
     "CounsellorOverride",
+    "Objection",
 ]

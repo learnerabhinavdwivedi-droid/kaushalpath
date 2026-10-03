@@ -112,3 +112,21 @@ export const useResultsStore = create<ResultsState>()(
     { name: 'results-storage', storage }
   )
 );
+
+interface RoomState {
+  // Active family decision room code, kept so the room pages survive a reload.
+  code: string | null;
+  setCode: (code: string | null) => void;
+  clear: () => void;
+}
+
+export const useRoomStore = create<RoomState>()(
+  persist(
+    (set) => ({
+      code: null,
+      setCode: (code) => set({ code }),
+      clear: () => set({ code: null }),
+    }),
+    { name: 'room-storage', storage }
+  )
+);
