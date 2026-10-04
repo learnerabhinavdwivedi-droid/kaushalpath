@@ -2,35 +2,144 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hero wave button: seamless horizontal scroll of the wavy orange crest. */
+@keyframes wave-scroll {
+  from { background-position-x: 0; }
+  to { background-position-x: 120px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-wave-crest {
+    animation: none !important;
+  }
+}
+
+/* Student Work URL typewriter caret. */
+@keyframes caret-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.caret-blink {
+  animation: caret-blink 1s step-end infinite;
+}
+
+/* Custom cursor (Phase 7): hide the native cursor across the marketing shell. */
+.spark-cursor-none,
+.spark-cursor-none * {
+  cursor: none !important;
+}
+
+/* SmartImage skeleton shimmer. */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, #eceae1 25%, #f6f5ef 50%, #eceae1 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .shimmer {
+    animation: none;
+  }
+}
+
+/* Infinite marquee strip (Phase 8): two identical rows scroll by -50%. */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 24s linear infinite;
+}
+.marquee-group:hover .marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
 @layer base {
+  /* SparkLab global baseline: pale-lime page, ink text, site-wide monospace. */
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  /* Anchor targets clear the floating navbar. */
+  section[id] {
+    scroll-margin-top: 120px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
   body {
-    @apply bg-background text-textPrimary font-sans antialiased;
+    @apply bg-page text-ink font-sans antialiased;
+    line-height: 1.8;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans font-bold tracking-heading;
+    line-height: 1.1;
   }
 }
 
 @layer components {
-  /* Reusable component classes for consistent, accessible UI */
+  /* Shared app controls, retokened to the SparkLab design system (ink pills,
+     AA-safe orange-deep hover, 3px offset focus ring, 44px min touch target). */
   .btn-primary {
-    @apply min-h-touch min-w-touch px-6 py-3 bg-accent text-white rounded-lg font-bold text-lg 
-           hover:bg-accent-hover focus:outline-none focus:ring-4 focus:ring-accent-light
-           disabled:opacity-50 disabled:cursor-not-allowed transition-colors
-           flex items-center justify-center gap-2;
+    @apply inline-flex min-h-touch items-center justify-center gap-2 rounded-pill bg-ink px-6 py-3
+           font-mono font-semibold text-white transition-colors
+           hover:bg-orange-deep focus:outline-none focus-visible:outline-none
+           focus-visible:ring-[3px] focus-visible:ring-orange-deep focus-visible:ring-offset-[3px] focus-visible:ring-offset-page
+           disabled:cursor-not-allowed disabled:opacity-50;
   }
-  
+
   .btn-secondary {
-    @apply min-h-touch min-w-touch px-6 py-3 bg-white text-accent border-2 border-accent rounded-lg font-bold text-lg 
-           hover:bg-accent-light focus:outline-none focus:ring-4 focus:ring-accent-light
-           disabled:opacity-50 disabled:cursor-not-allowed transition-colors
-           flex items-center justify-center gap-2;
+    @apply inline-flex min-h-touch items-center justify-center gap-2 rounded-pill border-2 border-ink bg-cardwhite px-6 py-3
+           font-mono font-semibold text-ink transition-colors
+           hover:bg-ink hover:text-white focus:outline-none focus-visible:outline-none
+           focus-visible:ring-[3px] focus-visible:ring-orange-deep focus-visible:ring-offset-[3px] focus-visible:ring-offset-page
+           disabled:cursor-not-allowed disabled:opacity-50;
   }
-  
+
   .card {
-    @apply bg-surface rounded-xl shadow-md p-6 border border-gray-200;
+    @apply rounded-card border border-ink/10 bg-cardwhite p-6 shadow-[0_1px_0_rgba(0,0,0,.04)];
   }
-  
+
   .input-field {
-    @apply min-h-touch w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg text-lg
-           focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent-light;
+    @apply min-h-touch w-full rounded-inner border-2 border-ink/15 bg-white px-4 py-3 text-ink
+           placeholder:text-muted/60
+           focus:border-ink focus:outline-none focus-visible:ring-[3px] focus-visible:ring-orange-deep focus-visible:ring-offset-[3px] focus-visible:ring-offset-page;
+  }
+
+  /* Footer/nav link: orange underline draws left -> right on hover. */
+  .link-underline {
+    position: relative;
+  }
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: 2px;
+    width: 100%;
+    background: #ff4f00;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  .link-underline:hover::after,
+  .link-underline:focus-visible::after {
+    transform: scaleX(1);
   }
 }
 

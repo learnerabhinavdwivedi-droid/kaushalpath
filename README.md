@@ -90,6 +90,58 @@ make security     # pip-audit (backend) + npm audit (frontend) -> docs/SECURITY.
 make backup       # consistent SQLite snapshot -> backups/
 ```
 
+## Frontend: app routes + SparkLab marketing landing
+
+The frontend hosts two UIs side by side on one Vite/React/TS + Tailwind build:
+
+| Route | What it is |
+|---|---|
+| `/` | KaushalPath app (landing, assessment, results, counsellor dashboards) |
+| `/home` | SparkLab-style marketing landing (the animated showpiece page) |
+| `/styleguide` | Design-system page: tokens + UI primitives |
+
+```bash
+npm --prefix frontend run dev        # dev server on :5173
+npm --prefix frontend run build      # tsc --noEmit + vite build (type + prod gate)
+npm --prefix frontend test           # vitest: app tests + axe-core a11y audits
+npm --prefix frontend run test:e2e   # Playwright (responsive + flow specs)
+```
+
+### Editing the landing-page copy — no component changes needed
+
+All marketing text and data lives in **one file**: `frontend/src/content/site.ts`.
+
+- `nav`, `hero`, `courses`, `projects`, `schedule`, `howItWorks`, `about`,
+  `testimonials`, `faq`, `cta`, `marquee`, `footer` — sections render straight from it.
+- Add a course: append an object to `courses` (`variant`/`pillStyle` pick the colour
+  scheme, `mascot` picks the SVG from `sections/CoursesArt.tsx`, `span: 2` makes it wide).
+- Never hardcode strings in components; the i18n dictionaries (`src/i18n/en|hi.json`)
+  stay in charge of the app UI, `site.ts` of the marketing site.
+- Images are placeholder art by design (rounded blob mascots + gradient blocks, rule:
+  no copied assets). Swap them by dropping files into `frontend/public/illustrations/`
+  and passing `src` to `components/ui/SmartImage.tsx` — lazy-loading, shimmer skeleton
+  and blur-up are already wired; pass `width`/`height` to avoid layout shift.
+
+### Animation + accessibility conventions (enforced)
+
+- Motion tokens live in `src/lib/motion.ts` (`SPRING`, `DURATION`, `EASE`); shared
+  interaction hooks in `src/hooks/interactions.ts` (`useTilt`, `useSpotlight`,
+  `useMagnetic`, `useReveal`, `useCanHover`).
+- Only `transform` / `opacity` / `clip-path` animate. `MotionConfig reducedMotion="user"`
+  in `components/layout/Layout.tsx` degrades every Framer animation for OS-level
+  reduced-motion; CSS animations have their own `@media (prefers-reduced-motion)` guards.
+- Scroll reveals are lighter on mobile (opacity-only, no stagger) via `useReveal`.
+- Desktop custom cursor is opt-out: toggle button bottom-right, disabled automatically
+  for touch and reduced-motion users.
+- `src/marketing-a11y.test.tsx` runs **axe-core** over the whole landing page in CI
+  (zero violations) and asserts one `h1`, `h2` section headings, skip link + `main`
+  landmark and accessible names on icon-only controls. `color-contrast` is the one
+  excluded rule (jsdom has no layout engine): ink `#0A0A0A` / muted `#55554A` on page
+  `#F1F5E0` ≈ 6.4:1 and white on green `#0F7B3F` ≈ 5.4:1 pass AA. White on the pure
+  accent orange `#FF4F00` is only ≈ 3.3:1, so any surface carrying white body text uses
+  the AA-safe `orange-deep` `#C13A00` token (≈ 5.4:1); `orange` stays for accents, icons
+  and dark-on-orange fills.
+
 ## Documentation
 
 | Doc | What it answers |
