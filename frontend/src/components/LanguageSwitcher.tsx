@@ -11,7 +11,7 @@ export const LanguageSwitcher: React.FC = () => {
   return (
     <button 
       onClick={toggleLanguage}
-      className="btn-secondary min-h-[44px] min-w-[44px] p-2 text-sm"
+      className="btn-secondary min-h-[44px] min-w-[44px] px-4 py-2 text-sm"
       aria-label="Toggle language"
     >
       {i18n.language === 'en' ? 'हिंदी' : 'English'}

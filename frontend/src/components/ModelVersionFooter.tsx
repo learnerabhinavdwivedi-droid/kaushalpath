@@ -25,7 +25,7 @@ export const ModelVersionFooter: React.FC = () => {
 
   if (!version) return null;
   return (
-    <footer className="text-xs text-textSecondary text-center py-3 print:hidden">
+    <footer className="py-3 text-center font-mono text-xs text-muted print:hidden">
       {t('footer.model_version')}: <span className="font-mono">{version}</span>
     </footer>
   );
