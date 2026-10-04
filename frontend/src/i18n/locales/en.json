@@ -13,7 +13,115 @@
     "title": "Welcome to KaushalPath",
     "subtitle": "Discover the right vocational career for you and your family.",
     "start_button": "Get Started",
-    "login_button": "Login"
+    "login_button": "Login",
+    "meta": "Assessment · Ranked matches · Family decision",
+    "scroll_hint": "See how it works",
+    "marquee": ["Skill match", "Explainable ranking", "Family decision room", "Local languages", "Counsellor reviewed", "Audit trail"],
+    "nav": {
+      "how": "How it works",
+      "features": "What's inside",
+      "who": "Who it's for"
+    },
+    "how": {
+      "title": "How It Works",
+      "subtitle": "Three steps from an empty form to a career decision the whole family agrees on.",
+      "steps": [
+        {
+          "n": "1",
+          "title": "Take the assessment",
+          "desc": "Answer a short set of questions about your studies, budget, district and the things that matter to you."
+        },
+        {
+          "n": "2",
+          "title": "Get ranked matches",
+          "desc": "KaushalPath ranks NSQF vocational options for your profile and shows the factors behind every position."
+        },
+        {
+          "n": "3",
+          "title": "Decide together",
+          "desc": "Open a Family Decision Room, let everyone weigh the factors, vote, and reach a consensus with a counsellor."
+        }
+      ]
+    },
+    "features": {
+      "title": "What's Inside",
+      "subtitle": "Every screen is built around one question: why this career, for this family?",
+      "items": [
+        {
+          "title": "Explainable ranking",
+          "desc": "Each recommendation shows the reasons behind it — cost, duration, salary, local jobs and distance.",
+          "tone": "orange",
+          "span": "yes"
+        },
+        {
+          "title": "Family Decision Room",
+          "desc": "Student, parents and a counsellor compare up to three options in the same room.",
+          "tone": "white",
+          "span": "no"
+        },
+        {
+          "title": "What matters, weighted",
+          "desc": "Each person slides their own weights and the family score updates live.",
+          "tone": "white",
+          "span": "no"
+        },
+        {
+          "title": "Vote to consensus",
+          "desc": "Ratings turn into an agreement score and a suggested next step on the roadmap.",
+          "tone": "lavender",
+          "span": "no"
+        },
+        {
+          "title": "Ask-box for doubts",
+          "desc": "Tap a concern — cost, distance, job safety — and get an answer in your language.",
+          "tone": "green",
+          "span": "no"
+        },
+        {
+          "title": "Counsellor cockpit",
+          "desc": "Cohort filters, analytics, resistance flags and an audit trail for every recorded override.",
+          "tone": "white",
+          "span": "yes"
+        }
+      ]
+    },
+    "who": {
+      "title": "Who It's For",
+      "subtitle": "One flow, three points of view.",
+      "items": [
+        {
+          "title": "Students",
+          "desc": "Find a vocational path that fits your marks, your budget and your district."
+        },
+        {
+          "title": "Parents",
+          "desc": "See why an option ranks first, and settle on it together in your own language."
+        },
+        {
+          "title": "Counsellors and admins",
+          "desc": "Track a whole cohort, spot resistance, and record corrections with a reason."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Start with one assessment.",
+      "subtitle": "Create a profile, answer the questions, and see which vocational careers rank highest for your family.",
+      "start": "Get Started",
+      "login": "Login",
+      "counsellor": "Counsellor dashboard"
+    },
+    "footer": {
+      "blurb": "Vocational career counselling for students, parents and counsellors — ranked matches with the reasons attached.",
+      "explore": "Explore",
+      "product": "Product",
+      "start": "Create account",
+      "login": "Login",
+      "counsellor": "Counsellor dashboard",
+      "room": "Join a room",
+      "styleguide": "Design system",
+      "marketing": "SparkLab demo",
+      "copyright": "© 2026 KaushalPath. Vocational career guidance, ranked with the reasons attached."
+    }
   },
   "consent": {
     "title": "Data Consent",
