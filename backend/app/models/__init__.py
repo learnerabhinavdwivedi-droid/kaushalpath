@@ -2,6 +2,7 @@
 from app.models.assessment import Assessment
 from app.models.audit import AuditLog
 from app.models.centre import Centre
+from app.models.conversation import Conversation, Turn
 from app.models.course import Course
 from app.models.feedback import Feedback
 from app.models.human import (
@@ -43,4 +44,6 @@ __all__ = [
     "CounsellorOverride",
     "Objection",
     "AuditLog",
+    "Conversation",
+    "Turn",
 ]

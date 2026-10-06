@@ -22,7 +22,7 @@ from app.db.base import Base, TimestampMixin
 ESCALATION_STATUSES = ("open", "resolved")
 # Conversational objection topics (PS 26241 parental concerns) and the
 # sentiment we tag each parent interaction with (feeds Phase 8 dashboard).
-OBJECTION_TOPICS = ("income", "security", "social", "safety", "other")
+OBJECTION_TOPICS = ("income", "security", "social", "safety", "distance", "cost", "other")
 OBJECTION_SENTIMENTS = ("concern", "neutral", "positive")
 
 

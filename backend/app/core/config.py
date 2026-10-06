@@ -68,6 +68,12 @@ class Settings(BaseSettings):
     embedder_model_name: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     model_version: str = "kaushalpath-rank-0.1.0"
 
+    # LLM Settings (Phase 12 conversational engine)
+    llm_provider: str = "none"  # "none" | "openai_compat" | "gemini"
+    llm_base_url: str | None = None
+    llm_model: str = "gpt-4o-mini"
+    llm_api_key: str | None = None
+
     # Fallback ranker weights (used when the LightGBM model is not trained)
     ranker_weight_riasec: float = 0.35
     ranker_weight_overlap: float = 0.10
