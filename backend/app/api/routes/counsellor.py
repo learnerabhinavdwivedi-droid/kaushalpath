@@ -1,11 +1,12 @@
 """Phase 5/8: Counsellor routes — cohort, escalation queue, audited overrides,
 student detail, analytics, resistance dashboard and the audit trail."""
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
+from app.db.base import utcnow
 from app.db.session import get_db
 from app.models import (
     Assessment,
@@ -30,8 +31,10 @@ from app.schemas.counsellor import (
     RoomStatusOut,
     StudentDetailOut,
 )
+from app.schemas.escalation import EscalationOut
 from app.services import analytics_svc
 from app.services.audit_svc import record_audit
+from app.services.escalation_svc import claim_escalation
 
 router = APIRouter(prefix="/counsellor", tags=["counsellor"])
 
@@ -165,42 +168,150 @@ def assign_student(
 
 @router.get("/escalations")
 def list_escalations(
-    current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
+    status: str | None = None,
+    pool: bool | None = None,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
 ):
-    """Open escalation queue for this counsellor (admin sees all open)."""
+    """Escalation queue for this counsellor (admin sees everything).
+
+    A counsellor sees both their own assigned cases AND the shared pool of
+    still-unassigned open cases (Phase 14: unassigned cases are no longer
+    admin-only). Optional ``status`` filters the lifecycle; ``pool=true``
+    restricts to unassigned open cases.
+    """
     _require_counsellor_or_admin(current_user)
-    stmt = select(Escalation).where(Escalation.status == "open")
+    stmt = select(Escalation)
     if current_user.role != "admin":
-        stmt = stmt.where(Escalation.assigned_counsellor_id == current_user.id)
+        assigned = Escalation.assigned_counsellor_id == current_user.id
+        unassigned_pool = (
+            Escalation.assigned_counsellor_id.is_(None) & (Escalation.status == "open")
+        )
+        stmt = stmt.where(assigned | unassigned_pool)
+    if pool is True:
+        stmt = stmt.where(
+            Escalation.assigned_counsellor_id.is_(None), Escalation.status == "open"
+        )
+    if status:
+        stmt = stmt.where(Escalation.status == status)
+
     queue = [
         {
             "id": e.id,
             "room_id": e.room_id,
+            "conversation_id": e.conversation_id,
             "student_id": e.student_id,
             "occupation_id": e.occupation_id,
             "reason": e.reason,
             "status": e.status,
+            "channel": e.channel,
+            "priority": e.priority,
+            "preferred_language": e.preferred_language,
+            "assigned_counsellor_id": e.assigned_counsellor_id,
+            "in_pool": e.assigned_counsellor_id is None,
         }
         for e in db.scalars(stmt.order_by(Escalation.id)).all()
     ]
     return queue
 
 
-@router.post("/escalations/{escalation_id}/resolve")
-def resolve_escalation(
+class NoteRequest(BaseModel):
+    note: str = Field(min_length=1)
+
+
+@router.post("/escalations/{escalation_id}/claim", response_model=EscalationOut)
+def claim_escalation_route(
     escalation_id: int,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    """Atomically claim an open/pool case. 409 if another counsellor won it."""
+    _require_counsellor_or_admin(current_user)
+    esc = claim_escalation(db, escalation_id, current_user.id)
+    if not esc:
+        raise HTTPException(status_code=409, detail="Escalation already claimed or not open")
+    record_audit(
+        db,
+        actor_user_id=current_user.id,
+        action="escalation_claim",
+        entity_type="escalation",
+        entity_id=esc.id,
+        detail={"student_id": esc.student_id},
+    )
+    db.commit()
+    return esc
+
+
+@router.post("/escalations/{escalation_id}/contact", response_model=EscalationOut)
+def contact_escalation(
+    escalation_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Mark a claimed case as contacted (counsellor reached the family)."""
     _require_counsellor_or_admin(current_user)
     esc = db.get(Escalation, escalation_id)
     if not esc:
         raise HTTPException(status_code=404, detail="Escalation not found")
     if current_user.role != "admin" and esc.assigned_counsellor_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not your escalation")
-    esc.status = "resolved"
+    if esc.status not in ("assigned", "contacted"):
+        raise HTTPException(status_code=409, detail=f"Cannot contact from status={esc.status}")
+    esc.mark("contacted")
     db.commit()
-    return {"id": esc.id, "status": esc.status}
+    db.refresh(esc)
+    return esc
+
+
+@router.post("/escalations/{escalation_id}/resolve", response_model=EscalationOut)
+def resolve_escalation(
+    escalation_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Resolve an escalation once the family concern is closed out."""
+    _require_counsellor_or_admin(current_user)
+    esc = db.get(Escalation, escalation_id)
+    if not esc:
+        raise HTTPException(status_code=404, detail="Escalation not found")
+    if current_user.role != "admin" and esc.assigned_counsellor_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not your escalation")
+    if esc.status == "resolved":
+        raise HTTPException(status_code=409, detail="Already resolved")
+    esc.mark("resolved")
+    record_audit(
+        db,
+        actor_user_id=current_user.id,
+        action="escalation_resolve",
+        entity_type="escalation",
+        entity_id=esc.id,
+        detail={"student_id": esc.student_id},
+    )
+    db.commit()
+    db.refresh(esc)
+    return esc
+
+
+@router.post("/escalations/{escalation_id}/notes", response_model=EscalationOut)
+def add_escalation_note(
+    escalation_id: int,
+    req: NoteRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Append a counsellor note to the case (audited free text)."""
+    _require_counsellor_or_admin(current_user)
+    esc = db.get(Escalation, escalation_id)
+    if not esc:
+        raise HTTPException(status_code=404, detail="Escalation not found")
+    if current_user.role != "admin" and esc.assigned_counsellor_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not your escalation")
+    stamp = utcnow().strftime("%Y-%m-%d %H:%M")
+    prefix = f"{esc.notes}\n" if esc.notes else ""
+    esc.notes = f"{prefix}[{stamp}] {req.note}"
+    db.commit()
+    db.refresh(esc)
+    return esc
 
 
 @router.post("/override")

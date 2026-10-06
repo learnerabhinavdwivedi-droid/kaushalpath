@@ -2,8 +2,9 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 import httpx
 
@@ -20,7 +21,7 @@ def _get_kb() -> dict[str, Any]:
     global _KB_DATA
     if _KB_DATA is None:
         if _KB_PATH.exists():
-            with open(_KB_PATH, "r", encoding="utf-8") as f:
+            with open(_KB_PATH, encoding="utf-8") as f:
                 _KB_DATA = json.load(f)
         else:
             _KB_DATA = {}
@@ -70,7 +71,7 @@ def build_template_reply(
     # Format numbers nicely
     formatted_mapping: dict[str, str] = {}
     for k, v in mapping.items():
-        if isinstance(v, (int, float)):
+        if isinstance(v, int | float):
             if isinstance(v, int) or v.is_integer():
                 formatted_mapping[k] = f"{int(v):,}"
             else:
@@ -173,8 +174,10 @@ def generate_response(
         system_prompt = (
             f"You are an empathetic vocational career counsellor in India. "
             f"Rephrase the following response for a parent/learner in language '{lang}'. "
-            f"CRITICAL GROUNDING RULE: You must ONLY use facts and numbers present in the provided facts JSON. "
-            f"You must NEVER invent, alter, or introduce any new numbers, salaries, placement rates, or statistics. "
+            f"CRITICAL GROUNDING RULE: You must ONLY use facts and numbers present in "
+            f"the provided facts JSON. "
+            f"You must NEVER invent, alter, or introduce any new numbers, salaries, "
+            f"placement rates, or statistics. "
             f"Respond with ONLY the rephrased text."
         )
         user_prompt = (

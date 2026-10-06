@@ -41,7 +41,7 @@ def extract_allowable_numbers(facts: list[dict[str, Any]]) -> set[float]:
 
     for fact in facts:
         val = fact.get("value")
-        if isinstance(val, (int, float)):
+        if isinstance(val, int | float):
             num = float(val)
             allowable.add(num)
             allowable.add(float(round(num)))

@@ -72,6 +72,8 @@ class ObjectionOut(BaseModel):
 
 class RoomSnapshotResponse(BaseModel):
     code: str
+    # Phase 15: numeric id so family clients can bind a conversation to the room.
+    room_id: int
     student_id: int
     members: list[RoomMemberOut]
     weights: list[MemberWeightsOut]

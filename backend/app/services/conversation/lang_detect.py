@@ -18,7 +18,7 @@ HINGLISH_TOKENS = {
     "yeh", "woh", "wo", "accha", "achha", "achhi", "sahi", "karega", "karegi",
     "parivar", "ghar", "karna", "karni", "bhejna", "bheje", "chinta", "dar",
     "darr", "vishwas", "bharosa", "paisa", "raksha", "sikhega", "sikhegi",
-    "baat", "karni", "sahayata", "madad", "sir", "madam", "suno", "bolo",
+    "baat", "sahayata", "madad", "sir", "madam", "suno", "bolo",
 }
 
 # Tokens that only appear in Hinglish and are very strong indicators

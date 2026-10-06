@@ -163,6 +163,8 @@ export interface ObjectionTag {
 
 export interface RoomSnapshot {
   code: string;
+  // Phase 15: numeric room id (needed to bind a shared conversation).
+  room_id: number;
   student_id: number;
   members: RoomMember[];
   weights: MemberWeights[];
@@ -376,6 +378,58 @@ export interface ResistanceResponse {
   suppressed_groups: number;
 }
 
+// --- Phase 16: scheme-administrator resistance dashboard -------------------
+
+export interface DashboardFilters {
+  from?: string;
+  to?: string;
+  state?: string;
+  trade?: string;
+  lang?: string;
+}
+
+export interface DashboardKpis {
+  families_counselled: number;
+  total_conversations: number;
+  pct_high_resistance: number;
+  top_concern: string;
+  escalation_rate: number;
+  sentiment_improved_pct: number;
+}
+
+export interface DistrictRow {
+  district: string;
+  state: string | null;
+  lat: number;
+  lon: number;
+  n: number;
+  avg_rs: number | null;
+  share_high: number | null;
+  top_topics: string[];
+  shift: { softened: number; hardened: number; unchanged: number };
+  is_suppressed: boolean;
+}
+
+export interface ConcernTradeMatrix {
+  concerns: string[];
+  trades: string[];
+  cells: (number | null)[][];
+  suppressed_cells: number;
+}
+
+export interface ResistanceDashboard {
+  filters: Required<DashboardFilters>;
+  kpis: DashboardKpis;
+  districts: DistrictRow[];
+  matrix: ConcernTradeMatrix;
+  phrases: Record<string, string[]>;
+  trend: { date: string; avg_rs: number; n_conversations: number }[];
+  shift: { softened: number; hardened: number; unchanged: number };
+  suppressed_groups: number;
+  high_threshold: number;
+  is_demo: boolean;
+}
+
 export interface AuditEntry {
   id: number;
   actor_user_id: number | null;
@@ -414,6 +468,25 @@ export const getAnalytics = () => apiRequest<AnalyticsResponse>('/counsellor/ana
 
 export const getResistance = () => apiRequest<ResistanceResponse>('/counsellor/resistance');
 
+export const getResistanceDashboard = (filters: DashboardFilters = {}) => {
+  const qs = new URLSearchParams(
+    Object.entries(filters).filter(([, v]) => v) as [string, string][]
+  ).toString();
+  return apiRequest<ResistanceDashboard>(`/admin/resistance/dashboard${qs ? `?${qs}` : ''}`);
+};
+
+// CSV export reuses the unchanged Phase 13 endpoint, but must send the Bearer
+// token, so we fetch to a Blob and hand back an object URL for download.
+export const exportResistanceCsv = async (): Promise<string> => {
+  const token = localStorage.getItem('token');
+  const res = await fetch(`${API_BASE}/admin/resistance/export.csv`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  if (!res.ok) throw new Error('Export failed');
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
+};
+
 export const getAuditLog = () => apiRequest<AuditEntry[]>('/counsellor/audit');
 
 export const sendFeedback = (payload: FeedbackPayload) =>
@@ -424,3 +497,113 @@ export const sendFeedback = (payload: FeedbackPayload) =>
 
 export const getModelVersion = () =>
   apiRequest<{ model_version: string }>('/meta/model-version');
+
+// --- Phase 15: shared family chat + guest parent join -----------------------
+
+/** One grounded fact as stored on an assistant turn (never LLM-invented). */
+export interface GroundedFact {
+  key: string;
+  label: string;
+  value: number | string;
+  unit?: string | null;
+  source?: string | null;
+  source_year?: number | null;
+  is_demo?: boolean;
+}
+
+export interface TurnOut {
+  id: number;
+  speaker: string; // learner | parent | counsellor | assistant
+  text: string;
+  lang: string;
+  intent: string | null;
+  topic: string | null;
+  sentiment: string | null;
+  intensity: number;
+  facts_json: GroundedFact[] | null;
+  fallback_used: boolean;
+  created_at: string;
+}
+
+export interface ConversationOut {
+  id: number;
+  student_id: number;
+  room_id: number | null;
+  lang: string;
+  status: string; // active | escalated | closed
+  created_at: string;
+  turns: TurnOut[];
+}
+
+export interface TurnResponse {
+  reply: string;
+  lang: string;
+  intent: string;
+  topic: string;
+  facts: GroundedFact[];
+  followups: string[];
+  escalation_suggested: boolean;
+  fallback_used: boolean;
+}
+
+export interface EscalationAck {
+  id: number;
+  status: string; // open | assigned | contacted | resolved | unreachable
+  assigned_counsellor_id: number | null;
+  in_pool: boolean;
+  case_pack?: Record<string, unknown> | null;
+}
+
+export interface EscalationPayload {
+  reason: string;
+  occupation_id?: number | null;
+  contact_phone?: string | null;
+  preferred_language?: string | null;
+  preferred_slot?: string | null;
+  channel?: string;
+  priority?: string;
+}
+
+export interface GuestToken {
+  access_token: string;
+  token_type: string;
+  room_code: string;
+  room_id: number;
+  student_id: number;
+  name: string;
+}
+
+/** Parent joins a room with just code + first name (no email/password). */
+export const guestJoin = (room_code: string, name: string, phone?: string, lang = 'hi') =>
+  apiRequest<GuestToken>('/auth/guest', {
+    method: 'POST',
+    body: JSON.stringify({ room_code, name, phone: phone || null, lang })
+  });
+
+export const createConversation = (student_id: number, room_id?: number | null, lang = 'hi') =>
+  apiRequest<ConversationOut>('/conversations', {
+    method: 'POST',
+    body: JSON.stringify({ student_id, room_id: room_id ?? null, lang })
+  });
+
+export const getConversation = (id: number) =>
+  apiRequest<ConversationOut>(`/conversations/${id}`);
+
+export const sendTurn = (
+  id: number,
+  payload: { speaker: string; text: string; occupation_id?: number | null; lang?: string | null }
+) =>
+  apiRequest<TurnResponse>(`/conversations/${id}/turns`, {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  });
+
+export const escalateConversation = (id: number, payload: EscalationPayload) =>
+  apiRequest<EscalationAck>(`/conversations/${id}/escalate`, {
+    method: 'POST',
+    body: JSON.stringify(payload)
+  });
+
+/** Live status of the family's hand-off (lifecycle fields only, poll-safe). */
+export const getConversationEscalation = (id: number) =>
+  apiRequest<EscalationAck>(`/conversations/${id}/escalation`);
