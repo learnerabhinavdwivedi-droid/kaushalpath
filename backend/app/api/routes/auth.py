@@ -35,7 +35,7 @@ def register(request: Request, user_in: UserCreate, db: Session = Depends(get_db
             detail="The user with this email already exists in the system.",
         )
 
-    if user_in.role not in ["student", "parent", "counsellor", "admin"]:
+    if user_in.role not in ["student", "parent", "counsellor", "admin", "scheme_admin"]:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid role.",

@@ -74,6 +74,20 @@ class Settings(BaseSettings):
     llm_model: str = "gpt-4o-mini"
     llm_api_key: str | None = None
 
+    # Resistance Score Settings (Phase 13 parental resistance tracking)
+    resistance_w_topic: float = 0.40
+    resistance_w_intensity: float = 0.40
+    resistance_w_consensus: float = 0.20
+    resistance_topic_weights: dict[str, float] = {
+        "safety": 1.0,
+        "social": 0.85,
+        "distance": 0.75,
+        "cost": 0.70,
+        "security": 0.65,
+        "income": 0.50,
+        "other": 0.30,
+    }
+
     # Fallback ranker weights (used when the LightGBM model is not trained)
     ranker_weight_riasec: float = 0.35
     ranker_weight_overlap: float = 0.10

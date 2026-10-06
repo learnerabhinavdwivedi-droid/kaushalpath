@@ -16,6 +16,7 @@ from slowapi.errors import RateLimitExceeded
 from sqlalchemy import text
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
+from app.api.routes import admin as admin_routes
 from app.api.routes import assessment as assessment_routes
 from app.api.routes import auth as auth_routes
 from app.api.routes import counsellor as counsellor_routes
@@ -98,6 +99,7 @@ app.include_router(counsellor_routes.router)
 app.include_router(feedback_routes.router)
 app.include_router(outcomes_routes.router)
 app.include_router(conversations_routes.router)
+app.include_router(admin_routes.router)
 
 
 @app.get("/health", tags=["health"])

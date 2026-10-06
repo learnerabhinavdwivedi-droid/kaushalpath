@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from sqlalchemy import Boolean, ForeignKey, Integer, JSON, String, Text
+from sqlalchemy import Boolean, Float, ForeignKey, Integer, JSON, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, TimestampMixin
@@ -44,7 +44,24 @@ class Turn(Base, TimestampMixin):
     intent: Mapped[str | None] = mapped_column(String(32), nullable=True)
     topic: Mapped[str | None] = mapped_column(String(32), nullable=True)
     sentiment: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    intensity: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     facts_json: Mapped[list[dict[str, Any]] | None] = mapped_column(JSON, nullable=True)
     fallback_used: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     conversation: Mapped[Conversation] = relationship("Conversation", back_populates="turns")
+
+
+class ResistanceSnapshot(Base, TimestampMixin):
+    __tablename__ = "rs_snapshots"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    conversation_id: Mapped[int] = mapped_column(
+        ForeignKey("conversations.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    turn_id: Mapped[int] = mapped_column(
+        ForeignKey("turns.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    rs: Mapped[float] = mapped_column(Float, nullable=False)
+
+    conversation: Mapped[Conversation] = relationship("Conversation")
+    turn: Mapped[Turn] = relationship("Turn")

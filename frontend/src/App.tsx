@@ -27,7 +27,7 @@ import { RequireRole } from './components/RequireRole';
 import { ModelVersionFooter } from './components/ModelVersionFooter';
 import { EASE } from './lib/motion';
 
-const STAFF_ROLES = ['counsellor', 'admin'];
+const STAFF_ROLES = ['counsellor', 'admin', 'scheme_admin'];
 
 const RouteFallback: React.FC = () => (
   <div className="flex min-h-screen items-center justify-center bg-page">

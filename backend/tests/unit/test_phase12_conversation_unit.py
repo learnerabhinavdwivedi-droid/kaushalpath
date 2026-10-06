@@ -8,16 +8,12 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import re
-
-import pytest
+from pathlib import Path
 
 from app.services.conversation.intent import classify_utterance
 from app.services.conversation.lang_detect import detect_language
 from app.services.conversation.validator import (
-    extract_allowable_numbers,
-    extract_numbers_from_text,
     validate_reply,
 )
 
@@ -42,12 +38,13 @@ def test_lang_detect_english():
 
 
 def test_objection_kb_has_no_literal_numbers():
-    kb_path = Path(__file__).resolve().parents[2] / "app" / "services" / "conversation" / "objection_kb.json"
+    base = Path(__file__).resolve().parents[2]
+    kb_path = base / "app" / "services" / "conversation" / "objection_kb.json"
     assert kb_path.exists()
-    with open(kb_path, "r", encoding="utf-8") as f:
+    with open(kb_path, encoding="utf-8") as f:
         data = json.load(f)
 
-    # Check that in every topic and every language template, there are NO hardcoded multi-digit numbers
+    # Check that in every topic and every language template, there are NO hardcoded numbers
     # (only placeholders like {median_salary}, {placement_rate}, {n}, {fee})
     digit_pattern = re.compile(r"\b\d{2,}\b")
     for topic, lang_map in data.items():
@@ -146,4 +143,5 @@ def test_intent_classification_on_30_labelled_lines():
             correct += 1
 
     accuracy = correct / len(labeled_data)
-    assert accuracy >= 0.85, f"Expected accuracy >= 0.85, got {accuracy:.2f} ({correct}/{len(labeled_data)})"
+    msg = f"Expected accuracy >= 0.85, got {accuracy:.2f} ({correct}/{len(labeled_data)})"
+    assert accuracy >= 0.85, msg

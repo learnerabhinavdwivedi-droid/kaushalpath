@@ -41,6 +41,7 @@ class TurnOut(BaseModel):
     intent: str | None = None
     topic: str | None = None
     sentiment: str | None = None
+    intensity: float = 0.0
     facts_json: list[dict[str, Any]] | None = None
     fallback_used: bool = False
     created_at: datetime

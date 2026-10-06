@@ -25,6 +25,8 @@ from app.services.conversation import (
     generate_response,
     ground_facts,
 )
+from app.services.resistance import record_resistance_snapshot
+from app.services.sentiment import analyze_sentiment
 
 router = APIRouter(prefix="/conversations", tags=["conversations"])
 
@@ -120,13 +122,13 @@ def add_turn(
     # 2. Intent and topic classification
     intent, topic, conf = classify_utterance(body.text)
 
-    # 3. Sentiment derivation
-    if intent == "object":
-        sentiment = "concern"
-    elif intent == "greet":
+    # 3. Sentiment & intensity analysis
+    sentiment, intensity, _ = analyze_sentiment(body.text, lang=lang)
+    if intent == "object" and sentiment == "neutral":
+        sentiment = "negative"
+        intensity = max(intensity, 0.4)
+    elif intent == "greet" and sentiment == "neutral":
         sentiment = "positive"
-    else:
-        sentiment = "neutral"
 
     # 4. Determine occupation to ground facts against
     occ_id = body.occupation_id
@@ -163,10 +165,15 @@ def add_turn(
         intent=intent,
         topic=topic,
         sentiment=sentiment,
+        intensity=intensity,
         facts_json=None,
         fallback_used=False,
     )
     db.add(user_turn)
+    db.flush()
+
+    # Record Rs snapshot
+    record_resistance_snapshot(conversation=conv, turn=user_turn, db=db)
 
     asst_turn = Turn(
         conversation_id=conv.id,
@@ -176,6 +183,7 @@ def add_turn(
         intent="inform",
         topic=topic,
         sentiment="neutral",
+        intensity=0.0,
         facts_json=facts,
         fallback_used=res["fallback_used"],
     )
@@ -184,9 +192,9 @@ def add_turn(
     # 8. Check escalation heuristics
     prior_concerns = db.scalar(
         select(Turn)
-        .where(Turn.conversation_id == conv.id, Turn.sentiment == "concern")
+        .where(Turn.conversation_id == conv.id, Turn.sentiment.in_(["concern", "negative"]))
     )
-    escalation_suggested = (intent == "escalate") or (sentiment == "concern" and prior_concerns is not None)
+    escalation_suggested = (intent == "escalate") or (sentiment == "negative" and (prior_concerns is not None or intensity >= 0.8))
     if intent == "escalate":
         conv.status = "escalated"
 
