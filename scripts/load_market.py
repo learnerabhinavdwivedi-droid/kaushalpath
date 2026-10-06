@@ -35,10 +35,13 @@ def main(get_session=SessionLocal) -> None:
             key = {
                 "occupation_id": occupation_id,
                 "state": raw["state"].strip(),
+                "district": (raw.get("district") or "").strip() or None,
                 "year": to_int(raw.get("year")),
             }
             values = {
                 "avg_salary_inr": to_float(raw.get("avg_salary_inr")),
+                "earnings_p25": to_float(raw.get("earnings_p25")),
+                "earnings_p75": to_float(raw.get("earnings_p75")),
                 "demand_index": to_float(raw.get("demand_index")),
                 "placement_rate": to_float(raw.get("placement_rate")),
                 "source": raw["source"].strip(),

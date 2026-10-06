@@ -1,0 +1,82 @@
+{"text": "What is the average starting salary for this vocation?", "intent": "inquire", "topic": "income", "lang": "en"}
+{"text": "How much monthly income can a fresher realistically expect?", "intent": "inquire", "topic": "income", "lang": "en"}
+{"text": "The earnings look too low compared to corporate office jobs", "intent": "object", "topic": "income", "lang": "en"}
+{"text": "Can an electrician earn enough to support family expenses?", "intent": "inquire", "topic": "income", "lang": "en"}
+{"text": "इस ट्रेड में प्रशिक्षण के बाद शुरुआती वेतन कितना मिलता है?", "intent": "inquire", "topic": "income", "lang": "hi"}
+{"text": "औसत मासिक आमदनी कितनी होगी?", "intent": "inquire", "topic": "income", "lang": "hi"}
+{"text": "वेतन बहुत कम है, इतने कम पैसे में घर चलाना मुश्किल होगा", "intent": "object", "topic": "income", "lang": "hi"}
+{"text": "क्या 25वें परसेंटाइल से 75वें परसेंटाइल तक कमाई बढ़ती है?", "intent": "inquire", "topic": "income", "lang": "hi"}
+{"text": "Starting me kitni salary milegi is trade me?", "intent": "inquire", "topic": "income", "lang": "hinglish"}
+{"text": "Har mahine kitne paise kamayega mera beta?", "intent": "inquire", "topic": "income", "lang": "hinglish"}
+{"text": "Kamai achhi hogi ya tankha kam milegi?", "intent": "inquire", "topic": "income", "lang": "hinglish"}
+{"text": "Starting package bahut kam lag raha hai kaise hoga?", "intent": "object", "topic": "income", "lang": "hinglish"}
+{"text": "What is the verified campus placement rate at this institute?", "intent": "inquire", "topic": "security", "lang": "en"}
+{"text": "Are these jobs permanent or on fixed-term contracts?", "intent": "inquire", "topic": "security", "lang": "en"}
+{"text": "I am worried my child will remain unemployed after completing ITI", "intent": "object", "topic": "security", "lang": "en"}
+{"text": "How many candidates got placed in top manufacturing firms last year?", "intent": "inquire", "topic": "security", "lang": "en"}
+{"text": "इस केंद्र पर छात्रों का प्लेसमेंट प्रतिशत क्या है?", "intent": "inquire", "topic": "security", "lang": "hi"}
+{"text": "क्या कोर्स खत्म होने के बाद नौकरी पक्की मिल जाएगी?", "intent": "inquire", "topic": "security", "lang": "hi"}
+{"text": "मुझे डर है कि प्रमाण पत्र मिलने के बाद भी नौकरी नहीं मिलेगी", "intent": "object", "topic": "security", "lang": "hi"}
+{"text": "क्या स्थानीय उद्योगों में इस कौशल की मांग बनी हुई है?", "intent": "inquire", "topic": "security", "lang": "hi"}
+{"text": "Placement rate kitna hai is college ka?", "intent": "inquire", "topic": "security", "lang": "hinglish"}
+{"text": "Job permanent milegi ya contract based hogi?", "intent": "inquire", "topic": "security", "lang": "hinglish"}
+{"text": "Campus placement me company aati hai ya khud dhundhna padega?", "intent": "inquire", "topic": "security", "lang": "hinglish"}
+{"text": "Agar placement na mile to kya bacha berojgar baithega?", "intent": "object", "topic": "security", "lang": "hinglish"}
+{"text": "What are the total fees and tool charges for this course?", "intent": "inquire", "topic": "cost", "lang": "en"}
+{"text": "Can economically weaker students get fee waivers or scholarships?", "intent": "inquire", "topic": "cost", "lang": "en"}
+{"text": "Our family cannot afford expensive private coaching fees", "intent": "object", "topic": "cost", "lang": "en"}
+{"text": "Is this vocational program free under Government skill schemes?", "intent": "inquire", "topic": "cost", "lang": "en"}
+{"text": "इस पाठ्यक्रम का कुल प्रशिक्षण शुल्क कितना है?", "intent": "inquire", "topic": "cost", "lang": "hi"}
+{"text": "क्या अनुसूचित जाति या बीपीएल परिवारों के लिए छात्रवृत्ति है?", "intent": "inquire", "topic": "cost", "lang": "hi"}
+{"text": "हम इतनी ज्यादा फीस नहीं भर सकते, कोई सस्ता विकल्प बताएं", "intent": "object", "topic": "cost", "lang": "hi"}
+{"text": "क्या सरकारी योजना के तहत मुफ्त दाखिला मिल सकता है?", "intent": "inquire", "topic": "cost", "lang": "hi"}
+{"text": "Total fees kitni lagegi is course ki?", "intent": "inquire", "topic": "cost", "lang": "hinglish"}
+{"text": "Stipend milta hai kya training ke time par?", "intent": "inquire", "topic": "cost", "lang": "hinglish"}
+{"text": "Sarkari scheme me free me admission ho sakta hai kya?", "intent": "inquire", "topic": "cost", "lang": "hinglish"}
+{"text": "Itna kharcha hum afford nahi kar sakte koi scholarship hai?", "intent": "object", "topic": "cost", "lang": "hinglish"}
+{"text": "Is the workshop and campus safe for female students?", "intent": "inquire", "topic": "safety", "lang": "en"}
+{"text": "Are there certified female instructors and security guards?", "intent": "inquire", "topic": "safety", "lang": "en"}
+{"text": "I fear sending my daughter into heavy industrial workshops", "intent": "object", "topic": "safety", "lang": "en"}
+{"text": "Does the institute provide separate girls hostel with CCTV security?", "intent": "inquire", "topic": "safety", "lang": "en"}
+{"text": "क्या यह संस्थान छात्राओं और लड़कियों के लिए सुरक्षित है?", "intent": "inquire", "topic": "safety", "lang": "hi"}
+{"text": "क्या वर्कशॉप में महिला ट्रेनर और सुरक्षा व्यवस्था उपलब्ध है?", "intent": "inquire", "topic": "safety", "lang": "hi"}
+{"text": "लड़कियों के लिए यह काम सुरक्षित नहीं लगता, मुझे चिंता है", "intent": "object", "topic": "safety", "lang": "hi"}
+{"text": "परिसर में सीसीटीवी कैमरे और सुरक्षा गार्ड तैनात हैं क्या?", "intent": "inquire", "topic": "safety", "lang": "hi"}
+{"text": "Center ladkiyo ke liye safe hai kya?", "intent": "inquire", "topic": "safety", "lang": "hinglish"}
+{"text": "Female trainer aur proper safety equipment hai na?", "intent": "inquire", "topic": "safety", "lang": "hinglish"}
+{"text": "Beti ki suraksha ki chinta hai workshop me koi problem to nahi?", "intent": "object", "topic": "safety", "lang": "hinglish"}
+{"text": "Ladkiyo ka alag hostel aur security guard available hai?", "intent": "inquire", "topic": "safety", "lang": "hinglish"}
+{"text": "How far is the training centre from our residential district?", "intent": "inquire", "topic": "distance", "lang": "en"}
+{"text": "Is safe hostel accommodation available nearby?", "intent": "inquire", "topic": "distance", "lang": "en"}
+{"text": "The institute is too far away from home, travelling daily is impossible", "intent": "object", "topic": "distance", "lang": "en"}
+{"text": "Are public buses and transport accessible to the campus?", "intent": "inquire", "topic": "distance", "lang": "en"}
+{"text": "हमारे घर से प्रशिक्षण केंद्र की दूरी कितनी है?", "intent": "inquire", "topic": "distance", "lang": "hi"}
+{"text": "क्या बाहर के छात्रों के लिए हॉस्टल की व्यवस्था उपलब्ध है?", "intent": "inquire", "topic": "distance", "lang": "hi"}
+{"text": "केंद्र शहर से बहुत दूर है, रोज आने-जाने में परेशानी होगी", "intent": "object", "topic": "distance", "lang": "hi"}
+{"text": "क्या बस या लोकल ट्रेन से सीधा रास्ता है?", "intent": "inquire", "topic": "distance", "lang": "hi"}
+{"text": "Center kitni door hai hamare ghar se?", "intent": "inquire", "topic": "distance", "lang": "hinglish"}
+{"text": "Hostel milega ya daily travel karna padega?", "intent": "inquire", "topic": "distance", "lang": "hinglish"}
+{"text": "Itni door aana jana mushkil hoga bus service hai kya?", "intent": "object", "topic": "distance", "lang": "hinglish"}
+{"text": "Outstation students ke rehne ki kya vyavastha hai?", "intent": "inquire", "topic": "distance", "lang": "hinglish"}
+{"text": "What is the social prestige and respectability of vocational ITI trades?", "intent": "inquire", "topic": "social", "lang": "en"}
+{"text": "Does society accept vocational certificates compared to college degrees?", "intent": "inquire", "topic": "social", "lang": "en"}
+{"text": "People in our community look down upon blue collar technicians", "intent": "object", "topic": "social", "lang": "en"}
+{"text": "Can a skilled technician rise to supervisor and management roles?", "intent": "inquire", "topic": "social", "lang": "en"}
+{"text": "समाज में इस तकनीकी काम की क्या इज्जत और मान-सम्मान है?", "intent": "inquire", "topic": "social", "lang": "hi"}
+{"text": "क्या रिश्तेदार और समाज इस करियर को सम्मान की दृष्टि से देखते हैं?", "intent": "inquire", "topic": "social", "lang": "hi"}
+{"text": "लोग कहेंगे कि छोटा काम कर रहा है, इज्जत नहीं रहेगी", "intent": "object", "topic": "social", "lang": "hi"}
+{"text": "क्या एनएसक्यूएफ प्रमाणन से सरकारी और बड़ी कंपनियों में प्रतिष्ठा मिलती है?", "intent": "inquire", "topic": "social", "lang": "hi"}
+{"text": "Samaj me is trade ki izzat kaisi hai?", "intent": "inquire", "topic": "social", "lang": "hinglish"}
+{"text": "College degree chod kar ITI karne par log kya kahenge?", "intent": "object", "topic": "social", "lang": "hinglish"}
+{"text": "Future me promotion aur izzat milegi na is field me?", "intent": "inquire", "topic": "social", "lang": "hinglish"}
+{"text": "Relativity me sab engineering kar rahe hain, isme respect hogi?", "intent": "object", "topic": "social", "lang": "hinglish"}
+{"text": "What is the minimum eligibility criteria and qualification needed?", "intent": "inquire", "topic": "other", "lang": "en"}
+{"text": "I want to speak with a human career counsellor immediately", "intent": "escalate", "topic": "other", "lang": "en"}
+{"text": "Please have an expert call me to discuss trade options", "intent": "escalate", "topic": "other", "lang": "en"}
+{"text": "Hello, good morning! Can you help guide me on career choices?", "intent": "greet", "topic": "other", "lang": "en"}
+{"text": "कृपया मुझे किसी विशेषज्ञ काउंसलर से सीधे फोन पर बात करवाएं", "intent": "escalate", "topic": "other", "lang": "hi"}
+{"text": "नमस्ते, मुझे करियर चयन में मार्गदर्शन चाहिए", "intent": "greet", "topic": "other", "lang": "hi"}
+{"text": "दाखिला लेने की अंतिम तिथि और आवश्यक दस्तावेज क्या हैं?", "intent": "inquire", "topic": "other", "lang": "hi"}
+{"text": "Mujhe kisi expert counsellor sir se phone par baat karni hai", "intent": "escalate", "topic": "other", "lang": "hinglish"}
+{"text": "Hello sir, career options choose karne me guide karein", "intent": "greet", "topic": "other", "lang": "hinglish"}
+{"text": "Admission form submit karne ke liye kya documents chahiye?", "intent": "inquire", "topic": "other", "lang": "hinglish"}

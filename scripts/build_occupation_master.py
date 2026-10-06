@@ -89,6 +89,7 @@ def main(get_session=SessionLocal) -> None:
                 "source_year": to_int(extra.get("source_year") or raw.get("source_year")),
                 "is_demo": to_bool(extra.get("is_demo", raw.get("is_demo")), default=True),
                 "needs_review": to_bool(extra.get("needs_review", raw.get("needs_review"))),
+                "is_vocational": to_bool(extra.get("is_vocational", raw.get("is_vocational")), default=True),
             }
             result = _upsert_occupation(session, name_en, values)
             if result == "insert":

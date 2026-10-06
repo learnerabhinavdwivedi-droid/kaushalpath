@@ -1,0 +1,128 @@
+{
+  "income": {
+    "en": {
+      "template": "Based on verified outcome data from {source} ({source_year}), the median monthly salary for this trade is ₹{median_salary}, with starting wages typically ranging between ₹{p25_salary} and ₹{p75_salary}. In {district}, {provider} has trained {n} students in this trade with structured wage progression.",
+      "followups": [
+        "What is the placement percentage in this trade?",
+        "Are there opportunities for wage progression and promotion?",
+        "What government schemes support free or subsidized training?"
+      ]
+    },
+    "hi": {
+      "template": "{source} ({source_year}) के प्रमाणित आंकड़ों के अनुसार, इस ट्रेड में औसत मासिक वेतन ₹{median_salary} है, तथा शुरुआती वेतन सामान्यतः ₹{p25_salary} से ₹{p75_salary} के बीच रहता है। {district} में {provider} ने {n} छात्रों को प्रशिक्षित कर उद्योग में स्थापित किया है।",
+      "followups": [
+        "इस ट्रेड में प्लेसमेंट का प्रतिशत क्या है?",
+        "आगे चलकर वेतन और पद में पदोन्नति कैसे मिलती है?",
+        "क्या सरकारी योजनाओं में कोई छात्रवृत्ति उपलब्ध है?"
+      ]
+    }
+  },
+  "security": {
+    "en": {
+      "template": "According to official reports from {source}, this vocation maintains a verified placement rate of {placement_rate}% across {n} certified students at {provider}. Formal NSQF certification and tie-ups ensure continuous hiring demand.",
+      "followups": [
+        "What starting salary can be expected after training?",
+        "Which major companies recruit from this provider?",
+        "Can a graduate pursue higher technical qualifications?"
+      ]
+    },
+    "hi": {
+      "template": "{source} की आधिकारिक रिपोर्ट के अनुसार, {provider} के {n} प्रमाणित विद्यार्थियों में से {placement_rate}% का सफल प्लेसमेंट दर्ज किया गया है। NSQF प्रमाणन से स्थायी और संगठित रोजगार के अवसर सुरक्षित होते हैं।",
+      "followups": [
+        "प्रशिक्षण के बाद औसत शुरुआती वेतन कितना रहता है?",
+        "कौन-सी प्रमुख कंपनियां सीधे कैंपस से भर्ती करती हैं?",
+        "क्या आगे डिप्लोमा या डिग्री के लिए रास्ते खुले हैं?"
+      ]
+    }
+  },
+  "cost": {
+    "en": {
+      "template": "Under the {scheme_name} initiative by {source}, eligible students receive subsidized vocational skill training. At {provider}, the nominal course fee is ₹{fee}, and qualifying candidates may receive stipend support.",
+      "followups": [
+        "What documents are needed to apply for the scheme subsidy?",
+        "What are the hostel and travel costs?",
+        "How soon can a student start earning after course completion?"
+      ]
+    },
+    "hi": {
+      "template": "{source} की {scheme_name} के तहत पात्र विद्यार्थियों को रियायती या निःशुल्क व्यावसायिक प्रशिक्षण दिया जाता है। {provider} में अनुमानित पाठ्यक्रम शुल्क ₹{fee} है, तथा पात्र शिक्षार्थियों को स्टाइपेंड सहायता भी मिलती है।",
+      "followups": [
+        "सरकारी योजना में छात्रवृत्ति हेतु कौन-से दस्तावेज चाहिए?",
+        "क्या हॉस्टल या आने-जाने के खर्चे में छूट मिलती है?",
+        "कोर्स पूरा होने के बाद आमदनी कब से शुरू हो जाती है?"
+      ]
+    }
+  },
+  "safety": {
+    "en": {
+      "template": "At {provider} in {district}, safety is strictly assured with female trainer presence ({has_female_trainers}) and designated hostel facilities ({has_hostel}). All practical workshops operate under certified workplace safety norms.",
+      "followups": [
+        "Can parents visit the training center before enrolment?",
+        "What are the daily class timings and batch options?",
+        "Is public transport safely accessible to the institute?"
+      ]
+    },
+    "hi": {
+      "template": "{district} स्थित {provider} में सुरक्षा के कड़े प्रबंध हैं, जहाँ महिला प्रशिक्षक उपस्थिति ({has_female_trainers}) तथा हॉस्टल सुविधा ({has_hostel}) उपलब्ध है। सभी वर्कशॉप प्रमाणित सुरक्षा नियमों के तहत संचालित होते हैं।",
+      "followups": [
+        "क्या दाखिले से पहले माता-पिता केंद्र का दौरा कर सकते हैं?",
+        "दैनिक कक्षाओं का समय और बैच का समय क्या है?",
+        "क्या केंद्र तक बस या परिवहन की सुरक्षित सुविधा है?"
+      ]
+    }
+  },
+  "distance": {
+    "en": {
+      "template": "Training is conveniently available in {district}, {state} at {provider}. {transport_note} Hostel accommodations ({has_hostel}) allow outstation students to study comfortably.",
+      "followups": [
+        "What are the public transit routes to the center?",
+        "What is the total duration of the training program?",
+        "Are there local job placements available in {district}?"
+      ]
+    },
+    "hi": {
+      "template": "{district}, {state} में {provider} पर स्थानीय प्रशिक्षण उपलब्ध है। {transport_note} हॉस्टल सुविधा ({has_hostel}) से दूर रहने वाले छात्र भी सुगमता से अध्ययन कर सकते हैं।",
+      "followups": [
+        "केंद्र तक पहुंचने के लिए परिवहन के साधन कौन-से हैं?",
+        "इस प्रशिक्षण कार्यक्रम की कुल समयावधि कितनी है?",
+        "क्या {district} में ही स्थानीय नौकरी के अवसर उपलब्ध हैं?"
+      ]
+    }
+  },
+  "social": {
+    "en": {
+      "template": "Vocational technical education is nationally recognized under {source} and the National Skills Qualifications Framework. Formal credentials from {provider} lead to recognized supervisory technician and master artisan careers.",
+      "followups": [
+        "What is the career progression path over five to ten years?",
+        "Can an ITI graduate start their own enterprise or workshop?",
+        "How does the starting salary compare with generic arts degrees?"
+      ]
+    },
+    "hi": {
+      "template": "व्यावसायिक तकनीकी शिक्षा को {source} और राष्ट्रीय कौशल योग्यता फ्रेमवर्क (NSQF) के तहत राष्ट्रीय मान्यता प्राप्त है। {provider} से प्राप्त प्रमाणपत्र सम्मानजनक तकनीशियन और पर्यवेक्षक पदों की गारंटी देता है।",
+      "followups": [
+        "अगले पांच से दस वर्षों में पदोन्नति का क्या मार्ग रहता है?",
+        "क्या आईटीआई के बाद अपना स्वतंत्र उद्यम या वर्कशॉप शुरू कर सकते हैं?",
+        "सामान्य बीए की तुलना में इस ट्रेड में कमाई और अवसर कैसे हैं?"
+      ]
+    }
+  },
+  "other": {
+    "en": {
+      "template": "Our career counselling engine grounds all guidance in verified outcome records from {source} ({source_year}). In {district}, {provider} is ready to support your educational and employment journey.",
+      "followups": [
+        "Would you like to speak directly with an assigned career counsellor?",
+        "What are the next steps for enrolment and batch registration?",
+        "Can we compare this trade with another vocation?"
+      ]
+    },
+    "hi": {
+      "template": "कौशलपथ की सभी जानकारियां {source} ({source_year}) के आधिकारिक आंकड़ों पर आधारित हैं। {district} में {provider} आपके उज्ज्वल भविष्य के लिए मार्गदर्शन प्रदान करने हेतु तत्पर है।",
+      "followups": [
+        "क्या आप विशेषज्ञ काउंसलर से सीधे फोन पर बात करना चाहते हैं?",
+        "प्रवेश लेने के लिए अगली प्रक्रिया क्या है?",
+        "क्या आप इस ट्रेड की तुलना किसी अन्य विकल्प से करना चाहते हैं?"
+      ]
+    }
+  }
+}

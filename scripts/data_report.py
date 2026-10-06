@@ -9,7 +9,15 @@ from __future__ import annotations
 
 from _common import BACKEND_DIR  # noqa: F401  (ensures sys.path bootstrap)
 from app.db.session import SessionLocal
-from app.models import Centre, Course, Market, Occupation
+from app.models import (
+    Centre,
+    Course,
+    Market,
+    Occupation,
+    ProgressionPath,
+    ProviderOutcome,
+    Scheme,
+)
 from sqlalchemy import func
 
 TABLES = {
@@ -19,6 +27,18 @@ TABLES = {
     "market": (
         Market,
         ["occupation_id", "state", "avg_salary_inr", "demand_index", "placement_rate", "source"],
+    ),
+    "provider_outcomes": (
+        ProviderOutcome,
+        ["provider_id", "course_id", "cohort_year", "placement_rate", "earnings_median", "source"],
+    ),
+    "progression_paths": (
+        ProgressionPath,
+        ["from_course_id", "to_label", "kind", "source"],
+    ),
+    "schemes": (
+        Scheme,
+        ["name", "benefit_text_en", "benefit_text_hi", "source"],
     ),
 }
 
@@ -59,8 +79,14 @@ def _dup_pct(session, model, name: str) -> float:
         cols = [model.occupation_id, model.name]
     elif name == "centres":
         cols = [model.course_id, model.name, model.district]
+    elif name == "provider_outcomes":
+        cols = [model.provider_id, model.course_id, model.cohort_year]
+    elif name == "progression_paths":
+        cols = [model.from_course_id, model.to_label]
+    elif name == "schemes":
+        cols = [model.name]
     else:  # market
-        cols = [model.occupation_id, model.state, model.year]
+        cols = [model.occupation_id, model.state, model.district, model.year]
     total = session.query(func.count(model.id)).scalar() or 0
     if not total:
         return 0.0
@@ -73,7 +99,10 @@ def _dup_pct(session, model, name: str) -> float:
 def _coverage(session) -> None:
     print("\n== occupation coverage ==")
     total_occ = session.query(func.count(Occupation.id)).scalar() or 0
-    print(f"  total occupations: {total_occ}")
+    voc_occ = session.query(func.count(Occupation.id)).filter(
+        Occupation.is_vocational.is_(True)
+    ).scalar() or 0
+    print(f"  total occupations: {total_occ} (vocational: {voc_occ})")
 
     print("  by NSQF level:")
     for level, cnt in session.query(Occupation.nsqf_level, func.count(Occupation.id)).group_by(
@@ -104,6 +133,18 @@ def _coverage(session) -> None:
         Market.placement_rate.isnot(None)
     ).scalar() or 0
     print(f"  market rows with placement_rate: {mk_with_rate}/{mk_total}")
+
+    po_total = session.query(func.count(ProviderOutcome.id)).scalar() or 0
+    po_with_range = session.query(func.count(ProviderOutcome.id)).filter(
+        ProviderOutcome.earnings_p25.isnot(None),
+        ProviderOutcome.earnings_median.isnot(None),
+        ProviderOutcome.earnings_p75.isnot(None),
+    ).scalar() or 0
+    print(f"  provider_outcomes with earnings ranges (p25/median/p75): {po_with_range}/{po_total}")
+
+    prog_total = session.query(func.count(ProgressionPath.id)).scalar() or 0
+    schemes_total = session.query(func.count(Scheme.id)).scalar() or 0
+    print(f"  progression paths: {prog_total}, schemes: {schemes_total}")
 
 
 def main() -> None:

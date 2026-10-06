@@ -8,7 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base, TimestampMixin
 
-ROLES = ("student", "parent", "counsellor", "admin")
+ROLES = ("student", "parent", "counsellor", "admin", "scheme_admin")
 
 
 class User(Base, TimestampMixin):

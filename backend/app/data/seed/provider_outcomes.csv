@@ -1,0 +1,81 @@
+provider_name,district,course_name,cohort_year,enrolled,certified,placed,placement_rate,earnings_p25,earnings_median,earnings_p75,self_employed_pct,apprenticeship_stipend_inr,source,source_year,is_demo,needs_review
+Government ITI Kanpur,Kanpur,ITI Fitter,2025,60,54,45,83.3,13600,16000,20000,12.5,9500,demo_synth_2026,2026,true,false
+NSTI Lucknow,Lucknow,ITI Fitter,2025,50,46,39,84.8,14450,17000,21250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Varanasi,Varanasi,ITI Turner,2025,60,54,45,83.3,14620,17200,21500,12.5,9500,demo_synth_2026,2026,true,false
+PMKK Skill Hub Patna,Patna,ITI Turner,2025,50,46,39,84.8,15470,18200,22750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Gaya,Gaya,ITI Machinist,2025,60,54,45,83.3,15640,18400,23000,12.5,9500,demo_synth_2026,2026,true,false
+Industrial Training Centre Nagpur,Nagpur,ITI Machinist,2025,50,46,39,84.8,16490,19400,24250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Pune,Pune,ITI Welder,2025,60,54,45,83.3,16660,19600,24500,12.5,9500,demo_synth_2026,2026,true,false
+NSTI Nashik,Nashik,ITI Welder,2025,50,46,39,84.8,17510,20600,25750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Jaipur,Jaipur,ITI Electrician,2025,60,54,45,83.3,17680,20800,26000,12.5,9500,demo_synth_2026,2026,true,false
+PMKK Skill Hub Jodhpur,Jodhpur,ITI Electrician,2025,50,46,39,84.8,18530,21800,27250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Bhopal,Bhopal,ITI Electronics Mechanic,2025,60,54,45,83.3,18700,22000,27500,12.5,9500,demo_synth_2026,2026,true,false
+Industrial Training Centre Indore,Indore,ITI Electronics Mechanic,2025,50,46,39,84.8,19550,23000,28750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Ahmedabad,Ahmedabad,ITI Motor Vehicle Mechanic,2025,60,54,45,83.3,19720,23200,29000,12.5,9500,demo_synth_2026,2026,true,false
+NSTI Vadodara,Vadodara,ITI Motor Vehicle Mechanic,2025,50,46,39,84.8,20570,24200,30250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Ranchi,Ranchi,ITI Diesel Mechanic,2025,60,54,45,83.3,20740,24400,30500,12.5,9500,demo_synth_2026,2026,true,false
+PMKK Skill Hub Bardhaman,Bardhaman,ITI Diesel Mechanic,2025,50,46,39,84.8,21590,25400,31750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Kanpur,Kanpur,ITI Plumber,2025,60,54,45,83.3,21760,25600,32000,12.5,9500,demo_synth_2026,2026,true,false
+Industrial Training Centre Lucknow,Lucknow,ITI Plumber,2025,50,46,39,84.8,22610,26600,33250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Varanasi,Varanasi,ITI Carpenter,2025,60,54,45,83.3,22780,26800,33500,12.5,9500,demo_synth_2026,2026,true,false
+NSTI Patna,Patna,ITI Carpenter,2025,50,46,39,84.8,23630,27800,34750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Gaya,Gaya,ITI Mason,2025,60,54,45,83.3,13600,16000,20000,12.5,9500,demo_synth_2026,2026,true,false
+PMKK Skill Hub Nagpur,Nagpur,ITI Mason,2025,50,46,39,84.8,14450,17000,21250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Pune,Pune,ITI Painter,2025,60,54,45,83.3,14620,17200,21500,12.5,9500,demo_synth_2026,2026,true,false
+Industrial Training Centre Nashik,Nashik,ITI Painter,2025,50,46,39,84.8,15470,18200,22750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Jaipur,Jaipur,ITI Refrigeration and AC Mechanic,2025,60,54,45,83.3,15640,18400,23000,12.5,9500,demo_synth_2026,2026,true,false
+NSTI Jodhpur,Jodhpur,ITI Refrigeration and AC Mechanic,2025,50,46,39,84.8,16490,19400,24250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Bhopal,Bhopal,ITI Computer Hardware Maintenance,2025,60,54,45,83.3,16660,19600,24500,12.5,9500,demo_synth_2026,2026,true,false
+PMKK Skill Hub Indore,Indore,ITI Computer Hardware Maintenance,2025,50,46,39,84.8,17510,20600,25750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Ahmedabad,Ahmedabad,ITI Instrument Mechanic,2025,60,54,45,83.3,17680,20800,26000,12.5,9500,demo_synth_2026,2026,true,false
+Industrial Training Centre Vadodara,Vadodara,ITI Instrument Mechanic,2025,50,46,39,84.8,18530,21800,27250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Ranchi,Ranchi,ITI CNC Turning,2025,60,54,45,83.3,18700,22000,27500,12.5,9500,demo_synth_2026,2026,true,false
+NSTI Bardhaman,Bardhaman,ITI CNC Turning,2025,50,46,39,84.8,19550,23000,28750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Kanpur,Kanpur,ITI Tool and Die,2025,60,54,45,83.3,19720,23200,29000,12.5,9500,demo_synth_2026,2026,true,false
+PMKK Skill Hub Lucknow,Lucknow,ITI Tool and Die,2025,50,46,39,84.8,20570,24200,30250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Varanasi,Varanasi,Solar PV Installer Certificate,2025,60,54,45,83.3,20740,24400,30500,12.5,9500,demo_synth_2026,2026,true,false
+Industrial Training Centre Patna,Patna,Solar PV Installer Certificate,2025,50,46,39,84.8,21590,25400,31750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Gaya,Gaya,Wind Turbine Technician Course,2025,60,54,45,83.3,21760,25600,32000,12.5,9500,demo_synth_2026,2026,true,false
+NSTI Nagpur,Nagpur,Wind Turbine Technician Course,2025,50,46,39,84.8,22610,26600,33250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Pune,Pune,HVAC Technician Certificate,2025,60,54,45,83.3,22780,26800,33500,12.5,9500,demo_synth_2026,2026,true,false
+PMKK Skill Hub Nashik,Nashik,HVAC Technician Certificate,2025,50,46,39,84.8,23630,27800,34750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Jaipur,Jaipur,Master of Science in Data Science,2025,60,54,45,83.3,13600,16000,20000,12.5,9500,demo_synth_2026,2026,true,false
+Industrial Training Centre Jodhpur,Jodhpur,Master of Science in Data Science,2025,50,46,39,84.8,14450,17000,21250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Bhopal,Bhopal,Database Administration Certificate,2025,60,54,45,83.3,14620,17200,21500,12.5,9500,demo_synth_2026,2026,true,false
+NSTI Indore,Indore,Database Administration Certificate,2025,50,46,39,84.8,15470,18200,22750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Ahmedabad,Ahmedabad,CCNA Networking,2025,60,54,45,83.3,15640,18400,23000,12.5,9500,demo_synth_2026,2026,true,false
+PMKK Skill Hub Vadodara,Vadodara,CCNA Networking,2025,50,46,39,84.8,16490,19400,24250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Ranchi,Ranchi,UI UX Design Programme,2025,60,54,45,83.3,16660,19600,24500,12.5,9500,demo_synth_2026,2026,true,false
+Industrial Training Centre Bardhaman,Bardhaman,UI UX Design Programme,2025,50,46,39,84.8,17510,20600,25750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Kanpur,Kanpur,Digital Marketing Certificate,2025,60,54,45,83.3,17680,20800,26000,12.5,9500,demo_synth_2026,2026,true,false
+NSTI Lucknow,Lucknow,Digital Marketing Certificate,2025,50,46,39,84.8,18530,21800,27250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Varanasi,Varanasi,Diploma in Graphic Design,2025,60,54,45,83.3,18700,22000,27500,12.5,9500,demo_synth_2026,2026,true,false
+PMKK Skill Hub Patna,Patna,Diploma in Graphic Design,2025,50,46,39,84.8,19550,23000,28750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Gaya,Gaya,General Nursing and Midwifery,2025,60,54,45,83.3,19720,23200,29000,12.5,9500,demo_synth_2026,2026,true,false
+Industrial Training Centre Nagpur,Nagpur,General Nursing and Midwifery,2025,50,46,39,84.8,20570,24200,30250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Pune,Pune,Nursing Assistant Training,2025,60,54,45,83.3,20740,24400,30500,12.5,9500,demo_synth_2026,2026,true,false
+NSTI Nashik,Nashik,Nursing Assistant Training,2025,50,46,39,84.8,21590,25400,31750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Jaipur,Jaipur,Diploma in Pharmacy,2025,60,54,45,83.3,21760,25600,32000,12.5,9500,demo_synth_2026,2026,true,false
+PMKK Skill Hub Jodhpur,Jodhpur,Diploma in Pharmacy,2025,50,46,39,84.8,22610,26600,33250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Bhopal,Bhopal,BSc Medical Laboratory Technology,2025,60,54,45,83.3,22780,26800,33500,12.5,9500,demo_synth_2026,2026,true,false
+Industrial Training Centre Indore,Indore,BSc Medical Laboratory Technology,2025,50,46,39,84.8,23630,27800,34750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Ahmedabad,Ahmedabad,Diploma in Radiology,2025,60,54,45,83.3,13600,16000,20000,12.5,9500,demo_synth_2026,2026,true,false
+NSTI Vadodara,Vadodara,Diploma in Radiology,2025,50,46,39,84.8,14450,17000,21250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Ranchi,Ranchi,Diploma in Physiotherapy Assistance,2025,60,54,45,83.3,14620,17200,21500,12.5,9500,demo_synth_2026,2026,true,false
+PMKK Skill Hub Bardhaman,Bardhaman,Diploma in Physiotherapy Assistance,2025,50,46,39,84.8,15470,18200,22750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Kanpur,Kanpur,EMT Paramedic Course,2025,60,54,45,83.3,15640,18400,23000,12.5,9500,demo_synth_2026,2026,true,false
+Industrial Training Centre Lucknow,Lucknow,EMT Paramedic Course,2025,50,46,39,84.8,16490,19400,24250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Varanasi,Varanasi,Auxiliary Nurse Midwifery,2025,60,54,45,83.3,16660,19600,24500,12.5,9500,demo_synth_2026,2026,true,false
+NSTI Patna,Patna,Auxiliary Nurse Midwifery,2025,50,46,39,84.8,17510,20600,25750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Gaya,Gaya,Diploma in Dental Hygiene,2025,60,54,45,83.3,17680,20800,26000,12.5,9500,demo_synth_2026,2026,true,false
+PMKK Skill Hub Nagpur,Nagpur,Diploma in Dental Hygiene,2025,50,46,39,84.8,18530,21800,27250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Pune,Pune,BSc Nutrition and Dietetics,2025,60,54,45,83.3,18700,22000,27500,12.5,9500,demo_synth_2026,2026,true,false
+Industrial Training Centre Nashik,Nashik,BSc Nutrition and Dietetics,2025,50,46,39,84.8,19550,23000,28750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Jaipur,Jaipur,Diploma in Optometry,2025,60,54,45,83.3,19720,23200,29000,12.5,9500,demo_synth_2026,2026,true,false
+NSTI Jodhpur,Jodhpur,Diploma in Optometry,2025,50,46,39,84.8,20570,24200,30250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Bhopal,Bhopal,Dialysis Technician Certificate,2025,60,54,45,83.3,20740,24400,30500,12.5,9500,demo_synth_2026,2026,true,false
+PMKK Skill Hub Indore,Indore,Dialysis Technician Certificate,2025,50,46,39,84.8,21590,25400,31750,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Ahmedabad,Ahmedabad,Bachelor of Education,2025,60,54,45,83.3,21760,25600,32000,12.5,9500,demo_synth_2026,2026,true,false
+Industrial Training Centre Vadodara,Vadodara,Bachelor of Education,2025,50,46,39,84.8,22610,26600,33250,15.0,10000,demo_synth_2026,2026,true,false
+Government ITI Ranchi,Ranchi,Child Care Worker Training,2025,60,54,45,83.3,22780,26800,33500,12.5,9500,demo_synth_2026,2026,true,false
+NSTI Bardhaman,Bardhaman,Child Care Worker Training,2025,50,46,39,84.8,23630,27800,34750,15.0,10000,demo_synth_2026,2026,true,false

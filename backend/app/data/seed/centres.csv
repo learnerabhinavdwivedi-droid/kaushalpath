@@ -1,46 +1,81 @@
-occupation_name_en,course_name,name,district,state,lat,lon,source,source_year,is_demo,needs_review
-Fitter,ITI Fitter,Government ITI Kanpur,Kanpur,Uttar Pradesh,26.4499,80.3319,demo_synth_2026,2026,true,true
-Fitter,ITI Fitter,Industrial Training Centre Lucknow,Lucknow,Uttar Pradesh,26.8467,80.9462,demo_synth_2026,2026,true,true
-Electrician,ITI Electrician,Government ITI Patna,Patna,Bihar,25.5941,85.1376,demo_synth_2026,2026,true,true
-Electrician,ITI Electrician,Polytechnic Nagpur,Nagpur,Maharashtra,21.1458,79.0882,demo_synth_2026,2026,true,true
-Welder,ITI Welder,ITI Asansol,Bardhaman,West Bengal,23.6920,86.9849,demo_synth_2026,2026,true,true
-Mechanic Motor Vehicle,ITI Motor Vehicle Mechanic,Government ITI Bhopal,Bhopal,Madhya Pradesh,23.2599,77.4126,demo_synth_2026,2026,true,true
-Plumber,ITI Plumber,ITI Jaipur,Jaipur,Rajasthan,26.9124,75.7873,demo_synth_2026,2026,true,true
-Carpenter,ITI Carpenter,Government ITI Ranchi,Ranchi,Jharkhand,23.3441,85.3096,demo_synth_2026,2026,true,true
-Software Developer,Bachelor of Computer Applications,City College Bengaluru,Bengaluru,Karnataka,12.9716,77.5946,demo_synth_2026,2026,true,true
-Web Developer,Diploma in Web Development,Tech Institute Hyderabad,Hyderabad,Telangana,17.3850,78.4867,demo_synth_2026,2026,true,true
-Data Analyst,Data Analytics Programme,Data Academy Pune,Pune,Maharashtra,18.5204,73.8567,demo_synth_2026,2026,true,true
-Cloud Engineer,AWS Cloud Practitioner,Cloud Skills Centre Gurugram,Gurugram,Haryana,28.4595,77.0266,demo_synth_2026,2026,true,true
-Cybersecurity Analyst,Cybersecurity Fundamentals,Security Lab Delhi,New Delhi,Delhi,28.6139,77.2090,demo_synth_2026,2026,true,true
-Graphic Designer,Diploma in Graphic Design,Design Institute Ahmedabad,Ahmedabad,Gujarat,23.0225,72.5714,demo_synth_2026,2026,true,true
-Digital Marketer,Digital Marketing Certificate,Marketing Academy Mumbai,Mumbai,Maharashtra,19.0760,72.8777,demo_synth_2026,2026,true,true
-Staff Nurse,General Nursing and Midwifery,Government Nursing College Chennai,Chennai,Tamil Nadu,13.0827,80.2707,demo_synth_2026,2026,true,true
-Nursing Assistant,Nursing Assistant Training,Health Training Centre Kochi,Kochi,Kerala,9.9312,76.2673,demo_synth_2026,2026,true,true
-Pharmacy Technician,Diploma in Pharmacy,Pharmacy Institute Vijayawada,Krishna,Andhra Pradesh,16.5062,80.6480,demo_synth_2026,2026,true,true
-Medical Lab Technician,BSc Medical Laboratory Technology,Lab Tech College Kolkata,Kolkata,West Bengal,22.5726,88.3639,demo_synth_2026,2026,true,true
-Physiotherapy Assistant,Diploma in Physiotherapy Assistance,Rehab Centre Pune,Pune,Maharashtra,18.5204,73.8567,demo_synth_2026,2026,true,true
-School Teacher,Bachelor of Education,Education College Bhopal,Bhopal,Madhya Pradesh,23.2599,77.4126,demo_synth_2026,2026,true,true
-Social Worker,Bachelor of Social Work,Social Work Institute Delhi,New Delhi,Delhi,28.6139,77.2090,demo_synth_2026,2026,true,true
-Accountant,Diploma in Accounting,Commerce College Jaipur,Jaipur,Rajasthan,26.9124,75.7873,demo_synth_2026,2026,true,true
-Bank Clerk,Banking Operations Certificate,Banking Institute Mumbai,Mumbai,Maharashtra,19.0760,72.8777,demo_synth_2026,2026,true,true
-Chartered Accountant,CA Foundation Course,CA Coaching Centre Delhi,New Delhi,Delhi,28.6139,77.2090,demo_synth_2026,2026,true,true
-Fashion Designer,Diploma in Fashion Design,Design Institute Surat,Surat,Gujarat,21.1959,72.8302,demo_synth_2026,2026,true,true
-Interior Designer,Diploma in Interior Design,Design Academy Bengaluru,Bengaluru,Karnataka,12.9716,77.5946,demo_synth_2026,2026,true,true
-Photographer,Photography Certificate,Media School Mumbai,Mumbai,Maharashtra,19.0760,72.8777,demo_synth_2026,2026,true,true
-Animator,Animation and VFX Diploma,Animation Academy Hyderabad,Hyderabad,Telangana,17.3850,78.4867,demo_synth_2026,2026,true,true
-Beautician,Beauty and Wellness Course,Beauty Academy Ludhiana,Ludhiana,Punjab,30.9010,75.8573,demo_synth_2026,2026,true,true
-Agriculture Technician,Diploma in Agriculture,Agri College Ludhiana,Ludhiana,Punjab,30.9010,75.8573,demo_synth_2026,2026,true,true
-Horticulturist,BSc Horticulture,Horticulture College Nashik,Nashik,Maharashtra,19.9975,73.7898,demo_synth_2026,2026,true,true
-Chef,Diploma in Food Production,Hotel Institute Goa,Visakhapatnam,Andhra Pradesh,17.6868,83.2185,demo_synth_2026,2026,true,true
-Hotel Manager,BSc Hospitality Management,Hospitality College Goa,East Goa,Goa,15.4909,73.8278,demo_synth_2026,2026,true,true
-Civil Engineer,Bachelor of Civil Engineering,Engineering College Indore,Indore,Madhya Pradesh,22.7196,75.8577,demo_synth_2026,2026,true,true
-Mechanical Engineer,Bachelor of Mechanical Engineering,Engineering College Coimbatore,Coimbatore,Tamil Nadu,11.0168,76.9558,demo_synth_2026,2026,true,true
-Electrical Engineer,Diploma in Electrical Engineering,Polytechnic Guwahati,Guwahati,Assam,26.1445,91.7362,demo_synth_2026,2026,true,true
-Electronics Engineer,Bachelor of Electronics Engineering,Engineering College Trivandrum,Thiruvananthapuram,Kerala,8.5241,76.9366,demo_synth_2026,2026,true,true
-Architect,Bachelor of Architecture,Architecture College Ahmedabad,Ahmedabad,Gujarat,23.0225,72.5714,demo_synth_2026,2026,true,true
-Solar PV Technician,Solar PV Installer Certificate,Renewable Skills Centre Jodhpur,Jodhpur,Rajasthan,26.2389,73.0243,demo_synth_2026,2026,true,true
-Wind Turbine Technician,Wind Turbine Technician Course,Skills Centre Kutch,Kutch,Gujarat,23.2420,69.6669,demo_synth_2026,2026,true,true
-HVAC Technician,HVAC Technician Certificate,Skills Institute Delhi,New Delhi,Delhi,28.6139,77.2090,demo_synth_2026,2026,true,true
-Garment Worker,Stitching and Garment Course,Skill Centre Noida,Gautam Buddha Nagar,Uttar Pradesh,28.5355,77.3910,demo_synth_2026,2026,true,true
-Weaver,Handloom Weaver Training,Weaver Seva Kendra Varanasi,Varanasi,Uttar Pradesh,25.3176,82.9739,demo_synth_2026,2026,true,true
-Yoga Instructor,Yoga Teacher Training,Yoga Institute Rishikesh,Dehradun,Uttarakhand,30.0869,78.2676,demo_synth_2026,2026,true,true
+occupation_name_en,course_name,name,district,state,lat,lon,source,source_year,is_demo,needs_review,provider_type,affiliation,has_female_trainers,has_hostel,transport_note,safety_certified
+Fitter,ITI Fitter,Government ITI Kanpur,Kanpur,Uttar Pradesh,26.4499,80.3319,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,Bus shuttle from Central Station,true
+Fitter,ITI Fitter,NSTI Lucknow,Lucknow,Uttar Pradesh,26.8467,80.9462,demo_synth_2026,2026,true,false,NSTI,NCVT,true,false,Adjacent to metro feeder route,true
+Turner,ITI Turner,Government ITI Varanasi,Varanasi,Uttar Pradesh,25.3176,82.9739,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,Public bus route 14 stops at gate,true
+Turner,ITI Turner,PMKK Skill Hub Patna,Patna,Bihar,25.5941,85.1376,demo_synth_2026,2026,true,false,PMKK Skill Hub,MSDE,true,true,5 mins walk from Rajendra Nagar terminal,true
+Machinist,ITI Machinist,Government ITI Gaya,Gaya,Bihar,24.7955,85.0002,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,Dedicated institute transport available,true
+Machinist,ITI Machinist,Industrial Training Centre Nagpur,Nagpur,Maharashtra,21.1458,79.0882,demo_synth_2026,2026,true,false,Industrial Training Centre,MSDE,true,false,Metro feeder line stop within 200m,true
+Welder,ITI Welder,Government ITI Pune,Pune,Maharashtra,18.5204,73.8567,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,PMPML bus stand at campus gate,true
+Welder,ITI Welder,NSTI Nashik,Nashik,Maharashtra,19.9975,73.7898,demo_synth_2026,2026,true,false,NSTI,NCVT,true,true,City transit connectivity available,true
+Electrician,ITI Electrician,Government ITI Jaipur,Jaipur,Rajasthan,26.9124,75.7873,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,Direct low-floor bus connectivity,true
+Electrician,ITI Electrician,PMKK Skill Hub Jodhpur,Jodhpur,Rajasthan,26.2389,73.0243,demo_synth_2026,2026,true,false,PMKK Skill Hub,MSDE,true,false,Bus stop right opposite main gate,true
+Electronics Mechanic,ITI Electronics Mechanic,Government ITI Bhopal,Bhopal,Madhya Pradesh,23.2599,77.4126,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,City link bus service every 15 mins,true
+Electronics Mechanic,ITI Electronics Mechanic,Industrial Training Centre Indore,Indore,Madhya Pradesh,22.7196,75.8577,demo_synth_2026,2026,true,false,Industrial Training Centre,MSDE,true,true,iBus BRTS station 300m away,true
+Mechanic Motor Vehicle,ITI Motor Vehicle Mechanic,Government ITI Ahmedabad,Ahmedabad,Gujarat,23.0225,72.5714,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,AMTS route 42 terminates at gate,true
+Mechanic Motor Vehicle,ITI Motor Vehicle Mechanic,NSTI Vadodara,Vadodara,Gujarat,22.3072,73.1812,demo_synth_2026,2026,true,false,NSTI,NCVT,true,false,City bus connectivity available,true
+Mechanic Diesel,ITI Diesel Mechanic,Government ITI Ranchi,Ranchi,Jharkhand,23.3441,85.3096,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,Shared auto and bus stop at entrance,true
+Mechanic Diesel,ITI Diesel Mechanic,PMKK Skill Hub Bardhaman,Bardhaman,West Bengal,23.2324,87.8615,demo_synth_2026,2026,true,false,PMKK Skill Hub,MSDE,true,true,Local bus and mini-van stop,true
+Plumber,ITI Plumber,Government ITI Kanpur,Kanpur,Uttar Pradesh,26.4499,80.3319,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,Bus shuttle from Central Station,true
+Plumber,ITI Plumber,Industrial Training Centre Lucknow,Lucknow,Uttar Pradesh,26.8467,80.9462,demo_synth_2026,2026,true,false,Industrial Training Centre,MSDE,true,false,Adjacent to metro feeder route,true
+Carpenter,ITI Carpenter,Government ITI Varanasi,Varanasi,Uttar Pradesh,25.3176,82.9739,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,Public bus route 14 stops at gate,true
+Carpenter,ITI Carpenter,NSTI Patna,Patna,Bihar,25.5941,85.1376,demo_synth_2026,2026,true,false,NSTI,NCVT,true,true,5 mins walk from Rajendra Nagar terminal,true
+Mason,ITI Mason,Government ITI Gaya,Gaya,Bihar,24.7955,85.0002,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,Dedicated institute transport available,true
+Mason,ITI Mason,PMKK Skill Hub Nagpur,Nagpur,Maharashtra,21.1458,79.0882,demo_synth_2026,2026,true,false,PMKK Skill Hub,MSDE,true,false,Metro feeder line stop within 200m,true
+Painter,ITI Painter,Government ITI Pune,Pune,Maharashtra,18.5204,73.8567,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,PMPML bus stand at campus gate,true
+Painter,ITI Painter,Industrial Training Centre Nashik,Nashik,Maharashtra,19.9975,73.7898,demo_synth_2026,2026,true,false,Industrial Training Centre,MSDE,true,true,City transit connectivity available,true
+Refrigeration and AC Mechanic,ITI Refrigeration and AC Mechanic,Government ITI Jaipur,Jaipur,Rajasthan,26.9124,75.7873,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,Direct low-floor bus connectivity,true
+Refrigeration and AC Mechanic,ITI Refrigeration and AC Mechanic,NSTI Jodhpur,Jodhpur,Rajasthan,26.2389,73.0243,demo_synth_2026,2026,true,false,NSTI,NCVT,true,false,Bus stop right opposite main gate,true
+Computer Hardware Maintenance,ITI Computer Hardware Maintenance,Government ITI Bhopal,Bhopal,Madhya Pradesh,23.2599,77.4126,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,City link bus service every 15 mins,true
+Computer Hardware Maintenance,ITI Computer Hardware Maintenance,PMKK Skill Hub Indore,Indore,Madhya Pradesh,22.7196,75.8577,demo_synth_2026,2026,true,false,PMKK Skill Hub,MSDE,true,true,iBus BRTS station 300m away,true
+Instrument Mechanic,ITI Instrument Mechanic,Government ITI Ahmedabad,Ahmedabad,Gujarat,23.0225,72.5714,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,AMTS route 42 terminates at gate,true
+Instrument Mechanic,ITI Instrument Mechanic,Industrial Training Centre Vadodara,Vadodara,Gujarat,22.3072,73.1812,demo_synth_2026,2026,true,false,Industrial Training Centre,MSDE,true,false,City bus connectivity available,true
+CNC Turning Operator,ITI CNC Turning,Government ITI Ranchi,Ranchi,Jharkhand,23.3441,85.3096,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,Shared auto and bus stop at entrance,true
+CNC Turning Operator,ITI CNC Turning,NSTI Bardhaman,Bardhaman,West Bengal,23.2324,87.8615,demo_synth_2026,2026,true,false,NSTI,NCVT,true,true,Local bus and mini-van stop,true
+Tool and Die Maker,ITI Tool and Die,Government ITI Kanpur,Kanpur,Uttar Pradesh,26.4499,80.3319,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,Bus shuttle from Central Station,true
+Tool and Die Maker,ITI Tool and Die,PMKK Skill Hub Lucknow,Lucknow,Uttar Pradesh,26.8467,80.9462,demo_synth_2026,2026,true,false,PMKK Skill Hub,MSDE,true,false,Adjacent to metro feeder route,true
+Solar PV Technician,Solar PV Installer Certificate,Government ITI Varanasi,Varanasi,Uttar Pradesh,25.3176,82.9739,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,Public bus route 14 stops at gate,true
+Solar PV Technician,Solar PV Installer Certificate,Industrial Training Centre Patna,Patna,Bihar,25.5941,85.1376,demo_synth_2026,2026,true,false,Industrial Training Centre,MSDE,true,true,5 mins walk from Rajendra Nagar terminal,true
+Wind Turbine Technician,Wind Turbine Technician Course,Government ITI Gaya,Gaya,Bihar,24.7955,85.0002,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,Dedicated institute transport available,true
+Wind Turbine Technician,Wind Turbine Technician Course,NSTI Nagpur,Nagpur,Maharashtra,21.1458,79.0882,demo_synth_2026,2026,true,false,NSTI,NCVT,true,false,Metro feeder line stop within 200m,true
+HVAC Technician,HVAC Technician Certificate,Government ITI Pune,Pune,Maharashtra,18.5204,73.8567,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,PMPML bus stand at campus gate,true
+HVAC Technician,HVAC Technician Certificate,PMKK Skill Hub Nashik,Nashik,Maharashtra,19.9975,73.7898,demo_synth_2026,2026,true,false,PMKK Skill Hub,MSDE,true,true,City transit connectivity available,true
+Data Scientist,Master of Science in Data Science,Government ITI Jaipur,Jaipur,Rajasthan,26.9124,75.7873,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,Direct low-floor bus connectivity,true
+Data Scientist,Master of Science in Data Science,Industrial Training Centre Jodhpur,Jodhpur,Rajasthan,26.2389,73.0243,demo_synth_2026,2026,true,false,Industrial Training Centre,MSDE,true,false,Bus stop right opposite main gate,true
+Database Administrator,Database Administration Certificate,Government ITI Bhopal,Bhopal,Madhya Pradesh,23.2599,77.4126,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,City link bus service every 15 mins,true
+Database Administrator,Database Administration Certificate,NSTI Indore,Indore,Madhya Pradesh,22.7196,75.8577,demo_synth_2026,2026,true,false,NSTI,NCVT,true,true,iBus BRTS station 300m away,true
+Network Administrator,CCNA Networking,Government ITI Ahmedabad,Ahmedabad,Gujarat,23.0225,72.5714,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,AMTS route 42 terminates at gate,true
+Network Administrator,CCNA Networking,PMKK Skill Hub Vadodara,Vadodara,Gujarat,22.3072,73.1812,demo_synth_2026,2026,true,false,PMKK Skill Hub,MSDE,true,false,City bus connectivity available,true
+UI UX Designer,UI UX Design Programme,Government ITI Ranchi,Ranchi,Jharkhand,23.3441,85.3096,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,Shared auto and bus stop at entrance,true
+UI UX Designer,UI UX Design Programme,Industrial Training Centre Bardhaman,Bardhaman,West Bengal,23.2324,87.8615,demo_synth_2026,2026,true,false,Industrial Training Centre,MSDE,true,true,Local bus and mini-van stop,true
+Digital Marketer,Digital Marketing Certificate,Government ITI Kanpur,Kanpur,Uttar Pradesh,26.4499,80.3319,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,Bus shuttle from Central Station,true
+Digital Marketer,Digital Marketing Certificate,NSTI Lucknow,Lucknow,Uttar Pradesh,26.8467,80.9462,demo_synth_2026,2026,true,false,NSTI,NCVT,true,false,Adjacent to metro feeder route,true
+Graphic Designer,Diploma in Graphic Design,Government ITI Varanasi,Varanasi,Uttar Pradesh,25.3176,82.9739,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,Public bus route 14 stops at gate,true
+Graphic Designer,Diploma in Graphic Design,PMKK Skill Hub Patna,Patna,Bihar,25.5941,85.1376,demo_synth_2026,2026,true,false,PMKK Skill Hub,MSDE,true,true,5 mins walk from Rajendra Nagar terminal,true
+Staff Nurse,General Nursing and Midwifery,Government ITI Gaya,Gaya,Bihar,24.7955,85.0002,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,Dedicated institute transport available,true
+Staff Nurse,General Nursing and Midwifery,Industrial Training Centre Nagpur,Nagpur,Maharashtra,21.1458,79.0882,demo_synth_2026,2026,true,false,Industrial Training Centre,MSDE,true,false,Metro feeder line stop within 200m,true
+Nursing Assistant,Nursing Assistant Training,Government ITI Pune,Pune,Maharashtra,18.5204,73.8567,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,PMPML bus stand at campus gate,true
+Nursing Assistant,Nursing Assistant Training,NSTI Nashik,Nashik,Maharashtra,19.9975,73.7898,demo_synth_2026,2026,true,false,NSTI,NCVT,true,true,City transit connectivity available,true
+Pharmacy Technician,Diploma in Pharmacy,Government ITI Jaipur,Jaipur,Rajasthan,26.9124,75.7873,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,Direct low-floor bus connectivity,true
+Pharmacy Technician,Diploma in Pharmacy,PMKK Skill Hub Jodhpur,Jodhpur,Rajasthan,26.2389,73.0243,demo_synth_2026,2026,true,false,PMKK Skill Hub,MSDE,true,false,Bus stop right opposite main gate,true
+Medical Lab Technician,BSc Medical Laboratory Technology,Government ITI Bhopal,Bhopal,Madhya Pradesh,23.2599,77.4126,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,City link bus service every 15 mins,true
+Medical Lab Technician,BSc Medical Laboratory Technology,Industrial Training Centre Indore,Indore,Madhya Pradesh,22.7196,75.8577,demo_synth_2026,2026,true,false,Industrial Training Centre,MSDE,true,true,iBus BRTS station 300m away,true
+Radiology Technician,Diploma in Radiology,Government ITI Ahmedabad,Ahmedabad,Gujarat,23.0225,72.5714,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,AMTS route 42 terminates at gate,true
+Radiology Technician,Diploma in Radiology,NSTI Vadodara,Vadodara,Gujarat,22.3072,73.1812,demo_synth_2026,2026,true,false,NSTI,NCVT,true,false,City bus connectivity available,true
+Physiotherapy Assistant,Diploma in Physiotherapy Assistance,Government ITI Ranchi,Ranchi,Jharkhand,23.3441,85.3096,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,Shared auto and bus stop at entrance,true
+Physiotherapy Assistant,Diploma in Physiotherapy Assistance,PMKK Skill Hub Bardhaman,Bardhaman,West Bengal,23.2324,87.8615,demo_synth_2026,2026,true,false,PMKK Skill Hub,MSDE,true,true,Local bus and mini-van stop,true
+Paramedic,EMT Paramedic Course,Government ITI Kanpur,Kanpur,Uttar Pradesh,26.4499,80.3319,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,Bus shuttle from Central Station,true
+Paramedic,EMT Paramedic Course,Industrial Training Centre Lucknow,Lucknow,Uttar Pradesh,26.8467,80.9462,demo_synth_2026,2026,true,false,Industrial Training Centre,MSDE,true,false,Adjacent to metro feeder route,true
+ANM Midwife,Auxiliary Nurse Midwifery,Government ITI Varanasi,Varanasi,Uttar Pradesh,25.3176,82.9739,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,Public bus route 14 stops at gate,true
+ANM Midwife,Auxiliary Nurse Midwifery,NSTI Patna,Patna,Bihar,25.5941,85.1376,demo_synth_2026,2026,true,false,NSTI,NCVT,true,true,5 mins walk from Rajendra Nagar terminal,true
+Dental Hygienist,Diploma in Dental Hygiene,Government ITI Gaya,Gaya,Bihar,24.7955,85.0002,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,Dedicated institute transport available,true
+Dental Hygienist,Diploma in Dental Hygiene,PMKK Skill Hub Nagpur,Nagpur,Maharashtra,21.1458,79.0882,demo_synth_2026,2026,true,false,PMKK Skill Hub,MSDE,true,false,Metro feeder line stop within 200m,true
+Nutritionist,BSc Nutrition and Dietetics,Government ITI Pune,Pune,Maharashtra,18.5204,73.8567,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,PMPML bus stand at campus gate,true
+Nutritionist,BSc Nutrition and Dietetics,Industrial Training Centre Nashik,Nashik,Maharashtra,19.9975,73.7898,demo_synth_2026,2026,true,false,Industrial Training Centre,MSDE,true,true,City transit connectivity available,true
+Optometrist,Diploma in Optometry,Government ITI Jaipur,Jaipur,Rajasthan,26.9124,75.7873,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,Direct low-floor bus connectivity,true
+Optometrist,Diploma in Optometry,NSTI Jodhpur,Jodhpur,Rajasthan,26.2389,73.0243,demo_synth_2026,2026,true,false,NSTI,NCVT,true,false,Bus stop right opposite main gate,true
+Dialysis Technician,Dialysis Technician Certificate,Government ITI Bhopal,Bhopal,Madhya Pradesh,23.2599,77.4126,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,City link bus service every 15 mins,true
+Dialysis Technician,Dialysis Technician Certificate,PMKK Skill Hub Indore,Indore,Madhya Pradesh,22.7196,75.8577,demo_synth_2026,2026,true,false,PMKK Skill Hub,MSDE,true,true,iBus BRTS station 300m away,true
+School Teacher,Bachelor of Education,Government ITI Ahmedabad,Ahmedabad,Gujarat,23.0225,72.5714,demo_synth_2026,2026,true,false,Government ITI,NCVT,true,true,AMTS route 42 terminates at gate,true
+School Teacher,Bachelor of Education,Industrial Training Centre Vadodara,Vadodara,Gujarat,22.3072,73.1812,demo_synth_2026,2026,true,false,Industrial Training Centre,MSDE,true,false,City bus connectivity available,true
+Anganwadi Worker,Child Care Worker Training,Government ITI Ranchi,Ranchi,Jharkhand,23.3441,85.3096,demo_synth_2026,2026,true,false,Government ITI,NCVT,false,true,Shared auto and bus stop at entrance,true
+Anganwadi Worker,Child Care Worker Training,NSTI Bardhaman,Bardhaman,West Bengal,23.2324,87.8615,demo_synth_2026,2026,true,false,NSTI,NCVT,true,true,Local bus and mini-van stop,true

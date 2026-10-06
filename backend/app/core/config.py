@@ -58,7 +58,7 @@ class Settings(BaseSettings):
             raw = url[len(prefix):]
             if not os.path.isabs(raw):
                 resolved = (_BACKEND_DIR / raw).resolve()
-                self.database_url = f"{prefix}{resolved}"
+                self.database_url = f"{prefix}{resolved.as_posix()}"
         return self
 
     # CORS — comma-separated origins
@@ -67,6 +67,26 @@ class Settings(BaseSettings):
     # ML Models
     embedder_model_name: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     model_version: str = "kaushalpath-rank-0.1.0"
+
+    # LLM Settings (Phase 12 conversational engine)
+    llm_provider: str = "none"  # "none" | "openai_compat" | "gemini"
+    llm_base_url: str | None = None
+    llm_model: str = "gpt-4o-mini"
+    llm_api_key: str | None = None
+
+    # Resistance Score Settings (Phase 13 parental resistance tracking)
+    resistance_w_topic: float = 0.40
+    resistance_w_intensity: float = 0.40
+    resistance_w_consensus: float = 0.20
+    resistance_topic_weights: dict[str, float] = {
+        "safety": 1.0,
+        "social": 0.85,
+        "distance": 0.75,
+        "cost": 0.70,
+        "security": 0.65,
+        "income": 0.50,
+        "other": 0.30,
+    }
 
     # Fallback ranker weights (used when the LightGBM model is not trained)
     ranker_weight_riasec: float = 0.35
