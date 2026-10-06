@@ -85,7 +85,7 @@ class RecommendService:
         items_to_rank = []
         for course in eligible_courses:
             occupation = self.db.get(Occupation, course.occupation_id)
-            if not occupation:
+            if not occupation or not getattr(occupation, "is_vocational", True):
                 continue
             features = extract_features(
                 student, occupation, course, student_riasec, student_apt,

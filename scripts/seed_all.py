@@ -18,7 +18,10 @@ import load_courses
 import load_esco
 import load_market
 import load_onet
+import load_progression
 import load_provided_dataset
+import load_provider_outcomes
+import load_schemes
 from app.db import Base, engine
 
 
@@ -35,6 +38,9 @@ def main() -> None:
     load_courses.main()
     load_centres.main()
     load_market.main()
+    load_provider_outcomes.main()
+    load_progression.main()
+    load_schemes.main()
 
     # Retrieval artefact for Phase 3 (no-ops if the embedding stack is absent).
     build_retrieval_index.main()

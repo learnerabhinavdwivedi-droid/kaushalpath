@@ -14,13 +14,18 @@ credible local data, votes to consensus, and gets a roadmap
 (course → centre → certification → job). Counsellors see a cohort dashboard and
 *where family resistance concentrates* — with privacy-preserving aggregation.
 
-## Status: complete (Phase 9 — hardened, deployable, audited)
+## Status: MVP shipped — conversational layer in progress
 
-All nine phases shipped. `make check` green (63 backend + frontend tests, incl. an
-automated accessibility audit), `make eval-final` meets every gate, and
-`make ps-audit` scores **100 %** PS alignment with evidence behind every row.
-Honest limitations (demo data, synthetic personas, catalogue coverage) are stated,
-not hidden.
+Phases 0–9 shipped the adaptive assessment, hybrid recommender, Family Decision
+Room, counsellor dashboard, i18n (en/hi), Docker and CI (63 backend + frontend
+tests). An independent gap analysis (Phase 10 truth reset) re-scored PS alignment
+at **~60 %** — the learner-profiling pipeline is solid, but the conversational
+counselling layer the PS requires (free-text chat, provider-level outcome data,
+automatic sentiment tracking, live human escalation with contact details, and
+a scheme-admin resistance dashboard) is being built in Phases 11–18.
+
+`make check` green. Honest limitations (demo data, synthetic personas, catalogue
+coverage, missing conversation engine) are stated, not hidden.
 
 ## The non-negotiables (what makes it trustworthy)
 

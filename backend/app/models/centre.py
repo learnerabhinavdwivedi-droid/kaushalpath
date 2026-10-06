@@ -1,7 +1,7 @@
 """Training centre offering a course, located by district/state."""
 from __future__ import annotations
 
-from sqlalchemy import Float, ForeignKey, String
+from sqlalchemy import Boolean, Float, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base, SourceMixin, TimestampMixin
@@ -19,3 +19,11 @@ class Centre(Base, TimestampMixin, SourceMixin):
     state: Mapped[str] = mapped_column(String(120), nullable=False, index=True)
     lat: Mapped[float | None] = mapped_column(Float, nullable=True)
     lon: Mapped[float | None] = mapped_column(Float, nullable=True)
+
+    # Provider characteristics & safety facts
+    provider_type: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    affiliation: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    has_female_trainers: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    has_hostel: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    transport_note: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    safety_certified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)

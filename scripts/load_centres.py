@@ -49,6 +49,12 @@ def main(get_session=SessionLocal) -> None:
                 "source_year": int(raw["source_year"]) if raw.get("source_year") else None,
                 "is_demo": to_bool(raw.get("is_demo"), default=True),
                 "needs_review": to_bool(raw.get("needs_review")),
+                "provider_type": (raw.get("provider_type") or "").strip() or None,
+                "affiliation": (raw.get("affiliation") or "").strip() or None,
+                "has_female_trainers": to_bool(raw.get("has_female_trainers"), default=False),
+                "has_hostel": to_bool(raw.get("has_hostel"), default=False),
+                "transport_note": (raw.get("transport_note") or "").strip() or None,
+                "safety_certified": to_bool(raw.get("safety_certified"), default=False),
             }
             if _upsert(session, key, values) == "insert":
                 inserts += 1

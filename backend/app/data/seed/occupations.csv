@@ -1,168 +1,168 @@
-name_en,name_hi,nco_code,onet_code,esco_uri,nsqf_level,description,riasec_r,riasec_i,riasec_a,riasec_s,riasec_e,riasec_c,source,source_year,is_demo,needs_review
-Fitter,फिटर,,,,5,Assembles and fits machine parts to specification,8,4,1,2,2,5,demo_synth_2026,2026,true,true
-Turner,टर्नर,,,,5,Operates lathes to shape metal components,8,4,1,2,2,5,demo_synth_2026,2026,true,true
-Machinist,मशीनिस्ट,,,,5,Sets up and operates precision machine tools,8,5,1,2,2,6,demo_synth_2026,2026,true,true
-Welder,वेल्डर,,,,4,Joins metal parts using welding equipment,9,3,2,2,2,4,demo_synth_2026,2026,true,true
-Electrician,विद्युतकार,,,,5,Installs and maintains electrical systems,9,4,1,2,3,4,demo_synth_2026,2026,true,true
-Electronics Mechanic,इलेक्ट्रॉनिक्स मैकेनिक,,,,5,Fits and repairs electronic circuits and devices,7,6,1,2,2,5,demo_synth_2026,2026,true,true
-Mechanic Motor Vehicle,मोटर वाहन मैकेनिक,,,,5,Services and repairs automobiles,9,4,1,2,2,4,demo_synth_2026,2026,true,true
-Mechanic Diesel,डीजल इंजन मैकेनिक,,,,5,Maintains diesel engines and heavy machinery,9,4,1,2,2,4,demo_synth_2026,2026,true,true
-Plumber,प्लंबर,,,,4,Installs and repairs water and drainage pipes,8,3,1,2,2,4,demo_synth_2026,2026,true,true
-Carpenter,कारपेंटर,,,,4,Cuts and joins wood for structures and furniture,8,3,3,2,2,4,demo_synth_2026,2026,true,true
-Mason,राजमिस्त्री,,,,3,Builds structures with brick stone and concrete,8,2,2,2,1,3,demo_synth_2026,2026,true,true
-Painter,पेंटर,,,,3,Prepares and paints surfaces interiors and exteriors,6,2,6,2,1,3,demo_synth_2026,2026,true,true
-Refrigeration and AC Mechanic,रेफ्रिजरेशन और एसी मैकेनिक,,,,5,Installs and repairs cooling and air systems,7,5,1,2,2,5,demo_synth_2026,2026,true,true
-Computer Hardware Maintenance,कंप्यूटर हार्डवेयर तकनीशियन,,,,5,Assembles repairs and maintains computers,5,7,2,3,2,5,demo_synth_2026,2026,true,true
-Instrument Mechanic,उपकरण मैकेनिक,,,,5,Calibrates and repairs industrial instruments,7,6,1,2,2,5,demo_synth_2026,2026,true,true
-CNC Turning Operator,सीएनसी टर्निंग ऑपरेटर,,,,5,Programs and operates CNC machine tools,8,5,1,1,2,6,demo_synth_2026,2026,true,true
-Sheet Metal Technician,शीट मेटल तकनीशियन,,,,4,Forms and shapes sheet metal components,8,3,3,1,1,4,demo_synth_2026,2026,true,true
-Foundryman,फाउंड्रीमान,,,,3,Pours and moulds molten metal into castings,8,3,1,1,1,3,demo_synth_2026,2026,true,true
-Tool and Die Maker,टूल एंड डाइमेकर,,,,6,Manufactures precision tools moulds and dies,8,6,1,1,2,6,demo_synth_2026,2026,true,true
-Grinder,ग्राइंडर,,,,4,Grinds and finishes components to tolerance,8,3,1,1,1,5,demo_synth_2026,2026,true,true
-Wireman,वायरमैन,,,,4,Wires electrical control panels and circuits,8,3,1,2,2,4,demo_synth_2026,2026,true,true
-Solar PV Technician,सोलर पीवी तकनीशियन,,,,5,Installs and maintains solar power systems,7,5,1,2,2,4,demo_synth_2026,2026,true,true
-Wind Turbine Technician,पवन टर्बाइन तकनीशियन,,,,5,Inspects and repairs wind turbine generators,7,5,1,2,2,4,demo_synth_2026,2026,true,true
-Lift and Escalator Technician,लिफ्ट और एस्केलेटर तकनीशियन,,,,5,Maintains elevators and escalator systems,7,5,1,2,2,5,demo_synth_2026,2026,true,true
-HVAC Technician,एचवीएसी तकनीशियन,,,,5,Services heating ventilation and air systems,7,5,1,2,2,5,demo_synth_2026,2026,true,true
-Battery Assembler,बैटरी असेंबलर,,,,3,Assembles and tests industrial batteries,8,2,1,1,1,4,demo_synth_2026,2026,true,true
-Software Developer,सॉफ्टवेयर डेवलपर,,,,7,Designs builds and tests application software,3,9,4,3,3,6,demo_synth_2026,2026,true,true
-Web Developer,वेब डेवलपर,,,,6,Builds and maintains websites and web apps,3,8,5,3,3,6,demo_synth_2026,2026,true,true
-Mobile App Developer,मोबाइल ऐप डेवलपर,,,,6,Develops applications for smartphones,3,8,5,3,3,6,demo_synth_2026,2026,true,true
-Data Analyst,डेटा विश्लेषक,,,,7,Cleans analyses and visualises business data,2,9,3,4,4,8,demo_synth_2026,2026,true,true
-Data Scientist,डेटा वैज्ञानिक,,,,8,Builds predictive models from large datasets,2,10,4,4,4,8,demo_synth_2026,2026,true,true
-Database Administrator,डेटाबेस प्रशासक,,,,7,Manages and secures databases,2,8,2,3,4,9,demo_synth_2026,2026,true,true
-Cloud Engineer,क्लाउड इंजीनियर,,,,7,Designs and runs cloud infrastructure,3,9,3,3,4,7,demo_synth_2026,2026,true,true
-Network Administrator,नेटवर्क प्रशासक,,,,6,Maintains computer networks and connectivity,4,7,2,4,4,7,demo_synth_2026,2026,true,true
-Cybersecurity Analyst,साइबर सुरक्षा विश्लेषक,,,,7,Protects systems from cyber threats,3,9,2,3,4,8,demo_synth_2026,2026,true,true
-System Administrator,सिस्टम प्रशासक,,,,6,Manages servers and IT operations,4,7,2,3,4,8,demo_synth_2026,2026,true,true
-DevOps Engineer,डेवऑप्स इंजीनियर,,,,7,Automates build deploy and monitoring,3,9,3,3,4,7,demo_synth_2026,2026,true,true
-QA Test Engineer,क्यूए टेस्ट इंजीनियर,,,,6,Tests software quality and reports defects,3,7,3,4,3,9,demo_synth_2026,2026,true,true
-UI UX Designer,यूआई यूएक्स डिजाइनर,,,,6,Designs usable digital interfaces,2,6,8,5,4,5,demo_synth_2026,2026,true,true
-AI ML Engineer,एआई एमएल इंजीनियर,,,,8,Builds and deploys machine learning systems,2,10,4,3,4,7,demo_synth_2026,2026,true,true
-Business Intelligence Analyst,बिजनेस इंटेलिजेंस विश्लेषक,,,,7,Turns data into decision dashboards,2,8,3,4,5,8,demo_synth_2026,2026,true,true
-IT Support Technician,आईटी सपोर्ट तकनीशियन,,,,5,Helps users resolve IT issues,4,6,2,6,3,6,demo_synth_2026,2026,true,true
-Computer Operator,कंप्यूटर ऑपरेटर,,,,4,Runs computer systems and batch jobs,2,4,2,4,3,8,demo_synth_2026,2026,true,true
-Digital Marketer,डिजिटल मार्केटर,,,,6,Promotes products through online channels,2,5,6,6,7,5,demo_synth_2026,2026,true,true
-SEO Specialist,एसईओ विशेषज्ञ,,,,6,Optimises content for search ranking,2,6,4,4,6,7,demo_synth_2026,2026,true,true
-Graphic Designer,ग्राफिक डिजाइनर,,,,5,Creates visual content for media,2,4,9,4,4,4,demo_synth_2026,2026,true,true
-Staff Nurse,स्टाफ नर्स,,,,7,Provides patient care in hospitals,3,6,2,9,3,5,demo_synth_2026,2026,true,true
-Nursing Assistant,नर्सिंग असिस्टेंट,,,,5,Assists nurses with basic patient care,4,6,2,9,2,5,demo_synth_2026,2026,true,true
-Pharmacy Technician,फार्मेसी तकनीशियन,,,,5,Prepares and dispenses medicines,3,6,2,5,3,7,demo_synth_2026,2026,true,true
-Medical Lab Technician,मेडिकल लैब तकनीशियन,,,,6,Performs diagnostic laboratory tests,3,8,2,4,2,7,demo_synth_2026,2026,true,true
-Radiology Technician,रेडियोलॉजी तकनीशियन,,,,6,Operates imaging and X-ray equipment,4,7,2,5,2,6,demo_synth_2026,2026,true,true
-Physiotherapy Assistant,फिजियोथेरेपी असिस्टेंट,,,,5,Helps patients regain movement,5,6,2,8,2,4,demo_synth_2026,2026,true,true
-Paramedic,पैरामेडिक,,,,5,Gives emergency out-of-hospital care,5,6,2,8,3,5,demo_synth_2026,2026,true,true
-Health Sanitary Inspector,स्वास्थ्य स्वच्छता निरीक्षक,,,,5,Inspects public health and sanitation,4,6,2,6,4,6,demo_synth_2026,2026,true,true
-ANM Midwife,एएनएम,,,,5,Supports mothers during pregnancy and birth,4,6,2,9,2,5,demo_synth_2026,2026,true,true
-Dental Hygienist,डेंटल हाइजीनिस्ट,,,,5,Cleans teeth and supports dental care,4,6,2,7,2,6,demo_synth_2026,2026,true,true
-Ayurvedic Technician,आयुर्वेदिक तकनीशियन,,,,5,Prepares and delivers ayurvedic treatments,4,6,3,6,2,5,demo_synth_2026,2026,true,true
-Nutritionist,पोषण विशेषज्ञ,,,,6,Advises on diet and healthy eating,3,7,3,7,4,5,demo_synth_2026,2026,true,true
-Occupational Therapist Assistant,ऑक्यूपेशनल थेरेपी असिस्टेंट,,,,6,Helps patients regain daily skills,4,6,3,8,2,4,demo_synth_2026,2026,true,true
-Optometrist,ऑप्टोमेट्रिस्ट,,,,6,Tests vision and prescribes lenses,3,7,2,6,3,6,demo_synth_2026,2026,true,true
-Dialysis Technician,डायलिसिस तकनीशियन,,,,5,Operates kidney dialysis equipment,4,6,2,7,2,6,demo_synth_2026,2026,true,true
-Hospital Ward Assistant,वार्ड असिस्टेंट,,,,3,Keeps wards clean and helps patients,5,3,1,7,2,5,demo_synth_2026,2026,true,true
-School Teacher,शिक्षक,,,,7,Teaches students in primary or secondary school,2,6,5,9,5,5,demo_synth_2026,2026,true,true
-Anganwadi Worker,अंगनवाड़ी सेविका,,,,3,Provides child nutrition and early care,3,3,4,9,3,4,demo_synth_2026,2026,true,true
-Child Care Professional,चाइल्डकेयर प्रोफेशनल,,,,4,Cares for and develops young children,3,4,4,9,3,4,demo_synth_2026,2026,true,true
-Counsellor,काउंसलर,,,,7,Guides people on personal and career choices,2,6,4,9,5,4,demo_synth_2026,2026,true,true
-Social Worker,समाजसेवी,,,,6,Supports individuals and communities,3,5,4,9,5,4,demo_synth_2026,2026,true,true
-Special Educator,विशेष शिक्षक,,,,6,Teaches learners with special needs,2,6,4,9,4,5,demo_synth_2026,2026,true,true
-Librarian,पुस्तकालयाध्यक्ष,,,,5,Manages books and information resources,2,5,4,6,4,7,demo_synth_2026,2026,true,true
-Training Coordinator,प्रशिक्षण समन्वयक,,,,6,Plans and runs training programmes,2,5,4,8,6,6,demo_synth_2026,2026,true,true
-ASHA Worker,आशा कार्यकर्ता,,,,3,Delivers basic health outreach in villages,3,3,3,9,3,4,demo_synth_2026,2026,true,true
-Sports Coach,कोच,,,,5,Trains athletes and teams,6,3,3,8,4,3,demo_synth_2026,2026,true,true
-Accountant,अकाउंटेंट,,,,6,Keeps and audits financial records,2,5,2,5,6,10,demo_synth_2026,2026,true,true
-Bookkeeper,बहीखाता लेखक,,,,5,Records daily business transactions,2,4,2,4,5,10,demo_synth_2026,2026,true,true
-Tax Assistant,टैक्स असिस्टेंट,,,,6,Prepares tax returns and filings,2,5,2,4,5,9,demo_synth_2026,2026,true,true
-Bank Clerk,बैंक क्लर्क,,,,5,Handles banking transactions and records,2,4,2,6,5,9,demo_synth_2026,2026,true,true
-Teller,टेलर,,,,4,Processes cash deposits and withdrawals,2,3,2,6,5,9,demo_synth_2026,2026,true,true
-Financial Advisor,वित्तीय सलाहकार,,,,7,Advises clients on money and investments,2,6,2,7,8,6,demo_synth_2026,2026,true,true
-Insurance Agent,बीमा एजेंट,,,,5,Sells and manages insurance policies,3,4,2,7,8,5,demo_synth_2026,2026,true,true
-HR Executive,एचआर एग्जीक्यूटिव,,,,6,Recruits and supports employees,2,5,3,8,7,6,demo_synth_2026,2026,true,true
-Sales Executive,सेल्स एग्जीक्यूटिव,,,,5,Sells products to business and retail customers,3,3,3,8,9,4,demo_synth_2026,2026,true,true
-Marketing Manager,मार्केटिंग मैनेजर,,,,7,Plans and leads marketing strategy,2,6,6,7,9,5,demo_synth_2026,2026,true,true
-Store Manager,स्टोर मैनेजर,,,,5,Runs retail store operations and staff,3,4,3,7,8,7,demo_synth_2026,2026,true,true
-Retail Associate,रिटेल असोसिएट,,,,3,Assists customers and manages stock in stores,3,2,3,7,6,5,demo_synth_2026,2026,true,true
-Cashier,कैशियर,,,,3,Collects payments at point of sale,2,3,2,5,5,10,demo_synth_2026,2026,true,true
-Purchase Executive,परचेज एग्जीक्यूटिव,,,,5,Sources and buys goods and services,2,4,2,6,7,7,demo_synth_2026,2026,true,true
-Logistics Coordinator,लॉजिस्टिक्स समन्वयक,,,,5,Plans movement and storage of goods,3,5,2,6,6,8,demo_synth_2026,2026,true,true
-Supply Chain Analyst,सप्लाई चेन विश्लेषक,,,,7,Optimises sourcing and distribution flows,2,7,3,5,6,9,demo_synth_2026,2026,true,true
-Entrepreneur,उद्यमी,,,,6,Starts and runs an own business,3,5,5,6,10,5,demo_synth_2026,2026,true,true
-Shopkeeper,दुकानदार,,,,4,Operates a retail shop,4,3,3,6,8,6,demo_synth_2026,2026,true,true
-Credit Analyst,क्रेडिट विश्लेषक,,,,7,Assesses loan and credit risk,2,7,2,4,6,9,demo_synth_2026,2026,true,true
-Back Office Executive,बैक ऑफिस एग्जीक्यूटिव,,,,4,Handles documentation and data processing,2,4,2,5,4,9,demo_synth_2026,2026,true,true
-Chartered Accountant,चार्टर्ड अकाउंटेंट,,,,8,Advises on accounts audit and taxation,2,7,2,5,7,10,demo_synth_2026,2026,true,true
-Fashion Designer,फैशन डिजाइनर,,,,6,Designs clothing and apparel,3,4,9,5,5,3,demo_synth_2026,2026,true,true
-Interior Designer,इंटीरियर डिजाइनर,,,,6,Designs functional indoor spaces,3,5,9,5,5,4,demo_synth_2026,2026,true,true
-Photographer,फोटोग्राफर,,,,5,Captures images for events and media,4,4,9,4,5,4,demo_synth_2026,2026,true,true
-Videographer,वीडियोग्राफर,,,,5,Films and produces video content,4,4,9,4,5,4,demo_synth_2026,2026,true,true
-Animator,एनिमेटर,,,,6,Creates animated visuals and characters,2,5,10,4,4,4,demo_synth_2026,2026,true,true
-Video Editor,वीडियो एडिटर,,,,5,Edits and assembles video footage,2,5,9,4,4,5,demo_synth_2026,2026,true,true
-Musician,संगीतकार,,,,4,Performs and composes music,2,4,10,5,4,2,demo_synth_2026,2026,true,true
-Singer,गायक,,,,3,Performs vocal music,1,3,10,6,5,2,demo_synth_2026,2026,true,true
-Dancer,नर्तक,,,,3,Performs dance,3,3,10,6,4,2,demo_synth_2026,2026,true,true
-Actor,अभिनेता,,,,4,Performs in film theatre and media,3,3,10,6,6,2,demo_synth_2026,2026,true,true
-Craft Instructor,हस्तकला प्रशिक्षक,,,,5,Teaches traditional crafts and skills,4,3,8,7,4,3,demo_synth_2026,2026,true,true
-Embroidery Technician,कढ़ाई कलाकार,,,,3,Decorates fabric with embroidery,4,2,8,3,2,5,demo_synth_2026,2026,true,true
-Beautician,ब्यूटीशियन,,,,4,Provides skin and beauty treatments,3,3,8,7,6,4,demo_synth_2026,2026,true,true
-Hair Stylist,हेयर स्टाइलिस्ट,,,,3,Cuts colours and styles hair,3,3,8,7,6,4,demo_synth_2026,2026,true,true
-Makeup Artist,मेकअप आर्टिस्ट,,,,4,Applies makeup for events and media,3,3,9,6,6,4,demo_synth_2026,2026,true,true
-Tattoo Artist,टैटू आर्टिस्ट,,,,4,Designs and applies tattoos,3,3,9,4,4,3,demo_synth_2026,2026,true,true
-Florist,फूलकार,,,,3,Arranges and sells flowers,4,2,8,5,4,3,demo_synth_2026,2026,true,true
-Jewellery Designer,आभूषण डिजाइनर,,,,5,Designs and crafts jewellery,5,4,9,3,5,5,demo_synth_2026,2026,true,true
-Agriculture Technician,कृषि तकनीशियन,,,,5,Supports crop and farm operations,7,6,2,4,3,4,demo_synth_2026,2026,true,true
-Dairy Farmer,डेयरी पशुपालक,,,,4,Raises cattle for milk production,8,4,2,4,5,4,demo_synth_2026,2026,true,true
-Poultry Farmer,पोल्ट्री फार्मर,,,,4,Raises birds for eggs and meat,8,4,2,3,5,4,demo_synth_2026,2026,true,true
-Beekeeper,मधुमक्खी पालक,,,,4,Raises bees for honey production,8,4,2,3,4,4,demo_synth_2026,2026,true,true
-Horticulturist,उद्यान विशेषज्ञ,,,,6,Grows fruits vegetables and ornamental plants,7,6,3,4,4,4,demo_synth_2026,2026,true,true
-Crop Advisor,फसल सलाहकार,,,,6,Advises farmers on crop management,5,7,2,6,5,4,demo_synth_2026,2026,true,true
-Fishery Technician,मत्स्य तकनीशियन,,,,4,Manages aquaculture and fish handling,8,4,2,3,3,4,demo_synth_2026,2026,true,true
-Food Processing Technician,फूड प्रोसेसिंग तकनीशियन,,,,5,Processes and packages food products,6,5,2,4,4,6,demo_synth_2026,2026,true,true
-Chef,शेफ,,,,5,Plans and cooks meals in kitchens,6,4,7,6,5,5,demo_synth_2026,2026,true,true
-Baker,बेकर,,,,4,Prepares bread and baked goods,6,3,7,4,4,5,demo_synth_2026,2026,true,true
-Confectioner,मिठाई कारिगर,,,,4,Makes sweets and confectionery,6,3,7,4,4,5,demo_synth_2026,2026,true,true
-Waiter,वेटर,,,,3,Serves food and drinks to customers,5,2,3,8,5,5,demo_synth_2026,2026,true,true
-Barista,बारिस्ता,,,,3,Prepares and serves coffee drinks,5,3,6,6,5,4,demo_synth_2026,2026,true,true
-Housekeeping Supervisor,हाउसकीपिंग सुपरवाइजर,,,,4,Leads cleaning and housekeeping teams,6,3,3,6,5,6,demo_synth_2026,2026,true,true
-Farm Manager,फार्म मैनेजर,,,,6,Oversees farm production and workers,6,5,2,5,7,5,demo_synth_2026,2026,true,true
-Driver,चालक,,,,3,Operates vehicles to transport goods or people,8,2,2,4,3,5,demo_synth_2026,2026,true,true
-Mechanic Two Wheeler,दोपहिया वाहन मैकेनिक,,,,4,Repairs motorcycles and scooters,9,4,1,2,2,4,demo_synth_2026,2026,true,true
-Courier Executive,कूरियर एग्जीक्यूटिव,,,,3,Picks up and delivers parcels,5,3,2,5,4,7,demo_synth_2026,2026,true,true
-Warehouse Manager,वेयरहाउस मैनेजर,,,,5,Manages storage inventory and dispatch,5,4,2,5,6,8,demo_synth_2026,2026,true,true
-Crane Operator,क्रेन ऑपरेटर,,,,4,Operates cranes at construction and ports,8,3,2,2,3,6,demo_synth_2026,2026,true,true
-Airline Ground Staff,एयरलाइन ग्राउंड स्टाफ,,,,4,Assists passengers and aircraft on ground,4,3,3,8,6,6,demo_synth_2026,2026,true,true
-Travel Agent,ट्रैवल एजेंट,,,,4,Books travel and designs itineraries,2,4,4,8,7,5,demo_synth_2026,2026,true,true
-Security Guard,सुरक्षा गार्ड,,,,3,Protects premises and people,6,2,2,5,4,6,demo_synth_2026,2026,true,true
-Fireman,दमकल कर्मी,,,,4,Fights fires and performs rescue,8,3,2,6,4,5,demo_synth_2026,2026,true,true
-Hotel Manager,होटल मैनेजर,,,,6,Runs hotel operations and guest services,2,5,4,8,8,6,demo_synth_2026,2026,true,true
-Tour Guide,टूर गाइड,,,,4,Leads and informs travellers on tours,4,4,5,9,6,4,demo_synth_2026,2026,true,true
-Event Manager,इवेंट मैनेजर,,,,6,Plans and executes events,3,5,6,8,8,5,demo_synth_2026,2026,true,true
-Front Desk Executive,फ्रंट डेस्क एग्जीक्यूटिव,,,,4,Handles reception and guest check-in,2,3,3,8,6,7,demo_synth_2026,2026,true,true
-Civil Engineer,सिविल इंजीनियर,,,,7,Designs and supervises construction,6,8,4,4,5,6,demo_synth_2026,2026,true,true
-Mechanical Engineer,मैकेनिकल इंजीनियर,,,,7,Designs and maintains machines,7,9,4,3,5,6,demo_synth_2026,2026,true,true
-Electrical Engineer,इलेक्ट्रिकल इंजीनियर,,,,7,Designs electrical systems,6,9,3,3,5,6,demo_synth_2026,2026,true,true
-Electronics Engineer,इलेक्ट्रॉनिक्स इंजीनियर,,,,7,Designs electronic circuits and devices,5,9,3,3,5,6,demo_synth_2026,2026,true,true
-Chemical Engineer,केमिकल इंजीनियर,,,,7,Designs chemical process plants,5,9,3,3,4,6,demo_synth_2026,2026,true,true
-Architect,आर्किटेक्ट,,,,8,Plans and designs buildings,4,7,9,5,6,5,demo_synth_2026,2026,true,true
-Draughtsman,ड्राफ्ट्समैन,,,,5,Prepares technical drawings,5,6,6,3,3,7,demo_synth_2026,2026,true,true
-Surveyor,सर्वेयर,,,,5,Measures and maps land boundaries,6,6,3,4,4,7,demo_synth_2026,2026,true,true
-Environmental Engineer,पर्यावरण इंजीनियर,,,,7,Solves pollution and environmental issues,5,8,3,6,4,6,demo_synth_2026,2026,true,true
-Industrial Engineer,इंडस्ट्रियल इंजीनियर,,,,7,Optimises production systems,5,8,3,4,6,7,demo_synth_2026,2026,true,true
-Clerk,क्लर्क,,,,4,Performs routine office record work,2,4,2,6,5,9,demo_synth_2026,2026,true,true
-Data Entry Operator,डेटा एंट्री ऑपरेटर,,,,3,Enters and verifies data records,2,3,2,4,3,10,demo_synth_2026,2026,true,true
-Office Assistant,कार्यालय सहायक,,,,4,Supports daily office administration,2,3,2,6,5,9,demo_synth_2026,2026,true,true
-Revenue Officer,राजस्व अधिकारी,,,,6,Handles land records and revenue work,3,5,2,6,7,8,demo_synth_2026,2026,true,true
-Lab Technician,प्रयोगशाला तकनीशियन,,,,5,Runs experiments and lab tests,4,7,2,4,3,7,demo_synth_2026,2026,true,true
-Machine Operator,मशीन ऑपरेटर,,,,3,Runs production machines,8,3,1,2,2,5,demo_synth_2026,2026,true,true
-Assembly Line Worker,असेंबली लाइन वर्कर,,,,3,Assembles products on a line,8,2,1,2,1,5,demo_synth_2026,2026,true,true
-Quality Inspector,गुणवत्ता निरीक्षक,,,,5,Checks products against standards,5,6,2,3,4,9,demo_synth_2026,2026,true,true
-Safety Officer,सेफ्टी ऑफिसर,,,,6,Enforces workplace safety rules,5,6,2,5,6,7,demo_synth_2026,2026,true,true
-Garment Worker,गारमेंट वर्कर,,,,3,Cuts and stitches garments,7,2,4,3,1,5,demo_synth_2026,2026,true,true
-Weaver,बुनकर,,,,3,Weaves fabric on looms,7,2,6,2,2,4,demo_synth_2026,2026,true,true
-Cobbler,चर्मकार,,,,3,Repairs and makes footwear,7,2,4,3,3,4,demo_synth_2026,2026,true,true
-Watch Repairer,घड़ी मरम्मत कारिगर,,,,4,Repairs and services watches,7,4,3,3,2,7,demo_synth_2026,2026,true,true
-Medical Representative,मेडिकल रिप्रेजेंटेटिव,,,,5,Promotes medicines to doctors,3,4,3,7,9,5,demo_synth_2026,2026,true,true
-Teaching Assistant,टीचिंग असिस्टेंट,,,,5,Supports teachers in classrooms,3,5,4,9,4,5,demo_synth_2026,2026,true,true
-Call Center Agent,कॉल सेंटर एजेंट,,,,4,Handles customer calls and queries,3,3,3,8,6,7,demo_synth_2026,2026,true,true
-Yoga Instructor,योग प्रशिक्षक,,,,4,Teaches yoga and wellness,5,3,6,8,4,3,demo_synth_2026,2026,true,true
-Event Photographer,इवेंट फोटोग्राफर,,,,4,Captures photographs at events,4,4,9,5,5,4,demo_synth_2026,2026,true,true
+name_en,name_hi,nco_code,onet_code,esco_uri,nsqf_level,description,riasec_r,riasec_i,riasec_a,riasec_s,riasec_e,riasec_c,source,source_year,is_demo,needs_review,is_vocational
+Fitter,फिटर,,,,5,Assembles and fits machine parts to specification,8,4,1,2,2,5,demo_synth_2026,2026,true,true,true
+Turner,टर्नर,,,,5,Operates lathes to shape metal components,8,4,1,2,2,5,demo_synth_2026,2026,true,true,true
+Machinist,मशीनिस्ट,,,,5,Sets up and operates precision machine tools,8,5,1,2,2,6,demo_synth_2026,2026,true,true,true
+Welder,वेल्डर,,,,4,Joins metal parts using welding equipment,9,3,2,2,2,4,demo_synth_2026,2026,true,true,true
+Electrician,विद्युतकार,,,,5,Installs and maintains electrical systems,9,4,1,2,3,4,demo_synth_2026,2026,true,true,true
+Electronics Mechanic,इलेक्ट्रॉनिक्स मैकेनिक,,,,5,Fits and repairs electronic circuits and devices,7,6,1,2,2,5,demo_synth_2026,2026,true,true,true
+Mechanic Motor Vehicle,मोटर वाहन मैकेनिक,,,,5,Services and repairs automobiles,9,4,1,2,2,4,demo_synth_2026,2026,true,true,true
+Mechanic Diesel,डीजल इंजन मैकेनिक,,,,5,Maintains diesel engines and heavy machinery,9,4,1,2,2,4,demo_synth_2026,2026,true,true,true
+Plumber,प्लंबर,,,,4,Installs and repairs water and drainage pipes,8,3,1,2,2,4,demo_synth_2026,2026,true,true,true
+Carpenter,कारपेंटर,,,,4,Cuts and joins wood for structures and furniture,8,3,3,2,2,4,demo_synth_2026,2026,true,true,true
+Mason,राजमिस्त्री,,,,3,Builds structures with brick stone and concrete,8,2,2,2,1,3,demo_synth_2026,2026,true,true,true
+Painter,पेंटर,,,,3,Prepares and paints surfaces interiors and exteriors,6,2,6,2,1,3,demo_synth_2026,2026,true,true,true
+Refrigeration and AC Mechanic,रेफ्रिजरेशन और एसी मैकेनिक,,,,5,Installs and repairs cooling and air systems,7,5,1,2,2,5,demo_synth_2026,2026,true,true,true
+Computer Hardware Maintenance,कंप्यूटर हार्डवेयर तकनीशियन,,,,5,Assembles repairs and maintains computers,5,7,2,3,2,5,demo_synth_2026,2026,true,true,true
+Instrument Mechanic,उपकरण मैकेनिक,,,,5,Calibrates and repairs industrial instruments,7,6,1,2,2,5,demo_synth_2026,2026,true,true,true
+CNC Turning Operator,सीएनसी टर्निंग ऑपरेटर,,,,5,Programs and operates CNC machine tools,8,5,1,1,2,6,demo_synth_2026,2026,true,true,true
+Sheet Metal Technician,शीट मेटल तकनीशियन,,,,4,Forms and shapes sheet metal components,8,3,3,1,1,4,demo_synth_2026,2026,true,true,true
+Foundryman,फाउंड्रीमान,,,,3,Pours and moulds molten metal into castings,8,3,1,1,1,3,demo_synth_2026,2026,true,true,true
+Tool and Die Maker,टूल एंड डाइमेकर,,,,6,Manufactures precision tools moulds and dies,8,6,1,1,2,6,demo_synth_2026,2026,true,true,true
+Grinder,ग्राइंडर,,,,4,Grinds and finishes components to tolerance,8,3,1,1,1,5,demo_synth_2026,2026,true,true,true
+Wireman,वायरमैन,,,,4,Wires electrical control panels and circuits,8,3,1,2,2,4,demo_synth_2026,2026,true,true,true
+Solar PV Technician,सोलर पीवी तकनीशियन,,,,5,Installs and maintains solar power systems,7,5,1,2,2,4,demo_synth_2026,2026,true,true,true
+Wind Turbine Technician,पवन टर्बाइन तकनीशियन,,,,5,Inspects and repairs wind turbine generators,7,5,1,2,2,4,demo_synth_2026,2026,true,true,true
+Lift and Escalator Technician,लिफ्ट और एस्केलेटर तकनीशियन,,,,5,Maintains elevators and escalator systems,7,5,1,2,2,5,demo_synth_2026,2026,true,true,true
+HVAC Technician,एचवीएसी तकनीशियन,,,,5,Services heating ventilation and air systems,7,5,1,2,2,5,demo_synth_2026,2026,true,true,true
+Battery Assembler,बैटरी असेंबलर,,,,3,Assembles and tests industrial batteries,8,2,1,1,1,4,demo_synth_2026,2026,true,true,true
+Software Developer,सॉफ्टवेयर डेवलपर,,,,7,Designs builds and tests application software,3,9,4,3,3,6,demo_synth_2026,2026,true,true,false
+Web Developer,वेब डेवलपर,,,,6,Builds and maintains websites and web apps,3,8,5,3,3,6,demo_synth_2026,2026,true,true,false
+Mobile App Developer,मोबाइल ऐप डेवलपर,,,,6,Develops applications for smartphones,3,8,5,3,3,6,demo_synth_2026,2026,true,true,false
+Data Analyst,डेटा विश्लेषक,,,,7,Cleans analyses and visualises business data,2,9,3,4,4,8,demo_synth_2026,2026,true,true,false
+Data Scientist,डेटा वैज्ञानिक,,,,8,Builds predictive models from large datasets,2,10,4,4,4,8,demo_synth_2026,2026,true,true,true
+Database Administrator,डेटाबेस प्रशासक,,,,7,Manages and secures databases,2,8,2,3,4,9,demo_synth_2026,2026,true,true,true
+Cloud Engineer,क्लाउड इंजीनियर,,,,7,Designs and runs cloud infrastructure,3,9,3,3,4,7,demo_synth_2026,2026,true,true,false
+Network Administrator,नेटवर्क प्रशासक,,,,6,Maintains computer networks and connectivity,4,7,2,4,4,7,demo_synth_2026,2026,true,true,true
+Cybersecurity Analyst,साइबर सुरक्षा विश्लेषक,,,,7,Protects systems from cyber threats,3,9,2,3,4,8,demo_synth_2026,2026,true,true,false
+System Administrator,सिस्टम प्रशासक,,,,6,Manages servers and IT operations,4,7,2,3,4,8,demo_synth_2026,2026,true,true,true
+DevOps Engineer,डेवऑप्स इंजीनियर,,,,7,Automates build deploy and monitoring,3,9,3,3,4,7,demo_synth_2026,2026,true,true,false
+QA Test Engineer,क्यूए टेस्ट इंजीनियर,,,,6,Tests software quality and reports defects,3,7,3,4,3,9,demo_synth_2026,2026,true,true,false
+UI UX Designer,यूआई यूएक्स डिजाइनर,,,,6,Designs usable digital interfaces,2,6,8,5,4,5,demo_synth_2026,2026,true,true,true
+AI ML Engineer,एआई एमएल इंजीनियर,,,,8,Builds and deploys machine learning systems,2,10,4,3,4,7,demo_synth_2026,2026,true,true,false
+Business Intelligence Analyst,बिजनेस इंटेलिजेंस विश्लेषक,,,,7,Turns data into decision dashboards,2,8,3,4,5,8,demo_synth_2026,2026,true,true,false
+IT Support Technician,आईटी सपोर्ट तकनीशियन,,,,5,Helps users resolve IT issues,4,6,2,6,3,6,demo_synth_2026,2026,true,true,true
+Computer Operator,कंप्यूटर ऑपरेटर,,,,4,Runs computer systems and batch jobs,2,4,2,4,3,8,demo_synth_2026,2026,true,true,true
+Digital Marketer,डिजिटल मार्केटर,,,,6,Promotes products through online channels,2,5,6,6,7,5,demo_synth_2026,2026,true,true,true
+SEO Specialist,एसईओ विशेषज्ञ,,,,6,Optimises content for search ranking,2,6,4,4,6,7,demo_synth_2026,2026,true,true,false
+Graphic Designer,ग्राफिक डिजाइनर,,,,5,Creates visual content for media,2,4,9,4,4,4,demo_synth_2026,2026,true,true,true
+Staff Nurse,स्टाफ नर्स,,,,7,Provides patient care in hospitals,3,6,2,9,3,5,demo_synth_2026,2026,true,true,true
+Nursing Assistant,नर्सिंग असिस्टेंट,,,,5,Assists nurses with basic patient care,4,6,2,9,2,5,demo_synth_2026,2026,true,true,true
+Pharmacy Technician,फार्मेसी तकनीशियन,,,,5,Prepares and dispenses medicines,3,6,2,5,3,7,demo_synth_2026,2026,true,true,true
+Medical Lab Technician,मेडिकल लैब तकनीशियन,,,,6,Performs diagnostic laboratory tests,3,8,2,4,2,7,demo_synth_2026,2026,true,true,true
+Radiology Technician,रेडियोलॉजी तकनीशियन,,,,6,Operates imaging and X-ray equipment,4,7,2,5,2,6,demo_synth_2026,2026,true,true,true
+Physiotherapy Assistant,फिजियोथेरेपी असिस्टेंट,,,,5,Helps patients regain movement,5,6,2,8,2,4,demo_synth_2026,2026,true,true,true
+Paramedic,पैरामेडिक,,,,5,Gives emergency out-of-hospital care,5,6,2,8,3,5,demo_synth_2026,2026,true,true,true
+Health Sanitary Inspector,स्वास्थ्य स्वच्छता निरीक्षक,,,,5,Inspects public health and sanitation,4,6,2,6,4,6,demo_synth_2026,2026,true,true,true
+ANM Midwife,एएनएम,,,,5,Supports mothers during pregnancy and birth,4,6,2,9,2,5,demo_synth_2026,2026,true,true,true
+Dental Hygienist,डेंटल हाइजीनिस्ट,,,,5,Cleans teeth and supports dental care,4,6,2,7,2,6,demo_synth_2026,2026,true,true,true
+Ayurvedic Technician,आयुर्वेदिक तकनीशियन,,,,5,Prepares and delivers ayurvedic treatments,4,6,3,6,2,5,demo_synth_2026,2026,true,true,true
+Nutritionist,पोषण विशेषज्ञ,,,,6,Advises on diet and healthy eating,3,7,3,7,4,5,demo_synth_2026,2026,true,true,true
+Occupational Therapist Assistant,ऑक्यूपेशनल थेरेपी असिस्टेंट,,,,6,Helps patients regain daily skills,4,6,3,8,2,4,demo_synth_2026,2026,true,true,true
+Optometrist,ऑप्टोमेट्रिस्ट,,,,6,Tests vision and prescribes lenses,3,7,2,6,3,6,demo_synth_2026,2026,true,true,true
+Dialysis Technician,डायलिसिस तकनीशियन,,,,5,Operates kidney dialysis equipment,4,6,2,7,2,6,demo_synth_2026,2026,true,true,true
+Hospital Ward Assistant,वार्ड असिस्टेंट,,,,3,Keeps wards clean and helps patients,5,3,1,7,2,5,demo_synth_2026,2026,true,true,true
+School Teacher,शिक्षक,,,,7,Teaches students in primary or secondary school,2,6,5,9,5,5,demo_synth_2026,2026,true,true,true
+Anganwadi Worker,अंगनवाड़ी सेविका,,,,3,Provides child nutrition and early care,3,3,4,9,3,4,demo_synth_2026,2026,true,true,true
+Child Care Professional,चाइल्डकेयर प्रोफेशनल,,,,4,Cares for and develops young children,3,4,4,9,3,4,demo_synth_2026,2026,true,true,true
+Counsellor,काउंसलर,,,,7,Guides people on personal and career choices,2,6,4,9,5,4,demo_synth_2026,2026,true,true,true
+Social Worker,समाजसेवी,,,,6,Supports individuals and communities,3,5,4,9,5,4,demo_synth_2026,2026,true,true,false
+Special Educator,विशेष शिक्षक,,,,6,Teaches learners with special needs,2,6,4,9,4,5,demo_synth_2026,2026,true,true,true
+Librarian,पुस्तकालयाध्यक्ष,,,,5,Manages books and information resources,2,5,4,6,4,7,demo_synth_2026,2026,true,true,true
+Training Coordinator,प्रशिक्षण समन्वयक,,,,6,Plans and runs training programmes,2,5,4,8,6,6,demo_synth_2026,2026,true,true,true
+ASHA Worker,आशा कार्यकर्ता,,,,3,Delivers basic health outreach in villages,3,3,3,9,3,4,demo_synth_2026,2026,true,true,true
+Sports Coach,कोच,,,,5,Trains athletes and teams,6,3,3,8,4,3,demo_synth_2026,2026,true,true,true
+Accountant,अकाउंटेंट,,,,6,Keeps and audits financial records,2,5,2,5,6,10,demo_synth_2026,2026,true,true,true
+Bookkeeper,बहीखाता लेखक,,,,5,Records daily business transactions,2,4,2,4,5,10,demo_synth_2026,2026,true,true,true
+Tax Assistant,टैक्स असिस्टेंट,,,,6,Prepares tax returns and filings,2,5,2,4,5,9,demo_synth_2026,2026,true,true,true
+Bank Clerk,बैंक क्लर्क,,,,5,Handles banking transactions and records,2,4,2,6,5,9,demo_synth_2026,2026,true,true,true
+Teller,टेलर,,,,4,Processes cash deposits and withdrawals,2,3,2,6,5,9,demo_synth_2026,2026,true,true,true
+Financial Advisor,वित्तीय सलाहकार,,,,7,Advises clients on money and investments,2,6,2,7,8,6,demo_synth_2026,2026,true,true,true
+Insurance Agent,बीमा एजेंट,,,,5,Sells and manages insurance policies,3,4,2,7,8,5,demo_synth_2026,2026,true,true,true
+HR Executive,एचआर एग्जीक्यूटिव,,,,6,Recruits and supports employees,2,5,3,8,7,6,demo_synth_2026,2026,true,true,true
+Sales Executive,सेल्स एग्जीक्यूटिव,,,,5,Sells products to business and retail customers,3,3,3,8,9,4,demo_synth_2026,2026,true,true,true
+Marketing Manager,मार्केटिंग मैनेजर,,,,7,Plans and leads marketing strategy,2,6,6,7,9,5,demo_synth_2026,2026,true,true,false
+Store Manager,स्टोर मैनेजर,,,,5,Runs retail store operations and staff,3,4,3,7,8,7,demo_synth_2026,2026,true,true,false
+Retail Associate,रिटेल असोसिएट,,,,3,Assists customers and manages stock in stores,3,2,3,7,6,5,demo_synth_2026,2026,true,true,true
+Cashier,कैशियर,,,,3,Collects payments at point of sale,2,3,2,5,5,10,demo_synth_2026,2026,true,true,true
+Purchase Executive,परचेज एग्जीक्यूटिव,,,,5,Sources and buys goods and services,2,4,2,6,7,7,demo_synth_2026,2026,true,true,true
+Logistics Coordinator,लॉजिस्टिक्स समन्वयक,,,,5,Plans movement and storage of goods,3,5,2,6,6,8,demo_synth_2026,2026,true,true,true
+Supply Chain Analyst,सप्लाई चेन विश्लेषक,,,,7,Optimises sourcing and distribution flows,2,7,3,5,6,9,demo_synth_2026,2026,true,true,false
+Entrepreneur,उद्यमी,,,,6,Starts and runs an own business,3,5,5,6,10,5,demo_synth_2026,2026,true,true,false
+Shopkeeper,दुकानदार,,,,4,Operates a retail shop,4,3,3,6,8,6,demo_synth_2026,2026,true,true,true
+Credit Analyst,क्रेडिट विश्लेषक,,,,7,Assesses loan and credit risk,2,7,2,4,6,9,demo_synth_2026,2026,true,true,false
+Back Office Executive,बैक ऑफिस एग्जीक्यूटिव,,,,4,Handles documentation and data processing,2,4,2,5,4,9,demo_synth_2026,2026,true,true,true
+Chartered Accountant,चार्टर्ड अकाउंटेंट,,,,8,Advises on accounts audit and taxation,2,7,2,5,7,10,demo_synth_2026,2026,true,true,true
+Fashion Designer,फैशन डिजाइनर,,,,6,Designs clothing and apparel,3,4,9,5,5,3,demo_synth_2026,2026,true,true,true
+Interior Designer,इंटीरियर डिजाइनर,,,,6,Designs functional indoor spaces,3,5,9,5,5,4,demo_synth_2026,2026,true,true,true
+Photographer,फोटोग्राफर,,,,5,Captures images for events and media,4,4,9,4,5,4,demo_synth_2026,2026,true,true,true
+Videographer,वीडियोग्राफर,,,,5,Films and produces video content,4,4,9,4,5,4,demo_synth_2026,2026,true,true,true
+Animator,एनिमेटर,,,,6,Creates animated visuals and characters,2,5,10,4,4,4,demo_synth_2026,2026,true,true,true
+Video Editor,वीडियो एडिटर,,,,5,Edits and assembles video footage,2,5,9,4,4,5,demo_synth_2026,2026,true,true,true
+Musician,संगीतकार,,,,4,Performs and composes music,2,4,10,5,4,2,demo_synth_2026,2026,true,true,false
+Singer,गायक,,,,3,Performs vocal music,1,3,10,6,5,2,demo_synth_2026,2026,true,true,true
+Dancer,नर्तक,,,,3,Performs dance,3,3,10,6,4,2,demo_synth_2026,2026,true,true,true
+Actor,अभिनेता,,,,4,Performs in film theatre and media,3,3,10,6,6,2,demo_synth_2026,2026,true,true,true
+Craft Instructor,हस्तकला प्रशिक्षक,,,,5,Teaches traditional crafts and skills,4,3,8,7,4,3,demo_synth_2026,2026,true,true,true
+Embroidery Technician,कढ़ाई कलाकार,,,,3,Decorates fabric with embroidery,4,2,8,3,2,5,demo_synth_2026,2026,true,true,true
+Beautician,ब्यूटीशियन,,,,4,Provides skin and beauty treatments,3,3,8,7,6,4,demo_synth_2026,2026,true,true,true
+Hair Stylist,हेयर स्टाइलिस्ट,,,,3,Cuts colours and styles hair,3,3,8,7,6,4,demo_synth_2026,2026,true,true,true
+Makeup Artist,मेकअप आर्टिस्ट,,,,4,Applies makeup for events and media,3,3,9,6,6,4,demo_synth_2026,2026,true,true,true
+Tattoo Artist,टैटू आर्टिस्ट,,,,4,Designs and applies tattoos,3,3,9,4,4,3,demo_synth_2026,2026,true,true,true
+Florist,फूलकार,,,,3,Arranges and sells flowers,4,2,8,5,4,3,demo_synth_2026,2026,true,true,true
+Jewellery Designer,आभूषण डिजाइनर,,,,5,Designs and crafts jewellery,5,4,9,3,5,5,demo_synth_2026,2026,true,true,true
+Agriculture Technician,कृषि तकनीशियन,,,,5,Supports crop and farm operations,7,6,2,4,3,4,demo_synth_2026,2026,true,true,true
+Dairy Farmer,डेयरी पशुपालक,,,,4,Raises cattle for milk production,8,4,2,4,5,4,demo_synth_2026,2026,true,true,true
+Poultry Farmer,पोल्ट्री फार्मर,,,,4,Raises birds for eggs and meat,8,4,2,3,5,4,demo_synth_2026,2026,true,true,true
+Beekeeper,मधुमक्खी पालक,,,,4,Raises bees for honey production,8,4,2,3,4,4,demo_synth_2026,2026,true,true,true
+Horticulturist,उद्यान विशेषज्ञ,,,,6,Grows fruits vegetables and ornamental plants,7,6,3,4,4,4,demo_synth_2026,2026,true,true,true
+Crop Advisor,फसल सलाहकार,,,,6,Advises farmers on crop management,5,7,2,6,5,4,demo_synth_2026,2026,true,true,true
+Fishery Technician,मत्स्य तकनीशियन,,,,4,Manages aquaculture and fish handling,8,4,2,3,3,4,demo_synth_2026,2026,true,true,true
+Food Processing Technician,फूड प्रोसेसिंग तकनीशियन,,,,5,Processes and packages food products,6,5,2,4,4,6,demo_synth_2026,2026,true,true,true
+Chef,शेफ,,,,5,Plans and cooks meals in kitchens,6,4,7,6,5,5,demo_synth_2026,2026,true,true,true
+Baker,बेकर,,,,4,Prepares bread and baked goods,6,3,7,4,4,5,demo_synth_2026,2026,true,true,true
+Confectioner,मिठाई कारिगर,,,,4,Makes sweets and confectionery,6,3,7,4,4,5,demo_synth_2026,2026,true,true,true
+Waiter,वेटर,,,,3,Serves food and drinks to customers,5,2,3,8,5,5,demo_synth_2026,2026,true,true,true
+Barista,बारिस्ता,,,,3,Prepares and serves coffee drinks,5,3,6,6,5,4,demo_synth_2026,2026,true,true,true
+Housekeeping Supervisor,हाउसकीपिंग सुपरवाइजर,,,,4,Leads cleaning and housekeeping teams,6,3,3,6,5,6,demo_synth_2026,2026,true,true,true
+Farm Manager,फार्म मैनेजर,,,,6,Oversees farm production and workers,6,5,2,5,7,5,demo_synth_2026,2026,true,true,false
+Driver,चालक,,,,3,Operates vehicles to transport goods or people,8,2,2,4,3,5,demo_synth_2026,2026,true,true,true
+Mechanic Two Wheeler,दोपहिया वाहन मैकेनिक,,,,4,Repairs motorcycles and scooters,9,4,1,2,2,4,demo_synth_2026,2026,true,true,true
+Courier Executive,कूरियर एग्जीक्यूटिव,,,,3,Picks up and delivers parcels,5,3,2,5,4,7,demo_synth_2026,2026,true,true,true
+Warehouse Manager,वेयरहाउस मैनेजर,,,,5,Manages storage inventory and dispatch,5,4,2,5,6,8,demo_synth_2026,2026,true,true,false
+Crane Operator,क्रेन ऑपरेटर,,,,4,Operates cranes at construction and ports,8,3,2,2,3,6,demo_synth_2026,2026,true,true,true
+Airline Ground Staff,एयरलाइन ग्राउंड स्टाफ,,,,4,Assists passengers and aircraft on ground,4,3,3,8,6,6,demo_synth_2026,2026,true,true,true
+Travel Agent,ट्रैवल एजेंट,,,,4,Books travel and designs itineraries,2,4,4,8,7,5,demo_synth_2026,2026,true,true,true
+Security Guard,सुरक्षा गार्ड,,,,3,Protects premises and people,6,2,2,5,4,6,demo_synth_2026,2026,true,true,true
+Fireman,दमकल कर्मी,,,,4,Fights fires and performs rescue,8,3,2,6,4,5,demo_synth_2026,2026,true,true,true
+Hotel Manager,होटल मैनेजर,,,,6,Runs hotel operations and guest services,2,5,4,8,8,6,demo_synth_2026,2026,true,true,false
+Tour Guide,टूर गाइड,,,,4,Leads and informs travellers on tours,4,4,5,9,6,4,demo_synth_2026,2026,true,true,true
+Event Manager,इवेंट मैनेजर,,,,6,Plans and executes events,3,5,6,8,8,5,demo_synth_2026,2026,true,true,false
+Front Desk Executive,फ्रंट डेस्क एग्जीक्यूटिव,,,,4,Handles reception and guest check-in,2,3,3,8,6,7,demo_synth_2026,2026,true,true,true
+Civil Engineer,सिविल इंजीनियर,,,,7,Designs and supervises construction,6,8,4,4,5,6,demo_synth_2026,2026,true,true,false
+Mechanical Engineer,मैकेनिकल इंजीनियर,,,,7,Designs and maintains machines,7,9,4,3,5,6,demo_synth_2026,2026,true,true,false
+Electrical Engineer,इलेक्ट्रिकल इंजीनियर,,,,7,Designs electrical systems,6,9,3,3,5,6,demo_synth_2026,2026,true,true,false
+Electronics Engineer,इलेक्ट्रॉनिक्स इंजीनियर,,,,7,Designs electronic circuits and devices,5,9,3,3,5,6,demo_synth_2026,2026,true,true,false
+Chemical Engineer,केमिकल इंजीनियर,,,,7,Designs chemical process plants,5,9,3,3,4,6,demo_synth_2026,2026,true,true,false
+Architect,आर्किटेक्ट,,,,8,Plans and designs buildings,4,7,9,5,6,5,demo_synth_2026,2026,true,true,false
+Draughtsman,ड्राफ्ट्समैन,,,,5,Prepares technical drawings,5,6,6,3,3,7,demo_synth_2026,2026,true,true,true
+Surveyor,सर्वेयर,,,,5,Measures and maps land boundaries,6,6,3,4,4,7,demo_synth_2026,2026,true,true,true
+Environmental Engineer,पर्यावरण इंजीनियर,,,,7,Solves pollution and environmental issues,5,8,3,6,4,6,demo_synth_2026,2026,true,true,false
+Industrial Engineer,इंडस्ट्रियल इंजीनियर,,,,7,Optimises production systems,5,8,3,4,6,7,demo_synth_2026,2026,true,true,false
+Clerk,क्लर्क,,,,4,Performs routine office record work,2,4,2,6,5,9,demo_synth_2026,2026,true,true,true
+Data Entry Operator,डेटा एंट्री ऑपरेटर,,,,3,Enters and verifies data records,2,3,2,4,3,10,demo_synth_2026,2026,true,true,true
+Office Assistant,कार्यालय सहायक,,,,4,Supports daily office administration,2,3,2,6,5,9,demo_synth_2026,2026,true,true,true
+Revenue Officer,राजस्व अधिकारी,,,,6,Handles land records and revenue work,3,5,2,6,7,8,demo_synth_2026,2026,true,true,false
+Lab Technician,प्रयोगशाला तकनीशियन,,,,5,Runs experiments and lab tests,4,7,2,4,3,7,demo_synth_2026,2026,true,true,true
+Machine Operator,मशीन ऑपरेटर,,,,3,Runs production machines,8,3,1,2,2,5,demo_synth_2026,2026,true,true,true
+Assembly Line Worker,असेंबली लाइन वर्कर,,,,3,Assembles products on a line,8,2,1,2,1,5,demo_synth_2026,2026,true,true,true
+Quality Inspector,गुणवत्ता निरीक्षक,,,,5,Checks products against standards,5,6,2,3,4,9,demo_synth_2026,2026,true,true,true
+Safety Officer,सेफ्टी ऑफिसर,,,,6,Enforces workplace safety rules,5,6,2,5,6,7,demo_synth_2026,2026,true,true,false
+Garment Worker,गारमेंट वर्कर,,,,3,Cuts and stitches garments,7,2,4,3,1,5,demo_synth_2026,2026,true,true,true
+Weaver,बुनकर,,,,3,Weaves fabric on looms,7,2,6,2,2,4,demo_synth_2026,2026,true,true,true
+Cobbler,चर्मकार,,,,3,Repairs and makes footwear,7,2,4,3,3,4,demo_synth_2026,2026,true,true,true
+Watch Repairer,घड़ी मरम्मत कारिगर,,,,4,Repairs and services watches,7,4,3,3,2,7,demo_synth_2026,2026,true,true,true
+Medical Representative,मेडिकल रिप्रेजेंटेटिव,,,,5,Promotes medicines to doctors,3,4,3,7,9,5,demo_synth_2026,2026,true,true,true
+Teaching Assistant,टीचिंग असिस्टेंट,,,,5,Supports teachers in classrooms,3,5,4,9,4,5,demo_synth_2026,2026,true,true,true
+Call Center Agent,कॉल सेंटर एजेंट,,,,4,Handles customer calls and queries,3,3,3,8,6,7,demo_synth_2026,2026,true,true,true
+Yoga Instructor,योग प्रशिक्षक,,,,4,Teaches yoga and wellness,5,3,6,8,4,3,demo_synth_2026,2026,true,true,true
+Event Photographer,इवेंट फोटोग्राफर,,,,4,Captures photographs at events,4,4,9,5,5,4,demo_synth_2026,2026,true,true,true

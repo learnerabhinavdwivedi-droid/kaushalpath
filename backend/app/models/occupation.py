@@ -1,7 +1,7 @@
 """Occupation master (RIASEC profile + taxonomy codes)."""
 from __future__ import annotations
 
-from sqlalchemy import Float, Integer, String, Text
+from sqlalchemy import Boolean, Float, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base, SourceMixin, TimestampMixin
@@ -18,6 +18,7 @@ class Occupation(Base, TimestampMixin, SourceMixin):
     esco_uri: Mapped[str | None] = mapped_column(String(255), nullable=True)
     nsqf_level: Mapped[int | None] = mapped_column(Integer, index=True, nullable=True)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    is_vocational: Mapped[bool] = mapped_column(Boolean, default=True, index=True, nullable=False)
 
     # Holland RIASEC scores (0-10 scale).
     riasec_r: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)

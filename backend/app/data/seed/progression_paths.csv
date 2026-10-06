@@ -1,0 +1,13 @@
+course_name,to_label,to_course_name,kind,credit_note,source,source_year,is_demo,needs_review
+ITI Fitter,Advanced Tooling & CNC Specialist (NSQF Level 6),,nsqf_levelup,Direct progression via CTS to CITS advanced craft certification,demo_synth_2026,2026,true,false
+ITI Fitter,Diploma in Mechanical Engineering (2nd Year Lateral Entry),Diploma in Mechanical Engineering,lateral_entry,Direct admission into 2nd year of State Polytechnic diploma,demo_synth_2026,2026,true,false
+ITI Fitter,Designated Industrial Apprentice under NAPS (BHEL / Railways / Tata),,apprenticeship,"1-year industry apprenticeship with guaranteed monthly stipend (Rs 9,500 - 11,500)",demo_synth_2026,2026,true,false
+ITI Electrician,Electrical Automation & PLC Control Specialist (NSQF Level 6),,nsqf_levelup,CITS certification for industrial automation and maintenance,demo_synth_2026,2026,true,false
+ITI Electrician,Diploma in Electrical Engineering (2nd Year Lateral Entry),Diploma in Electrical Engineering,lateral_entry,State board approved lateral entry route with 1 year credit exemption,demo_synth_2026,2026,true,false
+ITI Electrician,Discom & Substation Certified Apprentice (NAPS / State Power Corp),,apprenticeship,Official state power utility apprenticeship with NCVT National Apprenticeship Certificate (NAC),demo_synth_2026,2026,true,false
+ITI Welder,TIG/MIG & Pipe Welding Specialist (NSQF Level 5),,nsqf_levelup,Advanced precision welding qualification for boiler and structural work,demo_synth_2026,2026,true,false
+ITI Welder,Heavy Engineering Industry Apprenticeship (L&T / Railways),,apprenticeship,Practical shop-floor apprenticeship leading to Class-1 certified structural welder,demo_synth_2026,2026,true,false
+ITI Motor Vehicle Mechanic,Electric Vehicle (EV) Assembly & Battery Technician,,nsqf_levelup,Next-generation automotive skill add-on under Automotive Skills Development Council (ASDC),demo_synth_2026,2026,true,false
+ITI Motor Vehicle Mechanic,Automotive OEM Apprenticeship (Maruti Suzuki / Tata Motors),,apprenticeship,Hands-on assembly line training with stipend and absorbed technician recruitment route,demo_synth_2026,2026,true,false
+Solar PV Installer Certificate,Grid-Tied Solar Rooftop Project Engineer (NSQF Level 6),,nsqf_levelup,Skill Council for Green Jobs (SCGJ) accredited advanced qualification,demo_synth_2026,2026,true,false
+ITI CNC Turning,CAD/CAM Programmer & Multi-Axis CNC Specialist,,further_education,Direct pathway into precision aerospace and medical device tooling,demo_synth_2026,2026,true,false

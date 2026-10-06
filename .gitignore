@@ -12,6 +12,7 @@ env/
 htmlcov/
 *.sqlite3
 *.db
+*.db-journal
 
 # --- Node / frontend ---
 node_modules/

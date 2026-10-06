@@ -205,4 +205,28 @@ The CSP (`script-src 'self'`) forbids inline/eval scripts (the app ships none) b
 permits `style-src 'unsafe-inline'` because React sets inline `style` attributes on
 elements; this is a deliberate, documented narrowing rather than a blanket `'unsafe-inline'`.
 
+---
 
+# Phase 10 (truth reset and spec lock) assumptions
+
+## A27 — Honest re-score against PS wording
+An independent gap analysis (see `KaushalPath_SIH26241_Gap_Analysis_and_Phase_Plan.docx`)
+re-scored PS alignment at ~60% (26.0 / 43 weighted). The previous 100% score
+checked only that evidence text existed, not whether it matched the PS wording.
+Rows R1–R10, R12, R14 are set to 0.5 with a one-line reason each. Five new rows
+(R16–R20) capture capabilities the PS implies but were not in the original sheet.
+The 0.97 gate intentionally fails until Phases 11–18 ship the missing capabilities.
+
+## A28 — Duplicate i18n bootstrap removed
+Two i18n initialisations existed: `src/i18n/config.ts` (using `locales/*.json`)
+and `src/i18n/index.ts` (using sibling `en.json`/`hi.json` with only Phase 0
+keys). The duplicate `index.ts` and its `en.json`/`hi.json` have been deleted.
+Only `config.ts` + `locales/en.json` + `locales/hi.json` remain. `main.tsx` and
+all tests import `./i18n/config`.
+
+## A29 — PS deadline and portal verification
+The gap analysis notes that sih.gov.in blocks automated requests and the PS text
+was cross-checked on title, ministry and theme only. PS_SPEC.md says deadline
+5 Oct 2026 (already past at time of Phase 10). We are building for the prototype
+demonstration at evaluation. The team should re-confirm the PS wording against the
+portal when access is available.

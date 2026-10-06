@@ -58,7 +58,7 @@ class Settings(BaseSettings):
             raw = url[len(prefix):]
             if not os.path.isabs(raw):
                 resolved = (_BACKEND_DIR / raw).resolve()
-                self.database_url = f"{prefix}{resolved}"
+                self.database_url = f"{prefix}{resolved.as_posix()}"
         return self
 
     # CORS — comma-separated origins

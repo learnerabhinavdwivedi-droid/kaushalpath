@@ -4,6 +4,12 @@ Scraped from the live portal https://www.sih.gov.in/sih2026PS on **2026-10-02**.
 This is the authoritative wording; it overrides `docs/01_PS_ANALYSIS.md` and any
 inferred rows in `docs/PS_TRACEABILITY.md` where they conflict.
 
+> **Verification note (Phase 10):** Cross-checked on title, ministry, category
+> and theme against four public SIH26241 repositories. The portal blocks automated
+> requests so full word-for-word confirmation is pending. Deadline stated as
+> 5 Oct 2026 — re-confirm; other sources list different dates. If the idea
+> submission is already in, this plan is for the prototype shown at evaluation.
+
 | Field | Value |
 |---|---|
 | Problem Statement ID | **26241** (SIH26241) |
