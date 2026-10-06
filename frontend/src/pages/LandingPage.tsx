@@ -282,10 +282,10 @@ export const LandingPage: React.FC = () => {
           links={[
             { label: t('landing.footer.start'), href: '/register' },
             { label: t('landing.footer.login'), href: '/login' },
+            { label: t('landing.footer.talk'), href: '/talk' },
             { label: t('landing.footer.counsellor'), href: '/login' },
             { label: t('landing.footer.room'), href: '/room/join' },
             { label: t('landing.footer.styleguide'), href: '/styleguide' },
-            { label: t('landing.footer.marketing'), href: '/home' },
           ]}
         />
       }
@@ -325,6 +325,13 @@ export const LandingPage: React.FC = () => {
 
           <div className="mt-10 flex flex-wrap items-center gap-8">
             <WaveButton label={t('landing.start_button')} href="/register" />
+            {/* Phase 15: the product itself is the CTA — judges land on the chat. */}
+            <Link
+              href="/talk"
+              className="inline-flex items-center gap-2 rounded-pill bg-lavender px-6 py-4 font-mono text-base font-semibold text-ink transition-transform hover:scale-[1.03]"
+            >
+              {t('landing.talk_cta')}
+            </Link>
             <Link
               href="#how"
               className="group inline-flex items-center gap-2 font-mono text-[17px] font-semibold text-ink"
@@ -420,7 +427,7 @@ export const LandingPage: React.FC = () => {
                 {t('landing.cta.login')}
               </Link>
             </div>
-            <p className="mt-8 font-mono text-sm text-white/80">
+            <p className="mt-8 font-mono text-sm text-white">
               <Link href="/login" className="link-underline">
                 {t('landing.cta.counsellor')}
               </Link>

@@ -5,6 +5,14 @@ import { apiRequest } from '../api/client';
 import { useLocation } from 'wouter';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { ArrowLeft, Trash2, LogOut } from 'lucide-react';
+import {
+  FONT_SIZES,
+  getFontSize,
+  getHighContrast,
+  setFontSize,
+  setHighContrast,
+  type FontSize,
+} from '../lib/displayPrefs';
 
 export const SettingsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -13,6 +21,9 @@ export const SettingsPage: React.FC = () => {
   const resetAssessment = useAssessmentStore(state => state.resetAssessment);
   const setProfile = useProfileStore(state => state.setProfile);
   const setRecommendations = useResultsStore(state => state.setRecommendations);
+  // Phase 17: display prefs (font size + high contrast), persisted in localStorage.
+  const [fontSize, setFont] = React.useState<FontSize>(getFontSize());
+  const [contrast, setContrast] = React.useState<boolean>(getHighContrast());
 
   const handleDeleteData = async () => {
     if (window.confirm(t('settings.delete_confirm'))) {
@@ -48,6 +59,35 @@ export const SettingsPage: React.FC = () => {
         <div className="card flex justify-between items-center">
           <span className="text-xl font-medium">{t('settings.language')}</span>
           <LanguageSwitcher />
+        </div>
+
+        {/* Phase 17: text size + high contrast for low-vision / low-literacy. */}
+        <div className="card space-y-3">
+          <span className="text-xl font-medium">{t('settings.text_size')}</span>
+          <div className="flex gap-2" role="group" aria-label={t('settings.text_size')}>
+            {FONT_SIZES.map((s) => (
+              <button
+                key={s}
+                type="button"
+                aria-pressed={fontSize === s}
+                onClick={() => { setFont(s); setFontSize(s); }}
+                className={`min-h-[44px] flex-1 rounded-pill border-2 px-3 text-lg font-bold ${
+                  fontSize === s ? 'border-accent bg-accent-light' : 'border-gray-200'
+                }`}
+              >
+                {t(`settings.font_${s}`)}
+              </button>
+            ))}
+          </div>
+          <label className="flex items-center justify-between text-xl font-medium">
+            {t('settings.high_contrast')}
+            <input
+              type="checkbox"
+              className="h-6 w-6"
+              checked={contrast}
+              onChange={(e) => { setContrast(e.target.checked); setHighContrast(e.target.checked); }}
+            />
+          </label>
         </div>
 
         <button 

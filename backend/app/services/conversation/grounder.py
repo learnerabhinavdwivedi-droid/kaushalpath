@@ -21,7 +21,8 @@ def ground_facts(
     """Assemble structured ground facts for conversational verbalisation.
 
     Each fact satisfies:
-      {"key": str, "label": str, "value": Any, "unit": str, "source": str, "source_year": int, "is_demo": bool}
+      {"key": str, "label": str, "value": Any, "unit": str, "source": str,
+       "source_year": int, "is_demo": bool}
     """
     if student_id and (not state or not district):
         student = db.get(Student, student_id)
@@ -32,7 +33,9 @@ def ground_facts(
 
     outcome_svc = OutcomeService(db)
     try:
-        data = outcome_svc.get_trade_outcomes(occupation_id=occupation_id, state=state, district=district)
+        data = outcome_svc.get_trade_outcomes(
+            occupation_id=occupation_id, state=state, district=district
+        )
     except Exception:
         # Fallback if occupation not found or has no linked courses
         occ = db.get(Occupation, occupation_id)
@@ -71,7 +74,10 @@ def ground_facts(
     prov_state = primary_provider.get("state") or state or "State"
     has_female = "Yes" if primary_provider.get("has_female_trainers") else "Available upon request"
     has_hostel = "Yes" if primary_provider.get("has_hostel") else "Available in vicinity"
-    transport = primary_provider.get("transport_note") or "Public bus routes and local transit available."
+    transport = (
+        primary_provider.get("transport_note")
+        or "Public bus routes and local transit available."
+    )
 
     # Fee lookup
     course = db.scalars(select(Course).where(Course.occupation_id == occupation_id)).first()

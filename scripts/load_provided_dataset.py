@@ -19,8 +19,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-
-from _common import PROCESSED_DIR, RAW_DIR, read_csv
+from _common import RAW_DIR, read_csv
 from app.db.session import SessionLocal
 from app.models import Centre, Course, Market, Occupation, ProviderOutcome
 
@@ -29,7 +28,10 @@ RAW_PROVIDED_DIR = RAW_DIR / "provided"
 # Canonical target field synonyms for fuzzy matching
 DEFAULT_SYNONYMS: dict[str, list[str]] = {
     # Occupation / trade
-    "name_en": ["trade", "trade_name", "job_role", "occupation", "occupation_name", "role", "name_en", "trade_title"],
+    "name_en": [
+        "trade", "trade_name", "job_role", "occupation", "occupation_name",
+        "role", "name_en", "trade_title",
+    ],
     "name_hi": ["name_hi", "hindi_name", "trade_hi", "vyavsay_naam"],
     "nco_code": ["nco", "nco_code", "nco_2015", "nco_id"],
     "nsqf_level": ["nsqf", "nsqf_level", "level", "skill_level"],
@@ -37,19 +39,37 @@ DEFAULT_SYNONYMS: dict[str, list[str]] = {
     "is_vocational": ["is_vocational", "vocational", "is_iti", "technical_trade"],
 
     # Market / outcomes
-    "occupation_name_en": ["trade", "trade_name", "occupation", "occupation_name", "job_role", "course_name"],
+    "occupation_name_en": [
+        "trade", "trade_name", "occupation", "occupation_name", "job_role", "course_name",
+    ],
     "state": ["state", "state_name", "pradesh", "region"],
     "district": ["district", "district_name", "dist", "city", "location"],
-    "avg_salary_inr": ["avg_salary", "average_salary", "salary", "avg_salary_inr", "mean_salary", "monthly_salary"],
-    "earnings_p25": ["earnings_p25", "salary_p25", "p25_salary", "p25_earnings", "min_salary", "lower_salary", "salary_25th"],
-    "earnings_median": ["earnings_median", "median_salary", "salary_median", "median_earnings", "typical_salary"],
-    "earnings_p75": ["earnings_p75", "salary_p75", "p75_salary", "p75_earnings", "max_salary", "upper_salary", "salary_75th"],
-    "placement_rate": ["placement_rate", "placement_pct", "placement", "placed_pct", "placement_percentage", "job_placement_rate"],
+    "avg_salary_inr": [
+        "avg_salary", "average_salary", "salary", "avg_salary_inr", "mean_salary", "monthly_salary",
+    ],
+    "earnings_p25": [
+        "earnings_p25", "salary_p25", "p25_salary", "p25_earnings", "min_salary",
+        "lower_salary", "salary_25th",
+    ],
+    "earnings_median": [
+        "earnings_median", "median_salary", "salary_median", "median_earnings", "typical_salary",
+    ],
+    "earnings_p75": [
+        "earnings_p75", "salary_p75", "p75_salary", "p75_earnings", "max_salary",
+        "upper_salary", "salary_75th",
+    ],
+    "placement_rate": [
+        "placement_rate", "placement_pct", "placement", "placed_pct",
+        "placement_percentage", "job_placement_rate",
+    ],
     "demand_index": ["demand_index", "demand", "industry_demand", "market_demand"],
     "cohort_year": ["cohort_year", "year", "batch_year", "passing_year", "eval_year"],
 
     # Provider / centre
-    "provider_name": ["provider_name", "centre_name", "center_name", "institute_name", "iti_name", "provider", "name"],
+    "provider_name": [
+        "provider_name", "centre_name", "center_name", "institute_name", "iti_name",
+        "provider", "name",
+    ],
     "course_name": ["course", "course_name", "trade", "trade_name", "program", "programme_name"],
     "provider_type": ["provider_type", "type", "institute_type", "category"],
     "affiliation": ["affiliation", "board", "certifying_body", "affiliated_to"],
@@ -63,7 +83,9 @@ DEFAULT_SYNONYMS: dict[str, list[str]] = {
     "certified": ["certified", "passed", "graduated", "completed"],
     "placed": ["placed", "total_placed", "placed_candidates", "employed"],
     "self_employed_pct": ["self_employed_pct", "self_employed", "self_employment_rate"],
-    "apprenticeship_stipend_inr": ["apprenticeship_stipend_inr", "stipend", "apprentice_stipend", "naps_stipend"],
+    "apprenticeship_stipend_inr": [
+        "apprenticeship_stipend_inr", "stipend", "apprentice_stipend", "naps_stipend",
+    ],
 }
 
 
@@ -123,7 +145,10 @@ def clean_currency(val: Any) -> float | None:
     if val is None or str(val).strip() == "":
         return None
     s = str(val).strip().lower()
-    s = s.replace("₹", "").replace("rs.", "").replace("rs", "").replace("inr", "").replace(",", "").strip()
+    s = (
+        s.replace("₹", "").replace("rs.", "").replace("rs", "")
+        .replace("inr", "").replace(",", "").strip()
+    )
     multiplier = 1.0
     if "lakh" in s or "lac" in s:
         multiplier = 100000.0
@@ -188,7 +213,9 @@ def main(get_session=SessionLocal, base_dir: Path | None = None) -> dict[str, An
     session = get_session()
     all_unmapped: list[str] = []
     rejects: list[dict[str, Any]] = []
-    loaded_counts: dict[str, int] = {"occupations": 0, "market": 0, "centres": 0, "provider_outcomes": 0}
+    loaded_counts: dict[str, int] = {
+        "occupations": 0, "market": 0, "centres": 0, "provider_outcomes": 0
+    }
 
     try:
         for csv_path in csv_files:
@@ -209,19 +236,27 @@ def main(get_session=SessionLocal, base_dir: Path | None = None) -> dict[str, An
 
             all_unmapped.extend(file_unmapped)
             if file_unmapped:
-                print(f"load_provided_dataset: [{csv_path.name}] unmapped columns: {file_unmapped}")
-
-            # Detect primary schema type
-            canonical_targets = set(header_map.values())
+                print(
+                    f"load_provided_dataset: [{csv_path.name}] unmapped columns: {file_unmapped}"
+                )
 
             for row_idx, raw_row in enumerate(rows, start=1):
-                clean_row: dict[str, Any] = {header_map[k]: v for k, v in raw_row.items() if k in header_map and v}
+                clean_row: dict[str, Any] = {
+                    header_map[k]: v for k, v in raw_row.items() if k in header_map and v
+                }
 
                 # 1. Market record (has state and salary/placement)
-                if "state" in clean_row and ("avg_salary_inr" in clean_row or "placement_rate" in clean_row or "earnings_median" in clean_row):
+                if "state" in clean_row and (
+                    "avg_salary_inr" in clean_row
+                    or "placement_rate" in clean_row
+                    or "earnings_median" in clean_row
+                ):
                     occ_name = clean_row.get("occupation_name_en") or clean_row.get("name_en")
                     if not occ_name:
-                        rejects.append({**raw_row, "rejection_reason": f"Row {row_idx}: missing occupation/trade name"})
+                        rejects.append({
+                            **raw_row,
+                            "rejection_reason": f"Row {row_idx}: missing occupation/trade name",
+                        })
                         continue
 
                     occ = session.query(Occupation).filter_by(name_en=occ_name).first()
@@ -237,9 +272,15 @@ def main(get_session=SessionLocal, base_dir: Path | None = None) -> dict[str, An
                         session.add(occ)
                         session.flush()
 
-                    salary = clean_currency(clean_row.get("avg_salary_inr") or clean_row.get("earnings_median"))
-                    p25 = clean_currency(clean_row.get("earnings_p25")) or (salary * 0.85 if salary else None)
-                    p75 = clean_currency(clean_row.get("earnings_p75")) or (salary * 1.25 if salary else None)
+                    salary = clean_currency(
+                        clean_row.get("avg_salary_inr") or clean_row.get("earnings_median")
+                    )
+                    p25 = clean_currency(clean_row.get("earnings_p25")) or (
+                        salary * 0.85 if salary else None
+                    )
+                    p75 = clean_currency(clean_row.get("earnings_p75")) or (
+                        salary * 1.25 if salary else None
+                    )
                     rate = clean_percentage(clean_row.get("placement_rate"))
 
                     m_key = {
@@ -267,11 +308,19 @@ def main(get_session=SessionLocal, base_dir: Path | None = None) -> dict[str, An
                         session.add(Market(**m_key, **m_vals))
                     loaded_counts["market"] += 1
 
-                # 2. Provider outcomes (has provider_name and (placement_rate or placed or earnings))
-                elif "provider_name" in clean_row and ("placement_rate" in clean_row or "placed" in clean_row or "earnings_median" in clean_row):
+                # 2. Provider outcomes (provider_name + placement_rate/placed/earnings)
+                elif "provider_name" in clean_row and (
+                    "placement_rate" in clean_row
+                    or "placed" in clean_row
+                    or "earnings_median" in clean_row
+                ):
                     prov_name = clean_row["provider_name"].strip()
                     dist = clean_row.get("district", "Generic").strip()
-                    course_name = clean_row.get("course_name") or clean_row.get("name_en") or "Vocational Course"
+                    course_name = (
+                        clean_row.get("course_name")
+                        or clean_row.get("name_en")
+                        or "Vocational Course"
+                    )
 
                     centre = session.query(Centre).filter_by(name=prov_name, district=dist).first()
                     if not centre:
@@ -296,12 +345,22 @@ def main(get_session=SessionLocal, base_dir: Path | None = None) -> dict[str, An
                     course_id = cr.id if cr else centre.course_id
 
                     cohort_year = clean_int(clean_row.get("cohort_year")) or 2025
-                    salary_med = clean_currency(clean_row.get("earnings_median") or clean_row.get("avg_salary_inr"))
-                    p25 = clean_currency(clean_row.get("earnings_p25")) or (salary_med * 0.85 if salary_med else None)
-                    p75 = clean_currency(clean_row.get("earnings_p75")) or (salary_med * 1.25 if salary_med else None)
+                    salary_med = clean_currency(
+                        clean_row.get("earnings_median") or clean_row.get("avg_salary_inr")
+                    )
+                    p25 = clean_currency(clean_row.get("earnings_p25")) or (
+                        salary_med * 0.85 if salary_med else None
+                    )
+                    p75 = clean_currency(clean_row.get("earnings_p75")) or (
+                        salary_med * 1.25 if salary_med else None
+                    )
                     rate = clean_percentage(clean_row.get("placement_rate"))
 
-                    po_key = {"provider_id": centre.id, "course_id": course_id, "cohort_year": cohort_year}
+                    po_key = {
+                        "provider_id": centre.id,
+                        "course_id": course_id,
+                        "cohort_year": cohort_year,
+                    }
                     po_vals = {
                         "enrolled": clean_int(clean_row.get("enrolled")),
                         "certified": clean_int(clean_row.get("certified")),
@@ -311,7 +370,9 @@ def main(get_session=SessionLocal, base_dir: Path | None = None) -> dict[str, An
                         "earnings_median": salary_med,
                         "earnings_p75": p75,
                         "self_employed_pct": clean_percentage(clean_row.get("self_employed_pct")),
-                        "apprenticeship_stipend_inr": clean_currency(clean_row.get("apprenticeship_stipend_inr")),
+                        "apprenticeship_stipend_inr": clean_currency(
+                            clean_row.get("apprenticeship_stipend_inr")
+                        ),
                         "source": "msde_provided_2026",
                         "source_year": 2026,
                         "is_demo": False,
@@ -351,7 +412,10 @@ def main(get_session=SessionLocal, base_dir: Path | None = None) -> dict[str, An
                         ))
                     loaded_counts["occupations"] += 1
                 else:
-                    rejects.append({**raw_row, "rejection_reason": f"Row {row_idx}: unable to match to canonical schema"})
+                    rejects.append({
+                        **raw_row,
+                        "rejection_reason": f"Row {row_idx}: unable to match to canonical schema",
+                    })
 
         session.commit()
     finally:
@@ -369,7 +433,12 @@ def main(get_session=SessionLocal, base_dir: Path | None = None) -> dict[str, An
 
     total_loaded = sum(loaded_counts.values())
     print(f"load_provided_dataset: finished. Loaded: {loaded_counts}, Rejects: {len(rejects)}")
-    return {"loaded": total_loaded, "counts": loaded_counts, "rejected": len(rejects), "unmapped": all_unmapped}
+    return {
+        "loaded": total_loaded,
+        "counts": loaded_counts,
+        "rejected": len(rejects),
+        "unmapped": all_unmapped,
+    }
 
 
 if __name__ == "__main__":

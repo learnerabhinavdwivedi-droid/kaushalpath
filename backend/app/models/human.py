@@ -14,12 +14,24 @@ that provenance contract is only for reference/catalogue data):
 """
 from __future__ import annotations
 
-from sqlalchemy import ForeignKey, String, Text, UniqueConstraint
+from datetime import datetime
+
+from sqlalchemy import (
+    JSON,
+    DateTime,
+    ForeignKey,
+    String,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.db.base import Base, TimestampMixin
+from app.db.base import Base, TimestampMixin, utcnow
 
-ESCALATION_STATUSES = ("open", "resolved")
+ESCALATION_STATUSES = ("open", "assigned", "contacted", "resolved", "unreachable")
+# Channel the counsellor should reach the family on, and the handling priority.
+ESCALATION_CHANNELS = ("callback", "chat", "visit")
+ESCALATION_PRIORITIES = ("low", "normal", "high")
 # Conversational objection topics (PS 26241 parental concerns) and the
 # sentiment we tag each parent interaction with (feeds Phase 8 dashboard).
 OBJECTION_TOPICS = ("income", "security", "social", "safety", "distance", "cost", "other")
@@ -27,14 +39,25 @@ OBJECTION_SENTIMENTS = ("concern", "neutral", "positive")
 
 
 class Escalation(Base, TimestampMixin):
+    """A request for a live human counsellor (Phase 14).
+
+    Raised from a conversation (``conversation_id``) or a family room
+    (``room_id``); both are nullable so a case can be either conversation- or
+    room-scoped. The status lifecycle is
+    ``open -> assigned -> contacted -> resolved`` (with ``unreachable`` for
+    dead-ends). A resolved case never blocks a fresh one, so there is no
+    database-level uniqueness on the reason any more -- de-duplication of still
+    -open cases is enforced in ``escalation_svc``.
+    """
+
     __tablename__ = "escalations"
-    __table_args__ = (
-        UniqueConstraint("room_id", "raised_by_user_id", "reason", name="uq_escalation"),
-    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    room_id: Mapped[int] = mapped_column(
-        ForeignKey("rooms.id", ondelete="CASCADE"), index=True, nullable=False
+    room_id: Mapped[int | None] = mapped_column(
+        ForeignKey("rooms.id", ondelete="CASCADE"), index=True, nullable=True
+    )
+    conversation_id: Mapped[int | None] = mapped_column(
+        ForeignKey("conversations.id", ondelete="CASCADE"), index=True, nullable=True
     )
     raised_by_user_id: Mapped[int] = mapped_column(
         ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False
@@ -46,10 +69,32 @@ class Escalation(Base, TimestampMixin):
         ForeignKey("occupations.id", ondelete="SET NULL"), index=True, nullable=True
     )
     reason: Mapped[str] = mapped_column(Text, nullable=False)
-    status: Mapped[str] = mapped_column(String(12), nullable=False, default="open")
+    status: Mapped[str] = mapped_column(String(16), nullable=False, default="open")
     assigned_counsellor_id: Mapped[int | None] = mapped_column(
         ForeignKey("users.id", ondelete="SET NULL"), index=True, nullable=True
     )
+
+    # Phase 14 hand-off fields.
+    contact_phone: Mapped[str | None] = mapped_column(String(24), nullable=True)
+    preferred_language: Mapped[str | None] = mapped_column(String(8), nullable=True)
+    preferred_slot: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    channel: Mapped[str] = mapped_column(String(10), nullable=False, default="callback")
+    priority: Mapped[str] = mapped_column(String(8), nullable=False, default="normal")
+    case_pack_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    claimed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    contacted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    def mark(self, status: str) -> None:
+        """Transition the lifecycle and stamp the matching timestamp."""
+        self.status = status
+        if status == "assigned":
+            self.claimed_at = utcnow()
+        elif status == "contacted":
+            self.contacted_at = utcnow()
+        elif status == "resolved":
+            self.resolved_at = utcnow()
 
 
 class CounsellorAssignment(Base, TimestampMixin):

@@ -80,3 +80,45 @@
 {"text": "Mujhe kisi expert counsellor sir se phone par baat karni hai", "intent": "escalate", "topic": "other", "lang": "hinglish"}
 {"text": "Hello sir, career options choose karne me guide karein", "intent": "greet", "topic": "other", "lang": "hinglish"}
 {"text": "Admission form submit karne ke liye kya documents chahiye?", "intent": "inquire", "topic": "other", "lang": "hinglish"}
+{"text": "What is the median monthly salary after completing this trade?", "intent": "inquire", "topic": "income", "lang": "en"}
+{"text": "The pay is too low to support a family", "intent": "object", "topic": "income", "lang": "en"}
+{"text": "Are placement records available for graduates?", "intent": "inquire", "topic": "security", "lang": "en"}
+{"text": "I am worried my son will remain unemployed after this course", "intent": "object", "topic": "security", "lang": "en"}
+{"text": "Is the total course fee affordable with a scholarship?", "intent": "inquire", "topic": "cost", "lang": "en"}
+{"text": "We cannot afford such expensive training fees", "intent": "object", "topic": "cost", "lang": "en"}
+{"text": "Is the workshop floor safe for female students?", "intent": "inquire", "topic": "safety", "lang": "en"}
+{"text": "It feels unsafe for girls to attend evening classes", "intent": "object", "topic": "safety", "lang": "en"}
+{"text": "How far is the training centre and is transport available?", "intent": "inquire", "topic": "distance", "lang": "en"}
+{"text": "Staying in a hostel away from home seems impossible for us", "intent": "object", "topic": "distance", "lang": "en"}
+{"text": "Will this vocation bring social respect to my family?", "intent": "inquire", "topic": "social", "lang": "en"}
+{"text": "I am worried relatives look down on vocational work", "intent": "object", "topic": "social", "lang": "en"}
+{"text": "I would like to talk to a counsellor about my options", "intent": "escalate", "topic": "other", "lang": "en"}
+{"text": "Hello, can you help me understand the course options?", "intent": "greet", "topic": "other", "lang": "en"}
+{"text": "इस ट्रेड को पूरा करने के बाद औसत वेतन कितना मिलेगा?", "intent": "inquire", "topic": "income", "lang": "hi"}
+{"text": "क्या प्लेसमेंट सहायता मिलती है?", "intent": "inquire", "topic": "security", "lang": "hi"}
+{"text": "कोर्स की फीस और शुल्क कितना है?", "intent": "inquire", "topic": "cost", "lang": "hi"}
+{"text": "लड़कियों के लिए सुरक्षा कैसे है?", "intent": "inquire", "topic": "safety", "lang": "hi"}
+{"text": "कितनी दूर है और हॉस्टल उपलब्ध है?", "intent": "inquire", "topic": "distance", "lang": "hi"}
+{"text": "इस काम से समाज में इज्जत मिलेगी?", "intent": "inquire", "topic": "social", "lang": "hi"}
+{"text": "क्या यहाँ लड़कियों के लिए ट्रेनर हैं?", "intent": "inquire", "topic": "safety", "lang": "hi"}
+{"text": "प्लेसमेंट के बाद औसतन कितनी कमाई होती है?", "intent": "inquire", "topic": "income", "lang": "hi"}
+{"text": "वेतन बहुत कम है, परिवार चलाना मुश्किल होगा", "intent": "object", "topic": "income", "lang": "hi"}
+{"text": "फीस बहुत ज़्यादा है, हम वहन नहीं कर सकते", "intent": "object", "topic": "cost", "lang": "hi"}
+{"text": "लड़कियों के लिए सुरक्षा चिंता का विषय है", "intent": "object", "topic": "safety", "lang": "hi"}
+{"text": "समाज में इस काम की इज्जत नहीं है, लोग हँसेंगे", "intent": "object", "topic": "social", "lang": "hi"}
+{"text": "मुझे अधिकारी से बात करनी है", "intent": "escalate", "topic": "other", "lang": "hi"}
+{"text": "नमस्ते", "intent": "greet", "topic": "other", "lang": "hi"}
+{"text": "Is trade me starting salary kitni hogi?", "intent": "inquire", "topic": "income", "lang": "hinglish"}
+{"text": "Tankha bahut kam hai, guzara mushkil hoga", "intent": "object", "topic": "income", "lang": "hinglish"}
+{"text": "Placement ka chance kya hai is course me?", "intent": "inquire", "topic": "security", "lang": "hinglish"}
+{"text": "Course ki fee kitni hai, scholarship milegi?", "intent": "inquire", "topic": "cost", "lang": "hinglish"}
+{"text": "Fee bahut expensive hai, cannot afford karna mushkil hai", "intent": "object", "topic": "cost", "lang": "hinglish"}
+{"text": "Girls ke liye safe hai ya nahi workshop?", "intent": "inquire", "topic": "safety", "lang": "hinglish"}
+{"text": "Night shift me ladkiyon ke liye unsafe lagta hai", "intent": "object", "topic": "safety", "lang": "hinglish"}
+{"text": "Hostel available hai ya ghar se kitni dur hai?", "intent": "inquire", "topic": "distance", "lang": "hinglish"}
+{"text": "Itna dur commute karna impossible lagega", "intent": "object", "topic": "distance", "lang": "hinglish"}
+{"text": "Samaj me is kaam se izzat milegi?", "intent": "inquire", "topic": "social", "lang": "hinglish"}
+{"text": "Log kya kahenge, isme izzat nahi hai", "intent": "object", "topic": "social", "lang": "hinglish"}
+{"text": "Mujhe counsellor se baat karni hai, madad karo", "intent": "escalate", "topic": "other", "lang": "hinglish"}
+{"text": "Please call my phone and help me talk to an expert", "intent": "escalate", "topic": "other", "lang": "hinglish"}
+{"text": "Namaste, mera beta ka career set karna hai", "intent": "greet", "topic": "other", "lang": "hinglish"}

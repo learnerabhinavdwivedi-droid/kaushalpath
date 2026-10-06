@@ -29,8 +29,9 @@ import { ConsensusView } from '../components/ConsensusView';
 import { RoadmapView } from '../components/RoadmapView';
 import { ShareBar } from '../components/ShareBar';
 import { AskBox } from '../components/AskBox';
+import { ChatPanel } from '../components/chat/ChatPanel';
 
-type Tab = 'compare' | 'weights' | 'vote' | 'consensus' | 'roadmap';
+type Tab = 'compare' | 'weights' | 'vote' | 'consensus' | 'roadmap' | 'talk';
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'compare', label: 'room.tab_compare' },
@@ -38,6 +39,8 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'vote', label: 'room.tab_vote' },
   { id: 'consensus', label: 'room.tab_consensus' },
   { id: 'roadmap', label: 'room.tab_roadmap' },
+  // Phase 15: the shared learner + parent chat inside the family room.
+  { id: 'talk', label: 'room.tab_talk' },
 ];
 
 export const RoomHomePage: React.FC = () => {
@@ -281,6 +284,17 @@ export const RoomHomePage: React.FC = () => {
       )}
 
       {tab === 'roadmap' && <RoadmapView roadmap={roadmap} />}
+
+      {/* Phase 15: one shared chat for learner + parent, grounded fact cards,
+          voice in/out and the human hand-off. AskBox below keeps its chips as
+          quick-record objection tags for the resistance dashboard. */}
+      {tab === 'talk' && snapshot && (
+        <ChatPanel
+          studentId={snapshot.student_id}
+          roomId={snapshot.room_id}
+          occupationId={selectedIds[0] ?? null}
+        />
+      )}
 
       {/* Deterministic objection handler (records topic+sentiment) */}
       {topChoiceName && (

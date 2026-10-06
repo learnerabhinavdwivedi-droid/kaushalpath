@@ -1,15 +1,15 @@
 # Evaluation Report (test)
 
-Personas scored: 20; with a viable strong match: 16 (coverage 80.0%)
+Personas scored: 24; with a viable strong match: 19 (coverage 79.2%)
 
 | Gate | Value | Target | Status |
 |---|---|---|---|
 | G1_violations_pct | 0.0 | 0.0 | PASS |
 | G2_top3_hit_rate | 1.0 | 0.95 | PASS |
-| G3_ndcg_5 | 0.9297 | 0.9 | PASS |
+| G3_ndcg_5 | 0.9574 | 0.9 | PASS |
 | G5_explanation_coverage | 1.0 | 1.0 | PASS |
 | G6_slice_gap | 0.0 | 0.03 | PASS |
-| G7_latency_p95_ms | 2.94 | 800.0 | PASS |
+| G7_latency_p95_ms | 2.95 | 800.0 | PASS |
 
 ## Slice top-3 hit rates (G2 by slice)
 

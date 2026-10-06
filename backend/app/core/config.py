@@ -88,6 +88,12 @@ class Settings(BaseSettings):
         "other": 0.30,
     }
 
+    # Human escalation (Phase 14)
+    # Resistance-score threshold at/above which a conversation is auto-escalated.
+    escalation_rs_threshold: float = 0.6
+    # Which notifier adapter delivers the counsellor hand-off: console | sms_stub | whatsapp
+    notifier_provider: str = "console"
+
     # Fallback ranker weights (used when the LightGBM model is not trained)
     ranker_weight_riasec: float = 0.35
     ranker_weight_overlap: float = 0.10

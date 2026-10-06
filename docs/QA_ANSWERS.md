@@ -1,4 +1,4 @@
-# KaushalPath — Evaluator Q&A (Phase 9)
+# KaushalPath — Evaluator Q&A (rev. Phase 18)
 
 20 questions a judge is likely to ask, answered honestly. The recurring theme:
 **we are explicit about what is real, what is demo, and what is a rule vs. a
@@ -48,9 +48,14 @@ have no eligible course graded ≥2 in a 100-course demo catalogue. The fix is *
 (more real courses/rural centres), not model tuning. We surface the number rather than
 inflate it.
 
-### 8. Where does the LLM sit, and can it hallucinate a career?
+### 8. Where does the LLM sit, and can it hallucinate a career — or a number?
 The LLM **only verbalises** already-ranked, non-identifying output (reason codes +
-templated data) — it never *chooses* careers. Every path has a deterministic template
+templated data) — it never *chooses* careers. In the conversation engine every
+reply is passed through a **numeric-grounding validator**: any figure it tries to
+say must exist in the grounded provider/district facts, otherwise the reply is
+rejected and the deterministic template is used instead. The eval proves it —
+**numeric faithfulness = 1.0** and the adversarial "guaranteed 99 % placement"
+stub is refused (`eval/reports/convo_latest.md`). Every path has a template
 fallback, so the offline demo runs with **no external API** at all.
 
 ### 9. How do you avoid bias / sensitive attributes?
@@ -61,9 +66,13 @@ computable without storing a protected attribute.
 
 ### 10. Privacy / DPDP?
 Consent is required server-side at registration; `DELETE /auth/students/me` performs
-real erasure (tested) with a **non-retentive** audit row; only coarse district (no GPS,
-no govt IDs, no phone); small groups (<5) are suppressed on every dashboard; data
-minimisation by design. Details: `docs/PRIVACY.md`.
+real erasure and — because SQLite does **not** enforce FK cascades — the endpoint
+*explicitly* deletes the whole conversational trail (the student's conversations,
+turns, resistance snapshots and escalations) before the account, verified by
+`test_phase18_delete_cascade`; the audit row keeps only **non-identifying counts**,
+never the payload. Only coarse district (no GPS, no govt IDs, no phone); small
+groups (<5) are suppressed on every dashboard; data minimisation by design.
+Details: `docs/PRIVACY.md`.
 
 ### 11. Security — what did you actually check?
 SQLi (SQLAlchemy expression language only), XSS (no `dangerouslySetInnerHTML`),
@@ -72,11 +81,15 @@ via env only, **prod fail-fast config guards**, security headers, non-root conta
 and a dependency audit (`make security`). Full write-up + real advisory lists:
 `docs/SECURITY.md`. Two direct advisories were patched this phase.
 
-### 12. "100 % PS alignment" — did you just grade yourself generously?
+### 12. "~98 % PS alignment" — did you just grade yourself generously?
 `make ps-audit` recomputes a **weighted** score from `PS_TRACEABILITY.md` and *fails*
 any row marked complete that has no evidence (a test, eval gate, or demo artefact).
-We deliberately kept a row at 0.5 earlier for lacking an a11y audit, then **closed it
-with a real automated axe test** rather than talking it up. Limitations stay on the page.
+We did **not** round up to 100 %: one row (**R7 household-income-bracket tailoring**)
+is kept honestly at **0.5** because `income_band` is captured and carried into the
+escalation case pack but does **not** yet tailor the answer or the ranking — we say
+so rather than claim it. Low-literacy (R12) was likewise only upgraded to 1 once a
+**real automated axe colour-contrast test** existed, not before. Limitations stay on
+the page.
 
 ### 13. Scalability — will this survive real load?
 Stateless API + JWT (scales horizontally behind Nginx), read-heavy catalogue
@@ -107,8 +120,10 @@ hardening — all directly serving a PS requirement or the "demo-proof, judge-pr
 brief. We did **not** add a chart library, a database server, or an LLM dependency.
 
 ### 18. Where are the tests and how long is CI?
-`make check` runs ruff + mypy + pytest (**63 backend tests**) + vitest (+ axe) +
-`check-i18n` + build. The locked **test split is frozen** so final metrics can't drift.
+`make check` runs ruff + mypy + pytest (**109 backend tests**) + vitest (+ axe) +
+`check-i18n` + build. The conversation engine and the erasure cascade each have
+dedicated Phase-18 tests/evals. The locked **test split is frozen** so final metrics
+can't drift.
 
 ### 19. What breaks first in real production?
 Data quality and counsellor capacity, not code — which is exactly what the dashboard,

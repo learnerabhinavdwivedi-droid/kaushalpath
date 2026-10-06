@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { Route, Switch, useLocation } from 'wouter';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { LandingPage } from './pages/LandingPage';
@@ -15,19 +15,28 @@ const CareerDetailPage = lazy(() => import('./pages/CareerDetailPage').then((m) 
 const RoomCreatePage = lazy(() => import('./pages/RoomCreatePage').then((m) => ({ default: m.RoomCreatePage })));
 const RoomJoinPage = lazy(() => import('./pages/RoomJoinPage').then((m) => ({ default: m.RoomJoinPage })));
 const RoomHomePage = lazy(() => import('./pages/RoomHomePage').then((m) => ({ default: m.RoomHomePage })));
+const TalkPage = lazy(() => import('./pages/TalkPage').then((m) => ({ default: m.TalkPage })));
 const CohortPage = lazy(() => import('./pages/CohortPage').then((m) => ({ default: m.CohortPage })));
 const StudentDetailPage = lazy(() => import('./pages/StudentDetailPage').then((m) => ({ default: m.StudentDetailPage })));
 const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage').then((m) => ({ default: m.AnalyticsPage })));
 const ResistancePage = lazy(() => import('./pages/ResistancePage').then((m) => ({ default: m.ResistancePage })));
+const AdminResistancePage = lazy(() => import('./pages/AdminResistancePage').then((m) => ({ default: m.AdminResistancePage })));
 const AuditPage = lazy(() => import('./pages/AuditPage').then((m) => ({ default: m.AuditPage })));
 const StyleGuidePage = lazy(() => import('./pages/StyleGuidePage'));
 const SparkLabPage = lazy(() => import('./pages/SparkLabPage'));
+const StartPage = lazy(() => import('./pages/StartPage').then((m) => ({ default: m.StartPage })));
 import { RouteWipe } from './components/ui/RouteWipe';
 import { RequireRole } from './components/RequireRole';
 import { ModelVersionFooter } from './components/ModelVersionFooter';
+import { OfflineBanner } from './components/OfflineBanner';
+import { ReadThisScreen } from './components/ReadThisScreen';
+import { applyDisplayPrefs } from './lib/displayPrefs';
 import { EASE } from './lib/motion';
 
 const STAFF_ROLES = ['counsellor', 'admin', 'scheme_admin'];
+// Phase 16: the scheme-administrator dashboard is a superset of the counsellor
+// cohort view, so it is gated to the two administrator roles only.
+const ADMIN_ROLES = ['admin', 'scheme_admin'];
 
 const RouteFallback: React.FC = () => (
   <div className="flex min-h-screen items-center justify-center bg-page">
@@ -38,9 +47,14 @@ const RouteFallback: React.FC = () => (
 export const App: React.FC = () => {
   const [location] = useLocation();
   const reduced = useReducedMotion();
+  // Phase 17: apply persisted font-size / high-contrast prefs on boot.
+  useEffect(() => {
+    applyDisplayPrefs();
+  }, []);
   return (
     <div className="min-h-screen bg-page font-sans text-ink antialiased">
       <RouteWipe />
+      <OfflineBanner />
       {/* Phase 8 route transition: exit 250ms (opacity + y -20), enter 450ms
           (opacity + y 30->0); opacity-only when prefers-reduced-motion. */}
       <AnimatePresence mode="wait">
@@ -58,6 +72,8 @@ export const App: React.FC = () => {
           <Suspense fallback={<RouteFallback />}>
           <Switch location={location}>
         <Route path="/" component={LandingPage} />
+        {/* Phase 17: icon-first, 3-tap onboarding for low-literacy parents. */}
+        <Route path="/start" component={StartPage} />
         {/* Phase 1: design-system style guide (tokens + primitives). */}
         <Route path="/styleguide" component={StyleGuidePage} />
         {/* Phase 2+: SparkLab-style marketing shell (navbar + footer + sections). */}
@@ -72,6 +88,8 @@ export const App: React.FC = () => {
         <Route path="/assessment" component={AssessmentPage} />
         <Route path="/results" component={ResultsPage} />
         <Route path="/settings" component={SettingsPage} />
+        {/* Phase 15: the shared learner + parent chat. */}
+        <Route path="/talk" component={TalkPage} />
         <Route path="/career/:id" component={CareerDetailPage} />
         <Route path="/room/new" component={RoomCreatePage} />
         <Route path="/room/join" component={RoomJoinPage} />
@@ -95,6 +113,14 @@ export const App: React.FC = () => {
           {() => (
             <RequireRole roles={STAFF_ROLES}>
               <ResistancePage />
+            </RequireRole>
+          )}
+        </Route>
+        {/* Phase 16: scheme-administrator resistance dashboard (admin + scheme_admin). */}
+        <Route path="/admin/resistance">
+          {() => (
+            <RequireRole roles={ADMIN_ROLES}>
+              <AdminResistancePage />
             </RequireRole>
           )}
         </Route>
@@ -126,6 +152,7 @@ export const App: React.FC = () => {
           </Suspense>
         </motion.div>
       </AnimatePresence>
+      <ReadThisScreen />
       <ModelVersionFooter />
     </div>
   );

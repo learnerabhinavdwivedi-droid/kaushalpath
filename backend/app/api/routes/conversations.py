@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from app.api.deps import get_current_user
 from app.db.session import get_db
 from app.models.conversation import Conversation, Turn
+from app.models.human import Escalation
 from app.models.occupation import Occupation
 from app.models.recommendation import Recommendation
 from app.models.room import RoomMember
@@ -19,12 +20,14 @@ from app.schemas.conversation import (
     TurnCreate,
     TurnResponse,
 )
+from app.schemas.escalation import EscalationAck, EscalationCreate
 from app.services.conversation import (
     classify_utterance,
     detect_language,
     generate_response,
     ground_facts,
 )
+from app.services.escalation_svc import create_escalation, should_escalate
 from app.services.resistance import record_resistance_snapshot
 from app.services.sentiment import analyze_sentiment
 
@@ -116,6 +119,34 @@ def add_turn(
 
     _check_conversation_access(conv, current_user, db)
 
+    # A counsellor posting into the thread: store the human reply verbatim and
+    # do NOT run the assistant pipeline (the family sees this in the same chat).
+    if body.speaker == "counsellor" and current_user.role in ("counsellor", "admin"):
+        reply_turn = Turn(
+            conversation_id=conv.id,
+            speaker="counsellor",
+            text=body.text,
+            lang=body.lang or conv.lang,
+            intent="inform",
+            topic=None,
+            sentiment="neutral",
+            intensity=0.0,
+            facts_json=None,
+            fallback_used=False,
+        )
+        db.add(reply_turn)
+        db.commit()
+        return TurnResponse(
+            reply=body.text,
+            lang=reply_turn.lang,
+            intent="inform",
+            topic="other",
+            facts=[],
+            followups=[],
+            escalation_suggested=False,
+            fallback_used=False,
+        )
+
     # 1. Detect language
     lang = body.lang or detect_language(body.text)
 
@@ -189,12 +220,10 @@ def add_turn(
     )
     db.add(asst_turn)
 
-    # 8. Check escalation heuristics
-    prior_concerns = db.scalar(
-        select(Turn)
-        .where(Turn.conversation_id == conv.id, Turn.sentiment.in_(["concern", "negative"]))
-    )
-    escalation_suggested = (intent == "escalate") or (sentiment == "negative" and (prior_concerns is not None or intensity >= 0.8))
+    # 8. Auto-escalation decision (Phase 14 service): explicit request, Rs over the
+    #    threshold, or two consecutive unresolved family turns. This only nudges the
+    #    family toward the escalate sheet; the record itself is created on consent.
+    escalation_suggested, _ = should_escalate(db, conv)
     if intent == "escalate":
         conv.status = "escalated"
 
@@ -209,4 +238,86 @@ def add_turn(
         followups=res["followups"],
         escalation_suggested=escalation_suggested,
         fallback_used=res["fallback_used"],
+    )
+
+
+@router.get("/{conversation_id}/escalation", response_model=EscalationAck)
+def get_conversation_escalation(
+    conversation_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> EscalationAck:
+    """Latest hand-off case for this conversation, for the family-facing
+    live-status chip polled by the Phase 15 chat UI. Deliberately returns
+    only lifecycle fields — no notes or case pack (counsellor-private)."""
+    conv = db.get(Conversation, conversation_id)
+    if not conv:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+
+    _check_conversation_access(conv, current_user, db)
+
+    esc = db.scalar(
+        select(Escalation)
+        .where(Escalation.conversation_id == conv.id)
+        .order_by(Escalation.id.desc())
+    )
+    if not esc:
+        raise HTTPException(status_code=404, detail="No escalation for this conversation")
+    return EscalationAck(
+        id=esc.id,
+        status=esc.status,
+        assigned_counsellor_id=esc.assigned_counsellor_id,
+        in_pool=esc.assigned_counsellor_id is None,
+        case_pack=None,
+    )
+
+
+@router.post(
+    "/{conversation_id}/escalate",
+    response_model=EscalationAck,
+    status_code=status.HTTP_201_CREATED,
+)
+def escalate_conversation(
+    conversation_id: int,
+    body: EscalationCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> EscalationAck:
+    """Raise a live-counsellor hand-off from a conversation (Phase 14).
+
+    Builds a case pack, soft-routes to the student's least-loaded counsellor
+    (else the shared pool), fires the notifier, and marks the conversation
+    ``escalated``.
+    """
+    conv = db.get(Conversation, conversation_id)
+    if not conv:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+
+    _check_conversation_access(conv, current_user, db)
+
+    esc = create_escalation(
+        db,
+        student_id=conv.student_id,
+        raised_by_user_id=current_user.id,
+        reason=body.reason,
+        occupation_id=body.occupation_id,
+        conversation_id=conv.id,
+        room_id=conv.room_id,
+        contact_phone=body.contact_phone,
+        preferred_language=body.preferred_language or conv.lang,
+        preferred_slot=body.preferred_slot,
+        channel=body.channel,
+        priority=body.priority,
+    )
+
+    if conv.status == "active":
+        conv.status = "escalated"
+        db.commit()
+
+    return EscalationAck(
+        id=esc.id,
+        status=esc.status,
+        assigned_counsellor_id=esc.assigned_counsellor_id,
+        in_pool=esc.assigned_counsellor_id is None,
+        case_pack=esc.case_pack_json,
     )
