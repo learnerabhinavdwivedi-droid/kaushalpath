@@ -48,6 +48,12 @@ export default defineConfig({
         display: 'standalone',
         icons: [
           {
+            src: '565d9ea7-2d16-44ce-96c5-5222f51973b9.png',
+            sizes: 'any',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
             src: 'favicon.svg',
             sizes: 'any',
             type: 'image/svg+xml',

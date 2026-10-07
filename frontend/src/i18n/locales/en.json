@@ -137,7 +137,11 @@
     "password": "Password",
     "role": "I am a...",
     "role_student": "Student",
-    "role_parent": "Parent"
+    "role_parent": "Parent",
+    "already_registered": "Already have an account?",
+    "no_account": "Don't have an account?",
+    "switch_login": "Login",
+    "switch_register": "Register"
   },
   "profile": {
     "title": "Your Profile",
