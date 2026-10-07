@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { apiRequest, getMe } from '../api/client';
 import { useAuthStore } from '../store/useStore';
-import { useLocation } from 'wouter';
+import { useLocation, Link } from 'wouter';
 
 export const AuthPage: React.FC<{ mode: 'login' | 'register' }> = ({ mode }) => {
   const { t } = useTranslation();
@@ -111,6 +111,30 @@ export const AuthPage: React.FC<{ mode: 'login' | 'register' }> = ({ mode }) => 
             {loading ? t('common.loading') : (mode === 'login' ? t('auth.login') : t('auth.register'))}
           </button>
         </form>
+
+        <p className="mt-6 text-center text-textSecondary text-base">
+          {mode === 'register' ? (
+            <>
+              {t('auth.already_registered')}{' '}
+              <Link
+                href="/login"
+                className="text-accent font-semibold hover:underline focus:outline-none focus:ring-2 focus:ring-accent rounded inline-flex items-center justify-center min-h-[44px]"
+              >
+                {t('auth.switch_login')}
+              </Link>
+            </>
+          ) : (
+            <>
+              {t('auth.no_account')}{' '}
+              <Link
+                href="/register"
+                className="text-accent font-semibold hover:underline focus:outline-none focus:ring-2 focus:ring-accent rounded inline-flex items-center justify-center min-h-[44px]"
+              >
+                {t('auth.switch_register')}
+              </Link>
+            </>
+          )}
+        </p>
       </div>
     </div>
   );
