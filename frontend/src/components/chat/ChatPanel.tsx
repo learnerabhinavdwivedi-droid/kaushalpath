@@ -21,7 +21,7 @@ interface ChatPanelProps {
   /** Bind the shared chat to a family room when opened from one. */
   roomId?: number | null;
   /** Shortlisted trade the objections are about (grounds the fact cards). */
-  occupationId?: number | null;
+  occupationIds?: number[];
   className?: string;
 }
 
@@ -39,7 +39,7 @@ const POLL_MS = 5000;
  * 5 s for counsellor replies and escalation movement; when the network drops
  * turns queue locally and retry on reconnect.
  */
-export const ChatPanel: React.FC<ChatPanelProps> = ({ studentId, roomId, occupationId, className }) => {
+export const ChatPanel: React.FC<ChatPanelProps> = ({ studentId, roomId, occupationIds, className }) => {
   const { t, i18n } = useTranslation();
   const [phase, setPhase] = useState<'loading' | 'ready' | 'error'>('loading');
   const [conv, setConv] = useState<ConversationOut | null>(null);
@@ -113,7 +113,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ studentId, roomId, occupat
         const resp = await sendTurn(conv.id, {
           speaker: sp,
           text: trimmed,
-          occupation_id: occupationId ?? null,
+          occupation_ids: occupationIds ?? [],
           lang: i18n.language,
         });
         setDraft('');
@@ -135,7 +135,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ studentId, roomId, occupat
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [conv, occupationId, readAloud, i18n.language]
+    [conv, occupationIds, readAloud, i18n.language]
   );
 
   // Replay the offline queue as soon as we are back.

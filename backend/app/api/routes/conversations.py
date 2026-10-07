@@ -162,7 +162,7 @@ def add_turn(
         sentiment = "positive"
 
     # 4. Determine occupation to ground facts against
-    occ_id = body.occupation_id
+    occ_id = body.occupation_ids[0] if body.occupation_ids else None
     if not occ_id:
         top_rec = db.scalar(
             select(Recommendation)
@@ -184,8 +184,30 @@ def add_turn(
         student_id=conv.student_id,
     )
 
+    if body.occupation_ids:
+        occs = db.query(Occupation).filter(Occupation.id.in_(body.occupation_ids)).all()
+        if occs:
+            facts.append({"key": "comparing_careers", "value": ", ".join(occ.title for occ in occs)})
+
+    state = conv.state_json if getattr(conv, 'state_json', None) is not None else {}
+    if not isinstance(state, dict):
+        state = {}
+    prev_reply = state.get("last_reply")
+    turn_count = state.get("turn_count", 0)
+
+    reversed_turns = db.query(Turn).filter(Turn.conversation_id == conv.id).order_by(Turn.id.desc()).limit(6).all()
+    reversed_turns.reverse()
+    history = [{"speaker": t.speaker, "text": t.text} for t in reversed_turns]
+
     # 6. Generate grounded response with hallucination validation
-    res = generate_response(topic=topic, lang=lang, facts=facts)
+    res = generate_response(
+        topic=topic, 
+        lang=lang, 
+        facts=facts, 
+        history=history, 
+        prev_reply=prev_reply, 
+        turn_count=turn_count
+    )
 
     # 7. Persist turns
     user_turn = Turn(
@@ -219,6 +241,12 @@ def add_turn(
         fallback_used=res["fallback_used"],
     )
     db.add(asst_turn)
+
+    state["last_reply"] = res["reply"]
+    state["turn_count"] = turn_count + 1
+    conv.state_json = state
+    from sqlalchemy.orm.attributes import flag_modified
+    flag_modified(conv, "state_json")
 
     # 8. Auto-escalation decision (Phase 14 service): explicit request, Rs over the
     #    threshold, or two consecutive unresolved family turns. This only nudges the

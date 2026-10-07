@@ -68,4 +68,3 @@ def aptitude_scores(responses: dict[str, bool], bank: list[dict]) -> dict[str, f
 def probability_scores(theta_dict: dict[str, float]) -> dict[str, float]:
     """Map RIASEC latent ability thetas to probabilities via standard sigmoid."""
     return {d: 1.0 / (1.0 + math.exp(-theta_dict.get(d, 0.0))) for d in RIASEC_DIMS}
-

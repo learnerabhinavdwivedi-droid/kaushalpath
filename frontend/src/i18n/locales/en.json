@@ -17,7 +17,14 @@
     "meta": "Assessment · Ranked matches · Family decision",
     "scroll_hint": "See how it works",
     "talk_cta": "Talk to KaushalPath",
-    "marquee": ["Skill match", "Explainable ranking", "Family decision room", "Local languages", "Counsellor reviewed", "Audit trail"],
+    "marquee": [
+      "Skill match",
+      "Explainable ranking",
+      "Family decision room",
+      "Local languages",
+      "Counsellor reviewed",
+      "Audit trail"
+    ],
     "nav": {
       "how": "How it works",
       "features": "What's inside",
@@ -161,7 +168,8 @@
     "title": "Your Top Recommendations",
     "demo_badge": "Demo Data",
     "view_details": "View Details",
-    "no_results": "No results found."
+    "no_results": "No results found.",
+    "generating": "Generating your recommendations..."
   },
   "career": {
     "duration": "{{months}} months",

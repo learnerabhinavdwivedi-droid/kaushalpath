@@ -16,7 +16,7 @@ class ConversationCreate(BaseModel):
 class TurnCreate(BaseModel):
     speaker: str = Field(default="learner", description="learner | parent | counsellor")
     text: str = Field(..., min_length=1)
-    occupation_id: int | None = None
+    occupation_ids: list[int] = []
     lang: str | None = None
 
 
