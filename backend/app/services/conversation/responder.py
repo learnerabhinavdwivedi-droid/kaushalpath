@@ -29,13 +29,28 @@ def _get_kb() -> dict[str, Any]:
 
 
 def build_template_reply(
-    topic: str, lang: str, facts: list[dict[str, Any]]
+    topic: str, lang: str, facts: list[dict[str, Any]], prev_reply: str | None = None, turn_count: int = 0
 ) -> tuple[str, list[str]]:
     """Build deterministic reply by interpolating facts into KB template."""
+    INTENT_FALLBACK = {
+        "greeting": {"en": "Hello! I am here to guide you on your career path. What would you like to know today?", "hi": "नमस्ते! मैं आपकी करियर यात्रा में मार्गदर्शन के लिए यहाँ हूँ। आज आप क्या जानना चाहते हैं?"},
+        "thanks": {"en": "You are welcome! Feel free to ask any other questions.", "hi": "आपका स्वागत है! कोई भी अन्य प्रश्न बेझिझक पूछें।"},
+        "unknown": [
+            {"en": "What aspect of this career interests you most?", "hi": "इस करियर का कौन सा पहलू आपको सबसे ज्यादा आकर्षित करता है?"},
+            {"en": "Would you like to know about salary or job opportunities?", "hi": "क्या आप वेतन या नौकरी के अवसरों के बारे में जानना चाहेंगे?"},
+            {"en": "Can I tell you more about the training pathway?", "hi": "क्या मैं आपको प्रशिक्षण मार्ग के बारे में और बता सकता हूँ?"}
+        ]
+    }
+    target_lang = "hi" if lang in ("hi", "hinglish") else "en"
+    if topic in INTENT_FALLBACK:
+        if topic == "unknown":
+            reply = INTENT_FALLBACK["unknown"][turn_count % 3][target_lang]
+        else:
+            reply = INTENT_FALLBACK[topic][target_lang]
+        return reply, []
+
     kb = _get_kb()
     topic_data = kb.get(topic) or kb.get("other", {})
-
-    target_lang = "hi" if lang in ("hi", "hinglish") else "en"
     lang_data = topic_data.get(target_lang) or topic_data.get("en", {})
 
     template_str: str = lang_data.get("template", "Here are the verified outcomes for this trade.")
@@ -86,6 +101,14 @@ def build_template_reply(
         reply = template_str
         for k, v in formatted_mapping.items():
             reply = reply.replace(f"{{{k}}}", v)
+
+    if prev_reply and reply.strip() == prev_reply.strip():
+        suffixes = [
+            {"en": "Would you like more details about this career?", "hi": "क्या आप इस करियर के बारे में अधिक जानना चाहते हैं?"},
+            {"en": "Do you have any other questions for me?", "hi": "क्या आपके कोई अन्य प्रश्न हैं?"},
+            {"en": "I can also help you compare other career options.", "hi": "मैं आपको अन्य करियर विकल्पों की तुलना में भी सहायता कर सकता हूँ।"}
+        ]
+        reply += " " + suffixes[turn_count % 3][target_lang]
 
     return reply, followups
 
@@ -147,6 +170,9 @@ def generate_response(
     lang: str,
     facts: list[dict[str, Any]],
     llm_rephraser: Callable[[str, list[dict[str, Any]], str], str] | None = None,
+    history: list[dict[str, str]] | None = None,
+    prev_reply: str | None = None,
+    turn_count: int = 0,
 ) -> dict[str, Any]:
     """Generate grounded, validated response.
 
@@ -157,8 +183,10 @@ def generate_response(
             "fallback_used": bool,
         }
     """
+    if history is None:
+        history = []
     settings = get_settings()
-    template_reply, followups = build_template_reply(topic=topic, lang=lang, facts=facts)
+    template_reply, followups = build_template_reply(topic=topic, lang=lang, facts=facts, prev_reply=prev_reply, turn_count=turn_count)
 
     candidate_reply: str | None = None
 
@@ -180,10 +208,13 @@ def generate_response(
             f"placement rates, or statistics. "
             f"Respond with ONLY the rephrased text."
         )
-        user_prompt = (
-            f"Base message:\n{template_reply}\n\n"
-            f"Facts JSON:\n{json.dumps(facts, ensure_ascii=False)}"
-        )
+        user_prompt = f"Base message:\n{template_reply}\n\n"
+        if history:
+            user_prompt += "--- CONVERSATION HISTORY (oldest first) ---\n"
+            for t in history:
+                user_prompt += f"{t['speaker']}: {t['text']}\n"
+            user_prompt += "\n"
+        user_prompt += f"Facts JSON:\n{json.dumps(facts, ensure_ascii=False)}"
         candidate_reply = _call_llm_api(user_prompt, system_prompt)
 
     # 3. If an LLM candidate was generated, validate against hallucination
