@@ -23,12 +23,17 @@ def get_outcomes(
     district: str | None = Query(None, description="Optional district filter"),
     db: Session = Depends(get_db),
 ) -> dict[str, Any]:
-    """Retrieve verified outcome data (earnings p25/median/p75, placement rate, schemes, progression)."""
+    """Retrieve verified outcome data (earnings p25/median/p75, placement rate, schemes,
+    progression)."""
     service = OutcomeService(db)
     try:
-        return service.get_trade_outcomes(occupation_id=occupation_id, state=state, district=district)
+        return service.get_trade_outcomes(
+            occupation_id=occupation_id, state=state, district=district
+        )
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from None
 
 
 @router.get("/providers/{provider_id}/outcomes")
@@ -41,4 +46,6 @@ def get_provider_outcomes(
     try:
         return service.get_provider_profile(provider_id=provider_id)
     except ValueError as e:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=str(e)
+        ) from None

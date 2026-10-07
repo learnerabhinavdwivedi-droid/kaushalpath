@@ -16,13 +16,12 @@ BACKEND_DIR = REPO_ROOT / "backend"
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from sqlalchemy import select  # noqa: E402
-
 from app.db.session import SessionLocal  # noqa: E402
 from app.models.conversation import Conversation, ResistanceSnapshot, Turn  # noqa: E402
 from app.models.student import Student  # noqa: E402
 from app.models.user import User  # noqa: E402
 from app.services.resistance import compute_resistance_score  # noqa: E402
+from sqlalchemy import select  # noqa: E402
 
 DISTRICTS = [
     ("Kanpur", "Uttar Pradesh", 35),

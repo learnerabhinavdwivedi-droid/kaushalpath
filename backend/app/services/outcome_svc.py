@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models import Centre, Course, Market, Occupation, ProgressionPath, ProviderOutcome, Scheme
@@ -98,7 +98,11 @@ class OutcomeService:
             p75_vals = [float(r.earnings_p75) for r in po_rows if r.earnings_p75 is not None]
             rate_vals = [r.placement_rate for r in po_rows if r.placement_rate is not None]
             se_vals = [r.self_employed_pct for r in po_rows if r.self_employed_pct is not None]
-            stip_vals = [float(r.apprenticeship_stipend_inr) for r in po_rows if r.apprenticeship_stipend_inr is not None]
+            stip_vals = [
+                float(r.apprenticeship_stipend_inr)
+                for r in po_rows
+                if r.apprenticeship_stipend_inr is not None
+            ]
 
             if p25_vals:
                 earnings_p25 = round(sum(p25_vals) / len(p25_vals), 2)
@@ -119,7 +123,9 @@ class OutcomeService:
                 total_placed += r.placed or 0
 
         elif market_rows:
-            salaries = [float(r.avg_salary_inr) for r in market_rows if r.avg_salary_inr is not None]
+            salaries = [
+                float(r.avg_salary_inr) for r in market_rows if r.avg_salary_inr is not None
+            ]
             p25_vals = [float(r.earnings_p25) for r in market_rows if r.earnings_p25 is not None]
             p75_vals = [float(r.earnings_p75) for r in market_rows if r.earnings_p75 is not None]
             rates = [r.placement_rate for r in market_rows if r.placement_rate is not None]
@@ -244,10 +250,16 @@ class OutcomeService:
                 "placed": o.placed,
                 "placement_rate": o.placement_rate,
                 "earnings_p25": float(o.earnings_p25) if o.earnings_p25 is not None else None,
-                "earnings_median": float(o.earnings_median) if o.earnings_median is not None else None,
+                "earnings_median": (
+                    float(o.earnings_median) if o.earnings_median is not None else None
+                ),
                 "earnings_p75": float(o.earnings_p75) if o.earnings_p75 is not None else None,
                 "self_employed_pct": o.self_employed_pct,
-                "apprenticeship_stipend_inr": float(o.apprenticeship_stipend_inr) if o.apprenticeship_stipend_inr is not None else None,
+                "apprenticeship_stipend_inr": (
+                    float(o.apprenticeship_stipend_inr)
+                    if o.apprenticeship_stipend_inr is not None
+                    else None
+                ),
                 "source": o.source,
                 "source_year": o.source_year,
                 "is_demo": o.is_demo,

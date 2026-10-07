@@ -6,19 +6,18 @@ Tests:
 3. Hallucination rejection stub test (invented salary rejected, template fallback used).
 4. Authorization & room isolation (unauthorized users get 403).
 5. Escalation flow (user requesting human counsellor triggers escalation_suggested and status).
+6. Auto-trigger: two consecutive unresolved (negative) family turns raise
+   escalation_suggested via the Phase 14 should_escalate service (no explicit ask).
 """
 from __future__ import annotations
 
-import pytest
 from sqlalchemy.orm import Session
 
 from app.models.centre import Centre
-from app.models.conversation import Conversation, Turn
 from app.models.course import Course
 from app.models.market import Market
 from app.models.occupation import Occupation
 from app.models.provider_outcome import ProviderOutcome
-from app.models.student import Student
 from app.services.conversation.responder import generate_response
 
 
@@ -295,3 +294,42 @@ def test_escalation_suggestion_flow(client_with_db, db_session: Session) -> None
     # Verify conversation status was escalated
     conv_data = client.get(f"/conversations/{conv_id}", headers=_auth(token)).json()
     assert conv_data["status"] == "escalated"
+
+
+def test_auto_trigger_two_unresolved_turns(client_with_db, db_session: Session) -> None:
+    """Phase 14: the route auto-suggests escalation after 2 negative family turns."""
+    client = client_with_db
+    occ = _setup_trade_data(db_session)
+
+    reg = _register(client, "autotrigger_stu@example.com", "student")
+    token = reg["access_token"]
+    student_id = reg["student_id"]
+
+    conv_id = client.post(
+        "/conversations", json={"student_id": student_id}, headers=_auth(token)
+    ).json()["id"]
+
+    # Turn 1: a worried, negative parent objection (no explicit request for a human).
+    first = client.post(
+        f"/conversations/{conv_id}/turns",
+        json={
+            "speaker": "parent",
+            "text": "This pay is never enough, I am very worried and against it",
+            "occupation_id": occ.id,
+        },
+        headers=_auth(token),
+    )
+    assert first.status_code == 200
+
+    # Turn 2: a second consecutive negative family turn crosses the auto-trigger.
+    second = client.post(
+        f"/conversations/{conv_id}/turns",
+        json={
+            "speaker": "parent",
+            "text": "Absolutely not, this job is insecure and I strongly disagree",
+            "occupation_id": occ.id,
+        },
+        headers=_auth(token),
+    )
+    assert second.status_code == 200
+    assert second.json()["escalation_suggested"] is True

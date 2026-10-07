@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
 from app.db.session import get_db
-from app.models.human import CounsellorAssignment, Escalation, Objection
+from app.models.human import Objection
 from app.models.room import CriteriaWeight, Room, RoomMember
 from app.models.student import Student
 from app.models.user import User
@@ -26,6 +26,7 @@ from app.schemas.room import (
     WeightsUpdate,
 )
 from app.services.compare_svc import compare_occupations
+from app.services.escalation_svc import create_escalation
 
 router = APIRouter(prefix="/rooms", tags=["rooms"])
 
@@ -244,6 +245,7 @@ def get_room(
 
     return {
         "code": room.code,
+        "room_id": room.id,
         "student_id": room.student_id,
         "members": [{"user_id": m.user_id, "role": m.role} for m in members],
         "weights": [
@@ -311,24 +313,20 @@ def escalate(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    """Raise a human-escalation from a family room.
+
+    Thin wrapper over the Phase 14 ``escalation_svc`` so room- and
+    conversation-originated cases share one lifecycle, routing and notifier.
+    """
     room = get_room_and_verify_member(code, current_user.id, db)
-    counsellor = db.scalars(
-        select(CounsellorAssignment.counsellor_id).where(
-            CounsellorAssignment.student_id == room.student_id
-        )
-    ).first()
-    esc = Escalation(
-        room_id=room.id,
-        raised_by_user_id=current_user.id,
+    esc = create_escalation(
+        db,
         student_id=room.student_id,
-        occupation_id=req.occupation_id,
+        raised_by_user_id=current_user.id,
         reason=req.reason,
-        status="open",
-        assigned_counsellor_id=counsellor,
+        occupation_id=req.occupation_id,
+        room_id=room.id,
     )
-    db.add(esc)
-    db.commit()
-    db.refresh(esc)
     return {
         "id": esc.id,
         "room_code": room.code,

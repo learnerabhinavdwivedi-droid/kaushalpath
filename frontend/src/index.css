@@ -161,3 +161,35 @@
     break-inside: avoid;
   }
 }
+
+/* --- Phase 17: low-vision / low-literacy display preferences ----------------
+   Applied to <html> from lib/displayPrefs.ts and persisted in localStorage. */
+html.kp-font-sm {
+  font-size: 93.75%; /* 15px base */
+}
+html.kp-font-lg {
+  font-size: 125%; /* 20px base */
+}
+html.kp-high-contrast {
+  --tw-bg-opacity: 1;
+}
+html.kp-high-contrast body,
+html.kp-high-contrast .bg-page,
+html.kp-high-contrast .bg-background {
+  background: #ffffff !important;
+}
+html.kp-high-contrast {
+  color: #000000 !important;
+}
+html.kp-high-contrast .text-textSecondary,
+html.kp-high-contrast .text-muted {
+  color: #1a1a1a !important;
+}
+html.kp-high-contrast .card {
+  border: 2px solid #000000 !important;
+}
+html.kp-high-contrast a,
+html.kp-high-contrast .text-accent {
+  color: #0b3a9a !important;
+  text-decoration: underline;
+}

@@ -36,6 +36,8 @@ the data *is* the privacy control.
 | Age, education level, district, income band | `Student` | Hard eligibility rules + family-context explanation | Yes (for the service) |
 | RIASEC + aptitude responses & derived profile | `Assessment.state_json`, `Student` | Recommendations | Yes |
 | Budget / relocate / reachability constraints | `Student` / request | Eligibility filtering | Yes |
+| Free-text conversation turns, classified intent/topic/sentiment, resistance snapshots | `Conversation`, `Turn`, `ResistanceSnapshot` | Family decision support + engagement/resistance analytics (aggregated, k<5 suppressed) | Yes |
+| Escalation case packs (last turns + family context) | `Escalation.case_pack_json` | Human counsellor hand-off | Yes |
 | Recommendations, room votes, feedback sentiment | respective tables | History, family decision support, quality signal | Yes |
 
 `income_band` and household context shape the **family-facing explanation only**,
@@ -59,16 +61,25 @@ is never returned raw in any response (see `ASSUMPTIONS.md` A14).
 
 | DPDP-style right | Implementation | Test |
 |---|---|---|
-| **Right to erasure** | `DELETE /auth/students/me` removes the user + their data | `test_phase5` (self-delete) |
+| **Right to erasure** | `DELETE /auth/students/me` removes the user **and explicitly cascades the full conversational trail** — their `Conversation` rows, the `Turn`s, the `ResistanceSnapshot`s, and every `Escalation` raised by/for them — then the `Student` and `User` | `test_phase5` (self-delete) + `test_phase18_delete_cascade` (asserts conversations/turns/snapshots/escalations all drop to 0) |
 | **Right to access** | `GET /auth/me` returns the subject's own record | `test_phase5` |
 | **Correct / rectify** | constraint + profile update endpoints | phase tests |
 | **Data portability (minimal)** | counsellor CSV export excludes deleted subjects | `test_phase8` |
 
 **Deletion integrity:** erasure writes an **append-only audit row** recording
 *that* and *by whom* a deletion happened (`action="data_deletion"`), but stores
-**only the entity id and actor — never the deleted payload**
-(`ASSUMPTIONS.md` A19). A "delete" that quietly retained the PII in a log would
-defeat the right, so the audit trail is deliberately non-retentive.
+**only the entity id, the actor, and non-identifying counts** (how many
+conversations / turns / resistance snapshots / escalations were removed) — **never
+the deleted payload** (`ASSUMPTIONS.md` A19). A "delete" that quietly retained the
+PII in a log would defeat the right, so the audit trail is deliberately
+non-retentive.
+
+> **Phase 18 note (why the cascade is explicit):** SQLite does not enforce
+> foreign keys by default (no `PRAGMA foreign_keys=ON`), so the schema's
+> `ondelete="CASCADE"` clauses never fire on their own. The erasure endpoint
+> therefore deletes each dependent conversation row *by hand* before removing the
+> account, so "delete my data" genuinely clears the free-text conversational trail
+> rather than orphaning it in the database.
 
 ## 5. Retention & administrative safeguards
 

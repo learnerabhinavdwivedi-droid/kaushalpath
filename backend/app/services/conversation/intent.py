@@ -2,12 +2,11 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import re
+from pathlib import Path
 from typing import Any
 
 from app.ml.retrieval.embedder import get_embedder
-from app.services.conversation.lang_detect import detect_language
 
 _CUR_DIR = Path(__file__).resolve().parent
 _EXEMPLARS_PATH = _CUR_DIR / "intent_exemplars.json"
@@ -94,7 +93,7 @@ class IntentClassifier:
 
     def _load_exemplars(self) -> None:
         if self.exemplars_path.exists():
-            with open(self.exemplars_path, "r", encoding="utf-8") as f:
+            with open(self.exemplars_path, encoding="utf-8") as f:
                 self.exemplars = json.load(f)
             self._exemplar_texts = [e["text"] for e in self.exemplars]
 

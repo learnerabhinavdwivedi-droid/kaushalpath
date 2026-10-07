@@ -15,6 +15,7 @@ from app.api.deps import require_admin_or_scheme_admin
 from app.db.session import get_db
 from app.models.centre import Centre
 from app.models.conversation import Conversation, ResistanceSnapshot, Turn
+from app.models.human import Escalation
 from app.models.occupation import Occupation
 from app.models.recommendation import Recommendation
 from app.models.student import Student
@@ -370,3 +371,275 @@ def export_resistance_csv(
         media_type="text/csv",
         headers={"Content-Disposition": "attachment; filename=resistance_export.csv"},
     )
+
+
+@router.get("/resistance/dashboard")
+def get_resistance_dashboard(
+    from_date: str | None = Query(None, alias="from"),
+    to_date: str | None = Query(None, alias="to"),
+    state: str | None = Query(None),
+    trade: str | None = Query(None),
+    lang: str | None = Query(None),
+    high_threshold: float = Query(0.60, ge=0.0, le=1.0),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(require_admin_or_scheme_admin),
+) -> dict[str, Any]:
+    """Scheme-administrator resistance dashboard (Phase 16).
+
+    One filtered aggregation feeding KPI strip, district bubbles/table,
+    concern x trade matrix, 30-day trend, shift distribution, per-concern
+    phrases and a demo flag. Small groups (n < MIN_GROUP) are suppressed.
+    Read-only; every existing Phase 13 endpoint is left untouched.
+    """
+    query = select(Conversation)
+    if from_date:
+        try:
+            query = query.where(Conversation.created_at >= datetime.fromisoformat(from_date))
+        except ValueError:
+            pass
+    if to_date:
+        try:
+            query = query.where(Conversation.created_at <= datetime.fromisoformat(to_date))
+        except ValueError:
+            pass
+    if lang:
+        query = query.where(Conversation.lang == lang)
+    conversations = list(db.scalars(query).all())
+
+    student_ids = list({c.student_id for c in conversations})
+    students = (
+        {s.id: s for s in db.scalars(select(Student).where(Student.id.in_(student_ids))).all()}
+        if student_ids
+        else {}
+    )
+
+    # Trade = the student's top (rank 1) recommended occupation name.
+    occ_by_student: dict[int, int] = {}
+    if student_ids:
+        recs = db.scalars(
+            select(Recommendation).where(
+                Recommendation.student_id.in_(student_ids), Recommendation.rank == 1
+            )
+        ).all()
+        occ_by_student = {r.student_id: r.occupation_id for r in recs}
+    occ_ids = list(set(occ_by_student.values()))
+    occ_name: dict[int, str] = {}
+    occ_demo: dict[int, bool] = {}
+    if occ_ids:
+        for o in db.scalars(select(Occupation).where(Occupation.id.in_(occ_ids))).all():
+            occ_name[o.id] = o.name_en
+            occ_demo[o.id] = bool(o.is_demo)
+
+    # Apply the state + trade post-filters (they live on joined rows).
+    def _trade_of(cid_student: int) -> str:
+        oid = occ_by_student.get(cid_student)
+        return occ_name.get(oid, "General Vocational") if oid else "General Vocational"
+
+    if state:
+        conversations = [
+            c for c in conversations
+            if students.get(c.student_id) and students[c.student_id].state == state
+        ]
+    if trade:
+        conversations = [c for c in conversations if _trade_of(c.student_id) == trade]
+
+    conv_ids = [c.id for c in conversations]
+    total = len(conv_ids)
+
+    # Escalated conversations (any Escalation row pointing at a conversation).
+    escalated_ids: set[int] = set()
+    esc_reasons: list[tuple[int, str]] = []  # (conversation_id, reason)
+    if conv_ids:
+        esc_stmt = select(Escalation).where(Escalation.conversation_id.in_(conv_ids))
+        for e in db.scalars(esc_stmt).all():
+            if e.conversation_id is not None:
+                escalated_ids.add(e.conversation_id)
+                if e.reason:
+                    esc_reasons.append((e.conversation_id, e.reason))
+
+    # Resistance snapshots per conversation (also reused for the 30-day trend).
+    rs_by_conv: dict[int, list[float]] = defaultdict(list)
+    snapshots_all: list[ResistanceSnapshot] = []
+    if conv_ids:
+        snap_stmt = select(ResistanceSnapshot).where(
+            ResistanceSnapshot.conversation_id.in_(conv_ids)
+        )
+        snapshots_all = list(db.scalars(snap_stmt).all())
+        for s in snapshots_all:
+            rs_by_conv[s.conversation_id].append(s.rs)
+
+    # Turns per conversation (topics + sentiment ordering for shift).
+    turns_by_conv: dict[int, list[Turn]] = defaultdict(list)
+    if conv_ids:
+        for t in db.scalars(
+            select(Turn).where(Turn.conversation_id.in_(conv_ids)).order_by(Turn.id.asc())
+        ).all():
+            turns_by_conv[t.conversation_id].append(t)
+
+    # District centre coords (avg lat/lon), same projection source as /map.
+    centre_rows = db.execute(
+        select(Centre.district, Centre.state, func.avg(Centre.lat), func.avg(Centre.lon))
+        .where(Centre.lat.isnot(None), Centre.lon.isnot(None))
+        .group_by(Centre.district, Centre.state)
+    ).all()
+    coords = {
+        r[0]: {"state": r[1], "lat": float(r[2]), "lon": float(r[3])}
+        for r in centre_rows if r[0]
+    }
+
+    # ---- Per-conversation derived facts ----
+    def _primary_topic(c_id: int) -> str:
+        topics = [t.topic for t in turns_by_conv.get(c_id, []) if t.topic]
+        return Counter(topics).most_common(1)[0][0] if topics else "other"
+
+    conv_meta: dict[int, dict[str, Any]] = {}
+    shift_counter: Counter[str] = Counter()
+    concern_counter: Counter[str] = Counter()
+    trade_counter: Counter[str] = Counter()
+    high_conv = 0
+    for c in conversations:
+        rs_vals = rs_by_conv.get(c.id, [])
+        avg_rs = round(sum(rs_vals) / len(rs_vals), 3) if rs_vals else 0.0
+        is_high = any(v >= high_threshold for v in rs_vals)
+        if is_high:
+            high_conv += 1
+        shift = calculate_shift_label(turns_by_conv.get(c.id, []))
+        shift_counter[shift] += 1
+        ptopic = _primary_topic(c.id)
+        concern_counter[ptopic] += 1
+        tname = _trade_of(c.student_id)
+        trade_counter[tname] += 1
+        conv_meta[c.id] = {
+            "student_id": c.student_id,
+            "district": students[c.student_id].district if students.get(c.student_id) else None,
+            "state": students[c.student_id].state if students.get(c.student_id) else None,
+            "avg_rs": avg_rs,
+            "rs_vals": rs_vals,
+            "is_high": is_high,
+            "shift": shift,
+            "topic": ptopic,
+            "trade": tname,
+            "topics": [t.topic for t in turns_by_conv.get(c.id, []) if t.topic],
+        }
+
+    families_counselled = len({c.student_id for c in conversations})
+    top_concern = concern_counter.most_common(1)[0][0] if concern_counter else ""
+
+    # ---- District grouping (bubble map + table) ----
+    district_convs: dict[str, list[int]] = defaultdict(list)
+    for c_id, meta in conv_meta.items():
+        if meta["district"]:
+            district_convs[meta["district"]].append(c_id)
+
+    districts: list[dict[str, Any]] = []
+    suppressed_groups = 0
+    for dist, ids in district_convs.items():
+        n = len(ids)
+        all_rs = [v for cid in ids for v in conv_meta[cid]["rs_vals"]]
+        avg_rs = round(sum(all_rs) / len(all_rs), 3) if all_rs else 0.0
+        share_high = round(sum(1 for cid in ids if conv_meta[cid]["is_high"]) / n, 3) if n else 0.0
+        shift_c: Counter[str] = Counter(conv_meta[cid]["shift"] for cid in ids)
+        topic_c: Counter[str] = Counter(conv_meta[cid]["topic"] for cid in ids)
+        coord = coords.get(dist, {})
+        is_supp = n < MIN_GROUP
+        if is_supp:
+            suppressed_groups += 1
+        shift_dict = {
+            "softened": shift_c["softened"],
+            "hardened": shift_c["hardened"],
+            "unchanged": shift_c["unchanged"],
+        }
+        districts.append({
+            "district": dist,
+            "state": coord.get("state") or (conv_meta[ids[0]]["state"] if ids else None),
+            "lat": coord.get("lat", 26.8467),
+            "lon": coord.get("lon", 80.9462),
+            "n": n,
+            "avg_rs": None if is_supp else avg_rs,
+            "share_high": None if is_supp else share_high,
+            "top_topics": [] if is_supp else [tp for tp, _ in topic_c.most_common(3)],
+            "shift": shift_dict,
+            "is_suppressed": is_supp,
+        })
+    districts.sort(key=lambda d: (d["avg_rs"] or 0.0), reverse=True)
+
+    # ---- Concern x trade matrix (top 6 each, cells < MIN_GROUP suppressed) ----
+    concerns = [tp for tp, _ in concern_counter.most_common(6)]
+    trades = [tr for tr, _ in trade_counter.most_common(6)]
+    suppressed_cells = 0
+    cell_counts: dict[tuple[str, str], int] = Counter()
+    for meta in conv_meta.values():
+        if meta["topic"] in concerns and meta["trade"] in trades:
+            cell_counts[(meta["topic"], meta["trade"])] += 1
+    cells: list[list[Any]] = []
+    for tp in concerns:
+        row = []
+        for tr in trades:
+            cnt = cell_counts.get((tp, tr), 0)
+            if 0 < cnt < MIN_GROUP:
+                suppressed_cells += 1
+                row.append(None)
+            else:
+                row.append(cnt)
+        cells.append(row)
+
+    # ---- Top anonymised phrases per concern ----
+    phrase_by_topic: dict[str, Counter[str]] = defaultdict(Counter)
+    for c_id, reason in esc_reasons:
+        meta = conv_meta.get(c_id)
+        if meta:
+            phrase_by_topic[meta["topic"]][reason.strip()[:120]] += 1
+    phrases = {
+        tp: [p for p, _ in phrase_by_topic[tp].most_common(5)]
+        for tp in concerns if phrase_by_topic.get(tp)
+    }
+
+    # ---- 30-day trend (from the snapshots already loaded above) ----
+    daily: dict[str, list[float]] = defaultdict(list)
+    daily_convs: dict[str, set[int]] = defaultdict(set)
+    for s in snapshots_all:
+        d_str = s.created_at.strftime("%Y-%m-%d") if s.created_at else ""
+        if not d_str:
+            continue
+        daily[d_str].append(s.rs)
+        daily_convs[d_str].add(s.conversation_id)
+    trend = [
+        {"date": d, "avg_rs": round(sum(v) / len(v), 3), "n_conversations": len(daily_convs[d])}
+        for d, v in sorted(daily.items())
+    ][-30:]
+
+    is_demo = (
+        any(occ_demo.get(oid, False) for oid in occ_by_student.values())
+        or bool(conversations)
+    )
+
+    return {
+        "filters": {"from": from_date, "to": to_date, "state": state, "trade": trade, "lang": lang},
+        "kpis": {
+            "families_counselled": families_counselled,
+            "total_conversations": total,
+            "pct_high_resistance": round(high_conv / total * 100, 1) if total else 0.0,
+            "top_concern": top_concern,
+            "escalation_rate": round(len(escalated_ids) / total * 100, 1) if total else 0.0,
+            "sentiment_improved_pct": (
+                round(shift_counter["softened"] / total * 100, 1) if total else 0.0
+            ),
+        },
+        "districts": districts,
+        "matrix": {
+            "concerns": concerns,
+            "trades": trades,
+            "cells": cells,
+            "suppressed_cells": suppressed_cells,
+        },
+        "phrases": phrases,
+        "trend": trend,
+        "shift": {
+            "softened": shift_counter["softened"],
+            "hardened": shift_counter["hardened"],
+            "unchanged": shift_counter["unchanged"],
+        },
+        "suppressed_groups": suppressed_groups,
+        "high_threshold": high_threshold,
+        "is_demo": bool(is_demo),
+    }
