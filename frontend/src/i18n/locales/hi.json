@@ -137,7 +137,11 @@
     "password": "पासवर्ड",
     "role": "मैं हूँ...",
     "role_student": "छात्र",
-    "role_parent": "माता-पिता"
+    "role_parent": "माता-पिता",
+    "already_registered": "पहले से खाता है?",
+    "no_account": "खाता नहीं है?",
+    "switch_login": "लॉगिन",
+    "switch_register": "रजिस्टर करें"
   },
   "profile": {
     "title": "आपकी प्रोफ़ाइल",

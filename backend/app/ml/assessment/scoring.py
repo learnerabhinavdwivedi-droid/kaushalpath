@@ -10,6 +10,7 @@ test for the G4 evaluation metric.
 """
 from __future__ import annotations
 
+import math
 from collections import defaultdict
 
 RIASEC_DIMS = ("R", "I", "A", "S", "E", "C")
@@ -62,3 +63,9 @@ def aptitude_scores(responses: dict[str, bool], bank: list[dict]) -> dict[str, f
     for dim in APTITUDE_DIMS:
         out[dim] = correct[dim] / total[dim] if total[dim] else 0.0
     return out
+
+
+def probability_scores(theta_dict: dict[str, float]) -> dict[str, float]:
+    """Map RIASEC latent ability thetas to probabilities via standard sigmoid."""
+    return {d: 1.0 / (1.0 + math.exp(-theta_dict.get(d, 0.0))) for d in RIASEC_DIMS}
+
