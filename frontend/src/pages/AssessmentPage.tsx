@@ -13,6 +13,14 @@ import {
 import { QuestionCard } from '../components/QuestionCard';
 import { ProgressBar } from '../components/ProgressBar';
 import { ArrowLeft } from 'lucide-react';
+import { mapRecommendations } from '../lib/mapRecommendations';
+
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+
+function isRetryable(e: unknown): boolean {
+  const msg = e instanceof Error ? e.message.toLowerCase() : String(e).toLowerCase();
+  return msg.includes('404') || msg.includes('not found');
+}
 
 const INTEREST_EMOJI: Record<number, string> = {
   1: '😞',
@@ -43,15 +51,27 @@ export const AssessmentPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const finish = async (sid: number) => {
+  const finish = async (sid: number, attempt = 1): Promise<void> => {
     try {
       const res = await getRecommendations(sid, 3);
-      setRecommendations(mapRecommendations(res.recommendations));
-      resetAssessment();
-      setLocation('/results');
-    } catch (e: any) {
-      setError(e.message || t('common.error'));
-      setLoading(false);
+      if (!res.recommendations || res.recommendations.length === 0) {
+        if (attempt <= 3) {
+          await sleep(attempt * 1000);
+          return finish(sid, attempt + 1);
+        }
+      } else {
+        setRecommendations(mapRecommendations(res.recommendations));
+      }
+    } catch (e: unknown) {
+      if (attempt <= 3 && isRetryable(e)) {
+        await sleep(attempt * 1000);
+        return finish(sid, attempt + 1);
+      }
+    } finally {
+      if (attempt === 1 || attempt > 3) {
+        resetAssessment();
+        setLocation('/results');
+      }
     }
   };
 
@@ -155,19 +175,3 @@ export const AssessmentPage: React.FC = () => {
   );
 };
 
-function mapRecommendations(recs: RecommendationOut[]) {
-  return recs.map((r) => ({
-    // Primary key of the *stored* recommendation (Phase 8 feedback loop);
-    // optional so legacy/localStorage rows still render.
-    recId: r.id,
-    occupation: {
-      id: r.occupation_id,
-      title: r.occupation_name,
-      description: r.course_name ? `${r.course_name}` : '',
-      typical_duration_months: null as number | null,
-    },
-    reasons: (r.reasons || []).map((x) => ({ ...x, type: 'positive' as const })),
-    score: r.score,
-    is_demo: r.is_demo,
-  }));
-}
