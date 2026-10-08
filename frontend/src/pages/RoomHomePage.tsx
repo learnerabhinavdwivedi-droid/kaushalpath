@@ -31,7 +31,8 @@ import { ConsensusView } from '../components/ConsensusView';
 import { RoadmapView } from '../components/RoadmapView';
 import { ShareBar } from '../components/ShareBar';
 import { AskBox } from '../components/AskBox';
-import { RobotFaqPanel } from '../components/RobotFaqPanel';
+import { ChatPanel } from '../components/chat/ChatPanel';
+import { BackgroundDoodles } from '../components/BackgroundDoodles';
 
 type Tab = 'compare' | 'weights' | 'vote' | 'consensus' | 'roadmap' | 'talk';
 
@@ -204,7 +205,10 @@ export const RoomHomePage: React.FC = () => {
   const isCounsellor = me?.role === 'counsellor';
 
   return (
-    <div className="min-h-screen bg-background p-4 max-w-2xl mx-auto pb-24">
+    <div className="relative min-h-screen bg-page overflow-hidden">
+      <BackgroundDoodles section="room" />
+
+      <div className="relative z-10 p-4 max-w-2xl mx-auto pb-24">
       <div className="flex items-center justify-between py-2 mb-2 print-header">
         <h1 className="text-2xl font-bold text-accent">{t('room.title')}</h1>
         <div className="flex items-center gap-3">
@@ -324,11 +328,15 @@ export const RoomHomePage: React.FC = () => {
 
       {tab === 'roadmap' && <RoadmapView roadmap={roadmap} />}
 
-      {/* Phase 18: Robot FAQ replacing the old family chat */}
+      {/* Phase 15: one shared chat for learner + parent, grounded fact cards,
+          voice in/out and the human hand-off. AskBox below keeps its chips as
+          quick-record objection tags for the resistance dashboard. */}
       {tab === 'talk' && snapshot && (
-        <div className="mt-4">
-          <RobotFaqPanel />
-        </div>
+        <ChatPanel
+          studentId={snapshot.student_id}
+          roomId={snapshot.room_id}
+          occupationIds={selectedIds}
+        />
       )}
 
       {/* Deterministic objection handler (records topic+sentiment) */}
@@ -343,6 +351,7 @@ export const RoomHomePage: React.FC = () => {
       )}
 
       {topChoiceName && <div className="mt-4"><ShareBar choiceName={topChoiceName} roadmap={roadmap} /></div>}
+      </div>
     </div>
   );
 };

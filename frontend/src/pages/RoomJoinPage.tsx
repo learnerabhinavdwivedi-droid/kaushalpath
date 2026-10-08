@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'wouter';
 import { guestJoin, joinRoom } from '../api/client';
 import { useAuthStore, useRoomStore } from '../store/useStore';
+import { BackgroundDoodles } from '../components/BackgroundDoodles';
 
 export const RoomJoinPage: React.FC = () => {
   const { t } = useTranslation();
@@ -53,7 +54,10 @@ export const RoomJoinPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4 max-w-md mx-auto">
+    <div className="relative min-h-screen bg-page overflow-hidden">
+      <BackgroundDoodles section="room" />
+
+      <div className="relative z-10 p-4 max-w-md mx-auto">
       <div className="card space-y-4 mt-8">
         <h1 className="text-2xl font-bold text-accent">{t('room.join_title')}</h1>
         <label className="block">
@@ -118,6 +122,7 @@ export const RoomJoinPage: React.FC = () => {
         <button onClick={() => setLocation('/')} className="btn-secondary w-full">
           {t('common.back')}
         </button>
+      </div>
       </div>
     </div>
   );

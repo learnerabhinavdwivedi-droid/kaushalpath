@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'wouter';
 import { createRoom } from '../api/client';
 import { useAuthStore, useRoomStore } from '../store/useStore';
+import { BackgroundDoodles } from '../components/BackgroundDoodles';
 
 export const RoomCreatePage: React.FC = () => {
   const { t } = useTranslation();
@@ -27,7 +28,10 @@ export const RoomCreatePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4 max-w-md mx-auto">
+    <div className="relative min-h-screen bg-page overflow-hidden">
+      <BackgroundDoodles section="room" />
+
+      <div className="relative z-10 p-4 max-w-md mx-auto">
       <div className="card space-y-4 mt-8">
         <h1 className="text-2xl font-bold text-accent">{t('room.create_title')}</h1>
         <p className="text-textSecondary text-lg">{t('room.create_subtitle')}</p>
@@ -49,6 +53,7 @@ export const RoomCreatePage: React.FC = () => {
         <button onClick={() => setLocation('/results')} className="btn-secondary w-full">
           {t('common.back')}
         </button>
+      </div>
       </div>
     </div>
   );

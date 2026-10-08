@@ -14,6 +14,7 @@ import { ConcernTradeMatrix } from '../components/admin/ConcernTradeMatrix';
 import { TrendChart } from '../components/admin/TrendChart';
 import { ShiftBars } from '../components/admin/ShiftBars';
 import { TopPhrases } from '../components/admin/TopPhrases';
+import { BackgroundDoodles } from '../components/BackgroundDoodles';
 
 /**
  * Phase 16 — scheme-administrator resistance dashboard. Shows WHERE resistance
@@ -68,7 +69,10 @@ export const AdminResistancePage: React.FC = () => {
   const suppressed = data && data.suppressed_groups > 0;
 
   return (
-    <div className="mx-auto max-w-5xl space-y-4 bg-page p-4">
+    <div className="relative min-h-screen bg-page overflow-hidden">
+      <BackgroundDoodles section="staff" />
+
+      <div className="relative z-10 mx-auto max-w-5xl space-y-4 p-4 min-h-screen">
       <div className="flex flex-wrap items-center justify-between gap-2 py-2">
         <h1 className="text-2xl font-bold text-accent">{t('admin_dash.title')}</h1>
         <div className="flex items-center gap-3">
@@ -147,6 +151,7 @@ export const AdminResistancePage: React.FC = () => {
           <TopPhrases phrases={data.phrases} />
         </>
       )}
+      </div>
     </div>
   );
 };

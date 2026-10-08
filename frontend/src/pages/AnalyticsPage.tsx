@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'wouter';
 import { AnalyticsResponse, getAnalytics } from '../api/client';
 import { BucketChart } from '../components/BucketChart';
+import { BackgroundDoodles } from '../components/BackgroundDoodles';
 
 export const AnalyticsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -14,7 +15,10 @@ export const AnalyticsPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background p-4 max-w-3xl mx-auto space-y-4">
+    <div className="relative min-h-screen bg-page overflow-hidden">
+      <BackgroundDoodles section="staff" />
+
+      <div className="relative z-10 p-4 max-w-3xl mx-auto space-y-4 min-h-screen">
       <div className="flex justify-between items-center py-2">
         <h1 className="text-2xl font-bold text-accent">{t('analytics.title')}</h1>
         <Link href="/counsellor" className="text-accent hover:underline text-sm">
@@ -94,6 +98,7 @@ export const AnalyticsPage: React.FC = () => {
           </div>
         </>
       )}
+      </div>
     </div>
   );
 };

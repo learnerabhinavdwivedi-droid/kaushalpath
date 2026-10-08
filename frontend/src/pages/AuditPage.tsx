@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'wouter';
 import { AuditEntry, getAuditLog } from '../api/client';
+import { BackgroundDoodles } from '../components/BackgroundDoodles';
 
 export const AuditPage: React.FC = () => {
   const { t } = useTranslation();
@@ -17,7 +18,10 @@ export const AuditPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background p-4 max-w-3xl mx-auto space-y-4">
+    <div className="relative min-h-screen bg-page overflow-hidden">
+      <BackgroundDoodles section="staff" />
+
+      <div className="relative z-10 p-4 max-w-3xl mx-auto space-y-4 min-h-screen">
       <div className="flex justify-between items-center py-2">
         <h1 className="text-2xl font-bold text-accent">{t('audit.title')}</h1>
         <Link href="/counsellor" className="text-accent hover:underline text-sm">
@@ -55,6 +59,7 @@ export const AuditPage: React.FC = () => {
           )}
         </div>
       )}
+      </div>
     </div>
   );
 };

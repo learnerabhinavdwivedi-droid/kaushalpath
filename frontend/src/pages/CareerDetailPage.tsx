@@ -6,6 +6,7 @@ import { ReasonChip } from '../components/ReasonChip';
 import { SourceBadge } from '../components/SourceBadge';
 import { AskBox } from '../components/AskBox';
 import { ArrowLeft, Volume2 } from 'lucide-react';
+import { BackgroundDoodles } from '../components/BackgroundDoodles';
 
 export const CareerDetailPage: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -38,7 +39,10 @@ export const CareerDetailPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4 max-w-md mx-auto pb-20">
+    <div className="relative min-h-screen bg-page overflow-hidden">
+      <BackgroundDoodles section="career" />
+
+      <div className="relative z-10 p-4 max-w-md mx-auto pb-20">
       <div className="flex items-center gap-4 py-4 mb-6">
         <button onClick={() => setLocation('/results')} className="p-2" aria-label="Back">
           <ArrowLeft className="w-8 h-8 text-accent" />
@@ -91,6 +95,7 @@ export const CareerDetailPage: React.FC = () => {
 
       <div className="mt-6">
         <AskBox careerTitle={career.occupation.title} />
+      </div>
       </div>
     </div>
   );

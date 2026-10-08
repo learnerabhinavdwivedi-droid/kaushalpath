@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuthStore, useProfileStore } from '../store/useStore';
 import { useLocation } from 'wouter';
 import { getMe, saveConstraints } from '../api/client';
+import { BackgroundDoodles } from '../components/BackgroundDoodles';
 
 function budgetToBand(budget: number): string {
   if (budget <= 20000) return 'low';
@@ -64,7 +65,10 @@ export const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen p-6 max-w-md mx-auto pt-12">
+    <div className="relative min-h-screen bg-page overflow-hidden">
+      <BackgroundDoodles section="account" />
+
+      <div className="relative z-10 p-6 max-w-md mx-auto pt-12 min-h-screen">
       <h2 className="text-3xl font-bold mb-8 text-accent">{t('profile.title')}</h2>
 
       {error && <div className="bg-red-100 text-red-900 p-4 rounded-lg mb-6">{error}</div>}
@@ -129,6 +133,7 @@ export const ProfilePage: React.FC = () => {
           {loading ? t('common.loading') : t('common.next')}
         </button>
       </form>
+      </div>
     </div>
   );
 };

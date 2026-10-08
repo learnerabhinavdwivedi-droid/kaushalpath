@@ -6,6 +6,7 @@ import { Link, useLocation } from 'wouter';
 import { Settings as SettingsIcon } from 'lucide-react';
 import { getRecommendations, createRoom } from '../api/client';
 import { mapRecommendations } from '../lib/mapRecommendations';
+import { BackgroundDoodles } from '../components/BackgroundDoodles';
 
 export const ResultsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -45,12 +46,8 @@ export const ResultsPage: React.FC = () => {
   }, [recommendations.length, studentId, setRecommendations]);
 
   return (
-    <div className="relative min-h-screen bg-background overflow-hidden">
-      {/* High Quality HD Doodles */}
-      <div className="hidden lg:block absolute inset-0 pointer-events-none">
-        <img src="/doodles/doodle_learning.jpg" alt="" className="absolute top-1/4 left-[8%] w-[400px] h-[400px] object-contain mix-blend-multiply opacity-90 transition-transform duration-1000 hover:scale-105" />
-        <img src="/doodles/doodle_puzzle.jpg" alt="" className="absolute bottom-[10%] right-[8%] w-[400px] h-[400px] object-contain mix-blend-multiply opacity-90 transition-transform duration-1000 hover:scale-105" />
-      </div>
+    <div className="relative min-h-screen bg-page overflow-hidden">
+      <BackgroundDoodles section="results" />
 
       <div className="relative z-10 min-h-screen bg-transparent p-4 max-w-xl mx-auto">
         <div className="flex justify-between items-center py-4 mb-4">

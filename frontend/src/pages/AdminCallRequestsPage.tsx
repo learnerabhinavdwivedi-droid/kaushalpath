@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'wouter';
 import { getCallRequests, getMentorRequests, CallRequestRow, MentorRequestRow } from '../api/client';
+import { BackgroundDoodles } from '../components/BackgroundDoodles';
 
 export const AdminCallRequestsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -21,7 +22,10 @@ export const AdminCallRequestsPage: React.FC = () => {
   }, [t]);
 
   return (
-    <div className="min-h-screen bg-background p-4 max-w-5xl mx-auto">
+    <div className="relative min-h-screen bg-page overflow-hidden">
+      <BackgroundDoodles section="staff" />
+
+      <div className="relative z-10 p-4 max-w-5xl mx-auto min-h-screen">
       <div className="flex flex-wrap items-center justify-between gap-2 py-4 mb-4">
         <h1 className="text-2xl font-bold text-accent">Family & Mentor Requests</h1>
         <Link href="/counsellor" className="btn-secondary">
@@ -76,6 +80,7 @@ export const AdminCallRequestsPage: React.FC = () => {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };
