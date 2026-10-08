@@ -27,8 +27,15 @@ export const ResultsPage: React.FC = () => {
   }, [recommendations.length, studentId, setRecommendations]);
 
   return (
-    <div className="min-h-screen bg-background p-4 max-w-md mx-auto">
-      <div className="flex justify-between items-center py-4 mb-4">
+    <div className="relative min-h-screen bg-background overflow-hidden">
+      {/* High Quality HD Doodles */}
+      <div className="hidden lg:block absolute inset-0 pointer-events-none">
+        <img src="/doodles/doodle_learning.jpg" alt="" className="absolute top-1/4 left-[8%] w-[400px] h-[400px] object-contain mix-blend-multiply opacity-90 transition-transform duration-1000 hover:scale-105" />
+        <img src="/doodles/doodle_puzzle.jpg" alt="" className="absolute bottom-[10%] right-[8%] w-[400px] h-[400px] object-contain mix-blend-multiply opacity-90 transition-transform duration-1000 hover:scale-105" />
+      </div>
+
+      <div className="relative z-10 min-h-screen bg-transparent p-4 max-w-xl mx-auto">
+        <div className="flex justify-between items-center py-4 mb-4">
         <h2 className="text-2xl font-bold text-accent">{t('results.title')}</h2>
         <Link href="/settings" className="p-2 hover:bg-gray-200 rounded-full" aria-label="Settings">
           <SettingsIcon className="w-6 h-6 text-textSecondary" />
@@ -62,6 +69,7 @@ export const ResultsPage: React.FC = () => {
           {t('room.join_button')}
         </Link>
       </div>
+    </div>
     </div>
   );
 };

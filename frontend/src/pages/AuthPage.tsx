@@ -54,8 +54,15 @@ export const AuthPage: React.FC<{ mode: 'login' | 'register' }> = ({ mode }) => 
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center p-6 max-w-md mx-auto">
-      <div className="card">
+    <div className="relative min-h-screen bg-page overflow-hidden">
+      {/* High Quality HD Doodles */}
+      <div className="hidden lg:block absolute inset-0 pointer-events-none flex items-center justify-between px-[8%]">
+        <img src="/doodles/doodle_puzzle.jpg" alt="" className="w-[400px] h-[400px] object-contain mix-blend-multiply opacity-90 transition-transform duration-1000 hover:scale-105" />
+        <img src="/doodles/doodle_success.jpg" alt="" className="w-[450px] h-[450px] object-contain mix-blend-multiply opacity-90 transition-transform duration-1000 hover:scale-105" />
+      </div>
+
+      <div className="relative z-10 min-h-screen flex flex-col justify-center p-6 max-w-md mx-auto">
+        <div className="card shadow-2xl bg-white/95 backdrop-blur-sm border-2 border-accent/10">
         <h2 className="text-3xl font-bold mb-6 text-center text-accent">
           {mode === 'login' ? t('auth.login') : t('auth.register')}
         </h2>
@@ -136,6 +143,7 @@ export const AuthPage: React.FC<{ mode: 'login' | 'register' }> = ({ mode }) => 
           )}
         </p>
       </div>
+    </div>
     </div>
   );
 };

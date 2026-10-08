@@ -141,17 +141,10 @@ export const AssessmentPage: React.FC = () => {
 
   return (
     <div className="relative min-h-screen bg-page overflow-hidden">
-      {/* Background Doodles for empty space on large screens */}
+      {/* Background HD Doodles for empty space on large screens */}
       <div className="hidden lg:block absolute inset-0 pointer-events-none">
-        <Sparkles className="absolute top-20 left-[12%] w-16 h-16 text-lavender opacity-80 animate-pulse" />
-        <Star className="absolute top-[30%] left-[6%] w-12 h-12 text-orange opacity-50 transform -rotate-12" />
-        <Lightbulb className="absolute bottom-[25%] left-[10%] w-24 h-24 text-yellow-500 opacity-60" />
-        <Target className="absolute top-1/2 left-[5%] w-14 h-14 text-green opacity-40 animate-bounce" style={{ animationDuration: '4s' }} />
-
-        <Rocket className="absolute top-24 right-[10%] w-20 h-20 text-accent opacity-60 transform rotate-45" />
-        <Puzzle className="absolute bottom-[30%] right-[8%] w-16 h-16 text-pink-500 opacity-70" />
-        <Compass className="absolute top-1/2 right-[12%] w-28 h-28 text-blue-400 opacity-50 animate-[spin_12s_linear_infinite]" />
-        <Star className="absolute bottom-16 right-[18%] w-10 h-10 text-orange-deep opacity-60" />
+        <img src="/doodles/doodle_learning.jpg" alt="" className="absolute top-[15%] left-[8%] w-[400px] h-[400px] object-contain mix-blend-multiply opacity-90 transition-transform duration-1000 hover:scale-105" />
+        <img src="/doodles/doodle_success.jpg" alt="" className="absolute bottom-[10%] right-[8%] w-[450px] h-[450px] object-contain mix-blend-multiply opacity-90 transition-transform duration-1000 hover:scale-105" />
         
         {/* Soft Glassmorphism Color Blobs */}
         <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-lavender/30 rounded-full mix-blend-multiply filter blur-[80px] opacity-70"></div>
