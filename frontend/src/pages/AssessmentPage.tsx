@@ -57,7 +57,7 @@ export const AssessmentPage: React.FC = () => {
       if (!res.recommendations || res.recommendations.length === 0) {
         if (attempt <= 3) {
           await sleep(attempt * 1000);
-          return finish(sid, attempt + 1);
+          return await finish(sid, attempt + 1);
         }
       } else {
         setRecommendations(mapRecommendations(res.recommendations));
@@ -65,7 +65,7 @@ export const AssessmentPage: React.FC = () => {
     } catch (e: unknown) {
       if (attempt <= 3 && isRetryable(e)) {
         await sleep(attempt * 1000);
-        return finish(sid, attempt + 1);
+        return await finish(sid, attempt + 1);
       }
     } finally {
       if (attempt === 1 || attempt > 3) {
