@@ -24,8 +24,8 @@ EDU_HIERARCHY = {
 }
 
 BUDGET_LIMITS = {
-    "low": 10000.0,
-    "mid": 50000.0,
+    "low": 20000.0,
+    "mid": 60000.0,
     "high": float("inf"),
 }
 
@@ -91,8 +91,17 @@ def _reachability_reasons(student: Student, course: Course, centres: Sequence[An
         return ["No training centre offers this course"]
     if student.relocate_ok:
         return []  # willing to travel; any centre in the country qualifies
-    in_home_district = any(c.district == student.district for c in centres)
-    in_home_state = any(c.state == student.state for c in centres)
+        
+    s_dist = student.district.lower().strip() if student.district else ""
+    s_state = student.state.lower().strip() if student.state else ""
+    
+    in_home_district = any(
+        (c.district or "").lower().strip() == s_dist for c in centres
+    )
+    in_home_state = any(
+        (c.state or "").lower().strip() == s_state for c in centres
+    )
+    
     if in_home_district or in_home_state:
         return []
     return [
