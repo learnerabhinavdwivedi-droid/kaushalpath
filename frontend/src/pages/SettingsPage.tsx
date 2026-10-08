@@ -5,6 +5,7 @@ import { apiRequest } from '../api/client';
 import { useLocation } from 'wouter';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
 import { ArrowLeft, Trash2, LogOut } from 'lucide-react';
+import { BackgroundDoodles } from '../components/BackgroundDoodles';
 import {
   FONT_SIZES,
   getFontSize,
@@ -47,7 +48,10 @@ export const SettingsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 max-w-md mx-auto">
+    <div className="relative min-h-screen bg-page overflow-hidden">
+      <BackgroundDoodles section="account" />
+
+      <div className="relative z-10 p-4 max-w-md mx-auto">
       <div className="flex items-center gap-4 py-4 mb-6">
         <button onClick={() => window.history.back()} className="p-2" aria-label="Back">
           <ArrowLeft className="w-8 h-8 text-accent" />
@@ -105,6 +109,7 @@ export const SettingsPage: React.FC = () => {
           <Trash2 className="w-6 h-6" />
           {t('settings.delete_account')}
         </button>
+      </div>
       </div>
     </div>
   );

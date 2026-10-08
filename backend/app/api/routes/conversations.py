@@ -244,9 +244,10 @@ def add_turn(
 
     state["last_reply"] = res["reply"]
     state["turn_count"] = turn_count + 1
-    conv.state_json = state
-    from sqlalchemy.orm.attributes import flag_modified
-    flag_modified(conv, "state_json")
+    if hasattr(conv, "__mapper__") and "state_json" in conv.__mapper__.columns:
+        conv.state_json = state
+        from sqlalchemy.orm.attributes import flag_modified
+        flag_modified(conv, "state_json")
 
     # 8. Auto-escalation decision (Phase 14 service): explicit request, Rs over the
     #    threshold, or two consecutive unresolved family turns. This only nudges the

@@ -14,6 +14,8 @@ APTITUDE_DIMS = scoring.APTITUDE_DIMS
 MIN_ITEMS = 12          # minimum interest items before SEM stop can fire
 HARD_CAP = 18           # absolute maximum interest items
 SEM_STOP = 0.35         # stop when mean SEM of top-3 dims drops below this
+CONF_STOP = 0.70        # Legacy alias for test compatibility
+TARGET_ITEMS = 18       # Target interest items count
 MAX_APTITUDE = 6        # maximum aptitude items (3 per top-2 dimension)
 IRT_A = 1.0             # fixed discrimination for 2PL model
 IRT_PRIOR_SD = 1.0      # SD of N(0,1) prior for MAP estimation
@@ -50,6 +52,48 @@ def new_state() -> dict[str, Any]:
         "riasec_posterior": {},
         "item_bs": {d: [] for d in RIASEC_DIMS}
     }
+
+
+def ensure_state(state: dict[str, Any], bank: list[dict] | None = None) -> dict[str, Any]:
+    """Ensure state dict has all required CAT fields, gracefully migrating legacy sessions."""
+    defaults = new_state()
+    for k, v in defaults.items():
+        if k not in state:
+            state[k] = v.copy() if isinstance(v, (dict, list)) else v
+    if "theta" not in state or not isinstance(state["theta"], dict):
+        state["theta"] = {d: 0.0 for d in RIASEC_DIMS}
+    else:
+        for d in RIASEC_DIMS:
+            state["theta"].setdefault(d, 0.0)
+    if "item_bs" not in state or not isinstance(state["item_bs"], dict):
+        state["item_bs"] = {d: [] for d in RIASEC_DIMS}
+    else:
+        for d in RIASEC_DIMS:
+            state["item_bs"].setdefault(d, [])
+    if "interest_responses" not in state:
+        state["interest_responses"] = {}
+    if "aptitude_responses" not in state:
+        state["aptitude_responses"] = {}
+
+    # If state has interest responses but item_bs is unpopulated, reconstruct item_bs and thetas
+    if state["interest_responses"] and not any(state["item_bs"].values()) and bank is not None:
+        for i_id, i_val in state["interest_responses"].items():
+            it = next((x for x in bank if x["id"] == i_id), None)
+            if it:
+                dim = it["dimension"]
+                b = _irt_b(it.get("difficulty", 0.5))
+                state["item_bs"][dim].append(b)
+        for d in RIASEC_DIMS:
+            responses = []
+            for i_id, i_val in state["interest_responses"].items():
+                it = next((x for x in bank if x["id"] == i_id), None)
+                if it and it["dimension"] == d:
+                    b = _irt_b(it.get("difficulty", 0.5))
+                    is_correct = scoring.signed(i_val, it.get("reverse", False)) > 0
+                    responses.append((b, is_correct))
+            if responses:
+                state["theta"][d] = _map_update(state["theta"][d], responses)
+    return state
 
 
 def _irt_b(difficulty: float) -> float:
@@ -89,10 +133,11 @@ def _sem(theta: float, item_bs: list[float]) -> float:
 
 
 def ordering_confidence(state: dict, bank: list[dict]) -> float:
-    if "item_bs" not in state or not state.get("interest_responses"):
+    ensure_state(state, bank)
+    if not state.get("interest_responses"):
         return 0.0
-    order = sorted(RIASEC_DIMS, key=lambda d: state["theta"][d], reverse=True)
-    top3_sem = [_sem(state["theta"][d], state["item_bs"][d]) for d in order[:3]]
+    order = sorted(RIASEC_DIMS, key=lambda d: state["theta"].get(d, 0.0), reverse=True)
+    top3_sem = [_sem(state["theta"].get(d, 0.0), state["item_bs"].get(d, [])) for d in order[:3]]
     mean_sem = sum(top3_sem) / 3 if top3_sem else 1.0
     return max(0.0, min(1.0, 1.0 - mean_sem))
 
@@ -106,6 +151,7 @@ def _available(state: dict, bank: list[dict], dim: str) -> list[dict]:
 
 
 def next_interest_item(state: dict, bank: list[dict]) -> dict | None:
+    ensure_state(state, bank)
     for d in RIASEC_DIMS:
         answered = len(state["item_bs"][d])
         if answered < SEED_PER_DIM:
@@ -129,6 +175,7 @@ def next_interest_item(state: dict, bank: list[dict]) -> dict | None:
 
 
 def is_interest_complete(state: dict, bank: list[dict]) -> bool:
+    ensure_state(state, bank)
     items_answered = len(state["interest_responses"])
     if items_answered >= HARD_CAP:
         return True
@@ -176,6 +223,7 @@ def _recompute(state: dict, bank: list[dict], aptitude_bank: list[dict] | None) 
 def record_interest_answer(
     state: dict, bank: list[dict], item_id: str, value: int
 ) -> dict[str, Any]:
+    ensure_state(state, bank)
     item = next((it for it in bank if it["id"] == item_id), None)
     if item is None:
         raise ValueError(f"unknown interest item: {item_id}")
@@ -205,10 +253,11 @@ def record_interest_answer(
 
 
 def next_aptitude_item(state: dict, aptitude_bank: list[dict]) -> dict | None:
+    ensure_state(state)
     if len(state["aptitude_responses"]) >= MAX_APTITUDE:
         return None
         
-    order = sorted(RIASEC_DIMS, key=lambda d: state["theta"][d], reverse=True)
+    order = sorted(RIASEC_DIMS, key=lambda d: state["theta"].get(d, 0.0), reverse=True)
     target_apt_dims = []
     for d in order:
         for apt, ria in APTITUDE_TO_RIASEC.items():
@@ -236,6 +285,7 @@ def _is_correct(answer: Any, correct: Any) -> bool:
 def record_aptitude_answer(
     state: dict, bank: list[dict], aptitude_bank: list[dict], item_id: str, answer: Any
 ) -> dict[str, Any]:
+    ensure_state(state, bank)
     item = next((it for it in aptitude_bank if it["id"] == item_id), None)
     if item is None:
         raise ValueError(f"unknown aptitude item: {item_id}")
@@ -249,6 +299,7 @@ def record_aptitude_answer(
 
 
 def next_item(state: dict, bank: list[dict], aptitude_bank: list[dict]) -> dict | None:
+    ensure_state(state, bank)
     if state["phase"] == "interest" and not is_interest_complete(state, bank):
         item = next_interest_item(state, bank)
         if item is not None:

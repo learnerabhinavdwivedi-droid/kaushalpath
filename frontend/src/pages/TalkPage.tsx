@@ -4,7 +4,8 @@ import { useLocation, Link } from 'wouter';
 import { getMe, type MeOut } from '../api/client';
 import { useAuthStore } from '../store/useStore';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
-import { RobotFaqPanel } from '../components/RobotFaqPanel';
+import { ChatPanel } from '../components/chat/ChatPanel';
+import { BackgroundDoodles } from '../components/BackgroundDoodles';
 
 /**
  * /talk — the single shared family chat outside a room (PHASE_15). The
@@ -28,7 +29,10 @@ export const TalkPage: React.FC = () => {
   }, [token]);
 
   return (
-    <div className="min-h-screen bg-background p-4 max-w-2xl mx-auto">
+    <div className="relative min-h-screen bg-page overflow-hidden">
+      <BackgroundDoodles section="talk" />
+
+      <div className="relative z-10 p-4 max-w-2xl mx-auto min-h-screen">
       <div className="flex items-center justify-between py-2 mb-2">
         <h1 className="text-2xl font-bold text-accent">{t('chat.title')}</h1>
         <LanguageSwitcher />
@@ -43,7 +47,7 @@ export const TalkPage: React.FC = () => {
           </p>
         )
       ) : me.student_id ? (
-        <RobotFaqPanel />
+        <ChatPanel studentId={me.student_id} />
       ) : (
         // A parent without a room of their own: point them at the code join.
         <div className="card space-y-3 py-8 text-center">
@@ -59,6 +63,7 @@ export const TalkPage: React.FC = () => {
           {t('chat.join_family_room')}
         </Link>
       </p>
+      </div>
     </div>
   );
 };

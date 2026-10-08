@@ -530,5 +530,12 @@
     "actor": "Actor",
     "action_override": "Recommendation override",
     "action_data_deletion": "Data deletion"
+  },
+  "share": {
+    "title": "Share Roadmap",
+    "summary": "Check out this personalized career roadmap for {{choice}} on KaushalPath!",
+    "whatsapp": "WhatsApp",
+    "share_pdf": "Share PDF",
+    "share_unsupported": "Direct PDF sharing is not supported on this browser. Opening WhatsApp..."
   }
 }

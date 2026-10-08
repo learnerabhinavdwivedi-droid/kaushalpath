@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'wouter';
 import { CohortRow, getCohort } from '../api/client';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
+import { BackgroundDoodles } from '../components/BackgroundDoodles';
 
 interface Filters {
   district: string;
@@ -44,7 +45,10 @@ export const CohortPage: React.FC = () => {
     setFilters((f) => ({ ...f, [k]: e.target.value }));
 
   return (
-    <div className="min-h-screen bg-background p-4 max-w-3xl mx-auto">
+    <div className="relative min-h-screen bg-page overflow-hidden">
+      <BackgroundDoodles section="staff" />
+
+      <div className="relative z-10 p-4 max-w-3xl mx-auto min-h-screen">
       <div className="flex justify-between items-center py-4 mb-4">
         <h1 className="text-2xl font-bold text-accent">{t('cohort.title')}</h1>
         <LanguageSwitcher />
@@ -99,6 +103,7 @@ export const CohortPage: React.FC = () => {
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 };

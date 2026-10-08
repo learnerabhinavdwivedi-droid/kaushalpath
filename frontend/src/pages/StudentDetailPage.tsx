@@ -5,6 +5,7 @@ import { StudentDetail, getStudentDetail, submitOverride } from '../api/client';
 import { ReasonChip } from '../components/ReasonChip';
 import { SourceBadge } from '../components/SourceBadge';
 import { OverrideDialog } from '../components/OverrideDialog';
+import { BackgroundDoodles } from '../components/BackgroundDoodles';
 
 export const StudentDetailPage: React.FC = () => {
   const { t } = useTranslation();
@@ -47,7 +48,10 @@ export const StudentDetailPage: React.FC = () => {
   if (!detail) return <p className="p-8 text-textSecondary">{t('common.loading')}</p>;
 
   return (
-    <div className="min-h-screen bg-background p-4 max-w-3xl mx-auto space-y-4">
+    <div className="relative min-h-screen bg-page overflow-hidden">
+      <BackgroundDoodles section="staff" />
+
+      <div className="relative z-10 p-4 max-w-3xl mx-auto space-y-4 min-h-screen">
       <div className="flex justify-between items-center py-2">
         <h1 className="text-2xl font-bold text-accent">
           {t('student.title')} #{detail.student_id}
@@ -147,6 +151,7 @@ export const StudentDetailPage: React.FC = () => {
           onSubmit={applyOverride}
         />
       )}
+      </div>
     </div>
   );
 };

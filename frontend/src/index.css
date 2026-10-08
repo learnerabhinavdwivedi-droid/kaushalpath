@@ -75,6 +75,13 @@
   animation: spin 15s linear infinite;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-spin-slow {
+    animation: none !important;
+  }
+}
+
 @layer base {
   /* SparkLab global baseline: pale-lime page, ink text, site-wide monospace. */
   html {

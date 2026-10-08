@@ -4,6 +4,7 @@ import { Navbar, type NavbarProps } from "./Navbar";
 import { Footer } from "./Footer";
 import { CursorProvider } from "../ui/Cursor";
 import { ScrollProgress } from "../ui/ScrollProgress";
+import { HelpFab } from "../HelpFab";
 
 /**
  * Shared shell: floating Navbar + page content + Footer.
@@ -32,6 +33,7 @@ export const Layout: React.FC<{
         <main id="main" className="flex-1">{children}</main>
         {footer}
       </div>
+      <HelpFab />
     </CursorProvider>
   </MotionConfig>
 );

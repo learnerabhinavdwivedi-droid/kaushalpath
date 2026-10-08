@@ -26,6 +26,8 @@ const AdminCallRequestsPage = lazy(() => import('./pages/AdminCallRequestsPage')
 const StyleGuidePage = lazy(() => import('./pages/StyleGuidePage'));
 const SparkLabPage = lazy(() => import('./pages/SparkLabPage'));
 const StartPage = lazy(() => import('./pages/StartPage').then((m) => ({ default: m.StartPage })));
+const HelpPage = lazy(() => import('./pages/HelpPage').then((m) => ({ default: m.HelpPage })));
+import { HelpFab } from './components/HelpFab';
 import { RouteWipe } from './components/ui/RouteWipe';
 import { RequireRole } from './components/RequireRole';
 import { ModelVersionFooter } from './components/ModelVersionFooter';
@@ -95,6 +97,7 @@ export const App: React.FC = () => {
         <Route path="/room/new" component={RoomCreatePage} />
         <Route path="/room/join" component={RoomJoinPage} />
         <Route path="/room/:code" component={RoomHomePage} />
+        <Route path="/help" component={HelpPage} />
         {/* Phase 8: counsellor/admin dashboard, guarded client-side; backend re-checks. */}
         <Route path="/counsellor">
           {() => (
@@ -162,6 +165,7 @@ export const App: React.FC = () => {
       </AnimatePresence>
       <ReadThisScreen />
       <ModelVersionFooter />
+      <HelpFab />
     </div>
   );
 };

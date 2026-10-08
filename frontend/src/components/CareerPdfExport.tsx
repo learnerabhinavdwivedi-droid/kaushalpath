@@ -1,6 +1,5 @@
-import React, { useRef, useState } from 'react';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import React, { useState } from 'react';
+import jsPDF, { GState } from 'jspdf';
 import { RoadmapResult } from '../api/client';
 import { Download } from 'lucide-react';
 
@@ -9,21 +8,188 @@ interface CareerPdfExportProps {
   roadmap: RoadmapResult | null;
 }
 
+export function buildRoadmapPdf(choiceName: string, roadmap: RoadmapResult): jsPDF {
+  const doc = new jsPDF('p', 'mm', 'a4');
+  const pageW = doc.internal.pageSize.getWidth();
+  const pageH = doc.internal.pageSize.getHeight();
+  const margin = 18;
+  const contentW = pageW - margin * 2;
+
+  // 1. Soft Vector Brand Accents (Replacing raster JPGs)
+  try {
+    const gstate = new GState({ opacity: 0.12 });
+    doc.setGState(gstate);
+
+    // Lavender flourish top-right
+    doc.setFillColor(221, 185, 251); // #DDB9FB
+    doc.circle(pageW - 12, 22, 34, 'F');
+
+    // Soft Orange blob bottom-left
+    doc.setFillColor(255, 79, 0); // #FF4F00
+    doc.circle(12, pageH - 22, 28, 'F');
+
+    // Subtle Green accent card shape bottom-right
+    doc.setFillColor(15, 123, 63); // #0F7B3F
+    doc.roundedRect(pageW - 45, pageH - 42, 50, 35, 8, 8, 'F');
+
+    // Reset GState to full opacity for text and lines
+    doc.setGState(new GState({ opacity: 1.0 }));
+  } catch (e) {
+    // Graceful fallback if GState is not available
+  }
+
+  let y = 20;
+
+  // Header: 28-32pt bold "Kaushal Path" in #1D4ED8 (rgb: 29, 78, 216)
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(28);
+  doc.setTextColor(29, 78, 216);
+  doc.text('Kaushal Path', margin, y);
+  y += 7;
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(85, 85, 74);
+  doc.text('Personalized Career Roadmap & Vocational Guide', margin, y);
+  y += 4;
+
+  // Thin rule beneath header
+  doc.setDrawColor(29, 78, 216);
+  doc.setLineWidth(0.6);
+  doc.line(margin, y, pageW - margin, y);
+  y += 9;
+
+  // Choice Heading: 20-22pt
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(21);
+  doc.setTextColor(10, 10, 10);
+  const choiceLines = doc.splitTextToSize(choiceName, contentW);
+  doc.text(choiceLines, margin, y);
+  y += choiceLines.length * 7.5 + 2;
+
+  // roadmap.expected (if present): italic 11pt quote block with left accent bar
+  if (roadmap.expected) {
+    const expText = `"${roadmap.expected.trim()}"`;
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(10.5);
+    doc.setTextColor(75, 85, 99);
+    const expLines = doc.splitTextToSize(expText, contentW - 8);
+    const blockH = Math.max(10, expLines.length * 4.8 + 2);
+
+    // Left accent bar in #FF4F00
+    doc.setDrawColor(255, 79, 0);
+    doc.setLineWidth(1.2);
+    doc.line(margin, y, margin, y + blockH);
+
+    doc.text(expLines, margin + 4, y + 4);
+    y += blockH + 6;
+  } else {
+    y += 2;
+  }
+
+  // Section title
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.setTextColor(29, 78, 216);
+  doc.text('Step-by-Step Milestones', margin, y);
+  y += 6;
+
+  // Timeline auto-shrink scaling
+  const steps = roadmap.steps || [];
+  const stepsCount = steps.length;
+  const isCompact = stepsCount > 5;
+  const badgeR = isCompact ? 3.5 : 4.4;
+  const titleSize = isCompact ? 10.5 : 12;
+  const detailSize = isCompact ? 8.8 : 10;
+  const stepGap = isCompact ? 3.8 : 5.8;
+
+  const badgeX = margin + badgeR + 1;
+  const textX = badgeX + badgeR + 4;
+  const textW = pageW - margin - textX;
+
+  // Connecting vertical timeline bar if multiple steps
+  if (stepsCount > 1) {
+    doc.setDrawColor(219, 234, 254); // #DBEAFE
+    doc.setLineWidth(0.8);
+    // Draw vertical connector behind badges
+    doc.line(badgeX, y + badgeR, badgeX, y + (stepsCount - 1) * (isCompact ? 22 : 28));
+  }
+
+  steps.forEach((s, idx) => {
+    const stepNum = s.step || idx + 1;
+    const badgeCenterY = y + badgeR;
+
+    // Filled circle badge
+    doc.setFillColor(29, 78, 216);
+    doc.circle(badgeX, badgeCenterY, badgeR, 'F');
+
+    // Number inside badge
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(isCompact ? 8 : 9.5);
+    doc.setTextColor(255, 255, 255);
+    doc.text(String(stepNum), badgeX, badgeCenterY + (isCompact ? 1.0 : 1.2), { align: 'center' });
+
+    // Step type label
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(titleSize);
+    doc.setTextColor(10, 10, 10);
+    const typeLabel = s.type ? s.type.charAt(0).toUpperCase() + s.type.slice(1) : `Step ${stepNum}`;
+    doc.text(typeLabel, textX, badgeCenterY);
+
+    // Step detail text
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(detailSize);
+    doc.setTextColor(75, 85, 99);
+    const detailLines = doc.splitTextToSize(s.detail || '', textW);
+    doc.text(detailLines, textX, badgeCenterY + (isCompact ? 4.2 : 5.2));
+
+    const itemHeight = badgeR * 2 + detailLines.length * (isCompact ? 3.6 : 4.4);
+    y += Math.max(itemHeight, badgeR * 2 + 5) + stepGap;
+  });
+
+  // Footer: fixed at bottom of page
+  const footerY = 282;
+  doc.setDrawColor(229, 231, 235);
+  doc.setLineWidth(0.4);
+  doc.line(margin, footerY - 5, pageW - margin, footerY - 5);
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8.5);
+  doc.setTextColor(107, 114, 128);
+
+  const leftParts: string[] = [];
+  if (roadmap.district) {
+    leftParts.push(`District: ${roadmap.district}`);
+  }
+  if (roadmap.is_demo) {
+    leftParts.push('Demo Roadmap');
+  } else if (roadmap.source) {
+    leftParts.push(roadmap.source);
+  }
+  const leftText = leftParts.length > 0 ? leftParts.join(' • ') : 'Vocational Path';
+  doc.text(leftText, margin, footerY);
+
+  const rightText = 'Generated by Kaushal Path AI • kaushalpath.in';
+  doc.text(rightText, pageW - margin, footerY, { align: 'right' });
+
+  return doc;
+}
+
+export async function generateRoadmapPdfBlob(choiceName: string, roadmap: RoadmapResult): Promise<Blob> {
+  const doc = buildRoadmapPdf(choiceName, roadmap);
+  return doc.output('blob');
+}
+
 export const CareerPdfExport: React.FC<CareerPdfExportProps> = ({ choiceName, roadmap }) => {
   const [exporting, setExporting] = useState(false);
-  const pdfRef = useRef<HTMLDivElement>(null);
 
-  const generatePDF = async () => {
-    if (!pdfRef.current || !roadmap) return;
+  const handleDownload = () => {
+    if (!roadmap) return;
     setExporting(true);
     try {
-      const canvas = await html2canvas(pdfRef.current, { scale: 2, useCORS: true });
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`KaushalPath_Roadmap_${choiceName.replace(/\s+/g, '_')}.pdf`);
+      const doc = buildRoadmapPdf(choiceName, roadmap);
+      const filename = `KaushalPath_Roadmap_${choiceName.replace(/\s+/g, '_')}.pdf`;
+      doc.save(filename);
     } catch (e) {
       console.error(e);
       alert('Failed to generate PDF');
@@ -33,60 +199,12 @@ export const CareerPdfExport: React.FC<CareerPdfExportProps> = ({ choiceName, ro
   };
 
   return (
-    <>
-      <button onClick={generatePDF} disabled={exporting || !roadmap} className="btn-secondary flex items-center gap-2">
-        <Download size={18} /> {exporting ? 'Generating PDF...' : 'Download PDF'}
-      </button>
-
-      {/* Hidden container for PDF Generation */}
-      {roadmap && (
-        <div className="overflow-hidden h-0 w-0 absolute opacity-0 pointer-events-none">
-          <div ref={pdfRef} className="bg-page p-10 w-[800px] text-ink relative font-sans" style={{ minHeight: '1120px' }}>
-            {/* Background elements */}
-            <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-lavender/30 rounded-full mix-blend-multiply blur-[80px]"></div>
-            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-orange/20 rounded-full mix-blend-multiply blur-[80px]"></div>
-            
-            {/* Using the AI doodles for decoration */}
-            <img src="/doodles/doodle_success.jpg" alt="" className="absolute top-10 right-10 w-40 h-40 opacity-80 mix-blend-multiply object-contain" crossOrigin="anonymous" />
-            <img src="/doodles/doodle_puzzle.jpg" alt="" className="absolute bottom-10 left-10 w-40 h-40 opacity-80 mix-blend-multiply object-contain" crossOrigin="anonymous" />
-            
-            <div className="relative z-10">
-              <div className="border-b-4 border-accent pb-4 mb-8">
-                <h1 className="text-4xl font-extrabold text-accent mb-2">Kaushal Path</h1>
-                <p className="text-xl text-textSecondary">Your Personalized Career Roadmap</p>
-              </div>
-
-              <h2 className="text-5xl font-bold text-ink mb-6 leading-tight">{choiceName}</h2>
-              {roadmap.expected && (
-                <p className="text-2xl text-textSecondary italic mb-10 border-l-4 border-orange pl-6 py-2 bg-orange/5 rounded-r-xl">
-                  "{roadmap.expected}"
-                </p>
-              )}
-
-              <div className="bg-white rounded-2xl shadow-sm border-2 border-accent/10 p-8">
-                <h3 className="text-2xl font-bold text-accent mb-6">Step-by-Step Guide</h3>
-                <div className="space-y-8">
-                  {roadmap.steps.map((s, idx) => (
-                    <div key={idx} className="flex gap-6">
-                      <div className="flex-shrink-0 w-14 h-14 rounded-full bg-accent text-white flex items-center justify-center text-2xl font-bold shadow-md">
-                        {idx + 1}
-                      </div>
-                      <div>
-                        <h4 className="text-2xl font-bold capitalize mb-2">{s.type}</h4>
-                        <p className="text-xl text-textSecondary leading-relaxed">{s.detail}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="mt-16 text-center text-gray-400 font-mono text-sm border-t border-gray-200 pt-8">
-                Generated securely by Kaushal Path AI • www.kaushalpath.in
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    <button
+      onClick={handleDownload}
+      disabled={exporting || !roadmap}
+      className="btn-secondary flex items-center gap-2"
+    >
+      <Download size={18} /> {exporting ? 'Generating PDF...' : 'Download PDF'}
+    </button>
   );
 };

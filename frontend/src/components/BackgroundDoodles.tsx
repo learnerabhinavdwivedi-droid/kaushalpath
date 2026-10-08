@@ -2,7 +2,9 @@ import React, { useMemo } from 'react';
 import { 
   Sparkles, Star, Lightbulb, Puzzle, Compass, Target, Rocket, 
   BookOpen, Brain, Briefcase, GraduationCap, Telescope, Shapes,
-  UserPlus, Laptop, Zap, ShieldCheck
+  UserPlus, Laptop, Zap, ShieldCheck, HelpCircle, MessageCircleQuestion, Bot, LifeBuoy,
+  MapPin, Award, MessageCircle, Mic, Volume2, Users, Link2, Home, Heart, Share2,
+  Settings, User, Sliders, BarChart3, ClipboardList, TrendingUp, FileSearch
 } from 'lucide-react';
 
 interface Doodle {
@@ -22,17 +24,21 @@ const SECTION_ICONS: Record<string, React.ElementType[]> = {
   assessment: [Target, Puzzle, Lightbulb, Sparkles, Brain, Compass, Shapes],
   auth: [ShieldCheck, UserPlus, Zap, Rocket, Star, Telescope],
   results: [GraduationCap, Briefcase, Laptop, BookOpen, Target, Rocket],
+  career: [Briefcase, Compass, Star, MapPin, Award, BookOpen],
+  talk: [MessageCircle, Mic, Volume2, Bot, Sparkles],
+  room: [Users, Link2, Home, Heart, Share2],
+  account: [Settings, User, Sliders, ShieldCheck],
+  staff: [BarChart3, ClipboardList, TrendingUp, FileSearch, Users],
+  help: [HelpCircle, MessageCircleQuestion, Bot, Sparkles, LifeBuoy],
   default: [Star, Sparkles, Compass, Shapes, Puzzle]
 };
 
 const COLORS = ['text-orange', 'text-lavender', 'text-green', 'text-accent', 'text-pink-400', 'text-yellow-400', 'text-blue-400'];
 const ANIMATIONS = ['animate-pulse', 'animate-bounce', 'animate-spin-slow', 'animate-float'];
 
-// Custom float animation will require a quick addition to index.css or tailwind.config,
-// but pulse/bounce/spin are built-in. Let's use custom classes where possible or standard ones.
-// We'll add custom float keyframes to index.css later.
-
-export const BackgroundDoodles: React.FC<{ section?: 'assessment' | 'auth' | 'results' | 'default' }> = ({ section = 'default' }) => {
+export const BackgroundDoodles: React.FC<{
+  section?: 'assessment' | 'auth' | 'results' | 'career' | 'talk' | 'room' | 'account' | 'staff' | 'help' | 'default';
+}> = ({ section = 'default' }) => {
   const doodles = useMemo(() => {
     const icons = SECTION_ICONS[section] || SECTION_ICONS.default;
     const items: Doodle[] = [];
