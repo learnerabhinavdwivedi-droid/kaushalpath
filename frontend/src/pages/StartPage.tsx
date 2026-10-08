@@ -37,7 +37,14 @@ export const StartPage: React.FC = () => {
   );
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-md flex-col gap-4 p-5">
+    <div className="relative min-h-screen bg-page overflow-hidden">
+      {/* High Quality HD Doodles */}
+      <div className="hidden lg:block absolute inset-0 pointer-events-none flex items-center justify-between px-[5%]">
+        <img src="/doodles/doodle_learning.jpg" alt="" className="w-[350px] h-[350px] object-contain mix-blend-multiply opacity-90 transition-transform duration-1000 hover:scale-105" />
+        <img src="/doodles/doodle_success.jpg" alt="" className="w-[400px] h-[400px] object-contain mix-blend-multiply opacity-90 transition-transform duration-1000 hover:scale-105" />
+      </div>
+
+      <div className="relative z-10 mx-auto flex min-h-screen max-w-md flex-col gap-4 p-5">
       <header className="py-2">
         <p className="text-sm text-textSecondary">{t('start.step', { current: step + 1, total: 3 })}</p>
         <h1 className="text-2xl font-bold text-accent">{t('start.title')}</h1>
@@ -75,6 +82,7 @@ export const StartPage: React.FC = () => {
           <BackButton onClick={() => setStep(1)} />
         </div>
       )}
+    </div>
     </div>
   );
 };
