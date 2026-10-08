@@ -39,10 +39,10 @@ export default {
         container: "1600px"
       },
       fontFamily: {
-        // Site-wide monospace per master context.
-        sans: ['"IBM Plex Mono"', '"JetBrains Mono"', "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+        // Site-wide font updates for better readability and modern look
+        sans: ['"Outfit"', '"Inter"', "sans-serif"],
         mono: ['"IBM Plex Mono"', '"JetBrains Mono"', "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
-        display: ['"Barlow Condensed"', '"IBM Plex Mono"', "sans-serif"]
+        display: ['"Outfit"', '"Inter"', "sans-serif"]
       },
       letterSpacing: {
         heading: "-0.02em"
