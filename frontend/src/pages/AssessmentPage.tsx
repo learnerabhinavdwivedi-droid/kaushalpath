@@ -4,7 +4,6 @@ import { useAssessmentStore, useAuthStore, useResultsStore } from '../store/useS
 import { useLocation } from 'wouter';
 import {
   AssessmentItem,
-  RecommendationOut,
   getRecommendations,
   resumeSession,
   startSession,
@@ -12,7 +11,8 @@ import {
 } from '../api/client';
 import { QuestionCard } from '../components/QuestionCard';
 import { ProgressBar } from '../components/ProgressBar';
-import { ArrowLeft, Sparkles, Star, Lightbulb, Puzzle, Compass, Target, Rocket } from 'lucide-react';
+import { BackgroundDoodles } from '../components/BackgroundDoodles';
+import { ArrowLeft } from 'lucide-react';
 import { mapRecommendations } from '../lib/mapRecommendations';
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
@@ -141,17 +141,8 @@ export const AssessmentPage: React.FC = () => {
 
   return (
     <div className="relative min-h-screen bg-page overflow-hidden">
-      {/* Background HD Doodles for empty space on large screens */}
-      <div className="hidden lg:block absolute inset-0 pointer-events-none">
-        <img src="/doodles/doodle_learning.jpg" alt="" className="absolute top-[15%] left-[8%] w-[400px] h-[400px] object-contain mix-blend-multiply opacity-90 transition-transform duration-1000 hover:scale-105" />
-        <img src="/doodles/doodle_success.jpg" alt="" className="absolute bottom-[10%] right-[8%] w-[450px] h-[450px] object-contain mix-blend-multiply opacity-90 transition-transform duration-1000 hover:scale-105" />
-        
-        {/* Soft Glassmorphism Color Blobs */}
-        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-lavender/30 rounded-full mix-blend-multiply filter blur-[80px] opacity-70"></div>
-        <div className="absolute -top-20 right-0 w-[400px] h-[400px] bg-orange/20 rounded-full mix-blend-multiply filter blur-[80px] opacity-70"></div>
-        <div className="absolute -bottom-40 left-1/3 w-[600px] h-[600px] bg-accent-light/40 rounded-full mix-blend-multiply filter blur-[100px] opacity-70"></div>
-      </div>
-
+      <BackgroundDoodles section="assessment" />
+      
       <div className="relative z-10 flex flex-col p-4 sm:p-6 lg:p-8 max-w-2xl mx-auto min-h-screen">
         <div className="flex items-center gap-4 py-4">
         <button

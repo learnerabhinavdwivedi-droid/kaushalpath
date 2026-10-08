@@ -6,6 +6,7 @@ from uuid import uuid4
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
 from jose import JWTError, jwt
+from pydantic import BaseModel
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
@@ -24,6 +25,7 @@ from app.db.session import get_db
 from app.models.conversation import Conversation, ResistanceSnapshot, Turn
 from app.models.human import Escalation
 from app.models.room import CriteriaWeight, Room, RoomMember
+from app.models.mentor import MentorRequest
 from app.models.student import Student
 from app.models.user import User
 from app.schemas.auth import (
@@ -253,3 +255,20 @@ def delete_student_me(
     db.delete(current_user)
     db.commit()
     return {"status": "ok"}
+
+
+class MentorRequestIn(BaseModel):
+    phone_number: str
+
+@router.post("/mentor-request")
+def create_mentor_request(
+    req: MentorRequestIn,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Phase 18: Request a human mentor."""
+    mr = MentorRequest(user_id=current_user.id, phone_number=req.phone_number)
+    db.add(mr)
+    db.commit()
+    db.refresh(mr)
+    return {"id": mr.id, "status": mr.status}

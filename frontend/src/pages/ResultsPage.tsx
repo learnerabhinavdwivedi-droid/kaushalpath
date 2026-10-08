@@ -1,17 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useResultsStore, useAuthStore } from '../store/useStore';
+import { useResultsStore, useAuthStore, useRoomStore } from '../store/useStore';
 import { CareerCard } from '../components/CareerCard';
-import { Link } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { Settings as SettingsIcon } from 'lucide-react';
-import { getRecommendations } from '../api/client';
+import { getRecommendations, createRoom } from '../api/client';
 import { mapRecommendations } from '../lib/mapRecommendations';
 
 export const ResultsPage: React.FC = () => {
   const { t } = useTranslation();
   const { recommendations, setRecommendations } = useResultsStore();
   const studentId = useAuthStore((s) => s.studentId);
+  const role = useAuthStore((s) => s.role);
+  const setCode = useRoomStore((s) => s.setCode);
+  const [, setLocation] = useLocation();
   const [fetching, setFetching] = useState(false);
+  const [creatingRoom, setCreatingRoom] = useState(false);
+
+  const handleCreateRoom = async () => {
+    if (role !== 'student') return;
+    setCreatingRoom(true);
+    try {
+      const room = await createRoom();
+      setCode(room.code);
+      setLocation(`/room/${room.code}`);
+    } catch (e: any) {
+      alert(e.message || t('common.error'));
+    } finally {
+      setCreatingRoom(false);
+    }
+  };
 
   useEffect(() => {
     if (recommendations.length > 0 || studentId == null) return;
@@ -62,9 +80,11 @@ export const ResultsPage: React.FC = () => {
       )}
 
       <div className="card mt-6 flex flex-col gap-3">
-        <Link href="/room/new" className="btn-primary">
-          {t('room.create_button')}
-        </Link>
+        {role === 'student' && (
+          <button onClick={handleCreateRoom} disabled={creatingRoom} className="btn-primary">
+            {creatingRoom ? t('room.creating', 'Creating...') : t('room.create_button')}
+          </button>
+        )}
         <Link href="/room/join" className="btn-secondary">
           {t('room.join_button')}
         </Link>

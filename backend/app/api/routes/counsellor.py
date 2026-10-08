@@ -18,10 +18,12 @@ from app.models import (
     Recommendation,
     Room,
     RoomMember,
+    CallRequest,
     Student,
     User,
     Vote,
 )
+from app.models.mentor import MentorRequest
 from app.schemas.counsellor import (
     AnalyticsOut,
     AuditEntryOut,
@@ -524,3 +526,34 @@ def audit_log(
     _require_counsellor_or_admin(current_user)
     ids = None if current_user.role == "admin" else _scoped_student_ids(current_user, db)
     return analytics_svc.list_audit(db, ids)
+
+
+@router.get("/call-requests")
+def list_call_requests(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    _require_counsellor_or_admin(current_user)
+    reqs = db.query(CallRequest).order_by(CallRequest.created_at.desc()).all()
+    return [
+        {
+            "id": r.id,
+            "room_id": r.room_id,
+            "requested_by": r.requested_by_user_id,
+            "status": r.status,
+            "created_at": r.created_at.isoformat() if r.created_at else None
+        }
+        for r in reqs
+    ]
+
+@router.get("/mentor-requests")
+def list_mentor_requests(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    _require_counsellor_or_admin(current_user)
+    reqs = db.query(MentorRequest).order_by(MentorRequest.created_at.desc()).all()
+    return [
+        {
+            "id": r.id,
+            "user_id": r.user_id,
+            "phone_number": r.phone_number,
+            "status": r.status,
+            "created_at": r.created_at.isoformat() if r.created_at else None
+        }
+        for r in reqs
+    ]

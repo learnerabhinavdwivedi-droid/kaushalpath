@@ -22,6 +22,7 @@ const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage').then((m) => ({ 
 const ResistancePage = lazy(() => import('./pages/ResistancePage').then((m) => ({ default: m.ResistancePage })));
 const AdminResistancePage = lazy(() => import('./pages/AdminResistancePage').then((m) => ({ default: m.AdminResistancePage })));
 const AuditPage = lazy(() => import('./pages/AuditPage').then((m) => ({ default: m.AuditPage })));
+const AdminCallRequestsPage = lazy(() => import('./pages/AdminCallRequestsPage').then((m) => ({ default: m.AdminCallRequestsPage })));
 const StyleGuidePage = lazy(() => import('./pages/StyleGuidePage'));
 const SparkLabPage = lazy(() => import('./pages/SparkLabPage'));
 const StartPage = lazy(() => import('./pages/StartPage').then((m) => ({ default: m.StartPage })));
@@ -128,6 +129,13 @@ export const App: React.FC = () => {
           {() => (
             <RequireRole roles={STAFF_ROLES}>
               <AuditPage />
+            </RequireRole>
+          )}
+        </Route>
+        <Route path="/counsellor/requests">
+          {() => (
+            <RequireRole roles={STAFF_ROLES}>
+              <AdminCallRequestsPage />
             </RequireRole>
           )}
         </Route>

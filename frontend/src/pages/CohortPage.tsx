@@ -69,6 +69,7 @@ export const CohortPage: React.FC = () => {
         <Link href="/counsellor/analytics" className="text-accent hover:underline">{t('cohort.nav_analytics')}</Link>
         <Link href="/counsellor/resistance" className="text-accent hover:underline">{t('cohort.nav_resistance')}</Link>
         <Link href="/counsellor/audit" className="text-accent hover:underline">{t('cohort.nav_audit')}</Link>
+        <Link href="/counsellor/requests" className="text-accent hover:underline">Requests</Link>
       </nav>
 
       {error && <p className="text-red-600 mb-4">{error}</p>}

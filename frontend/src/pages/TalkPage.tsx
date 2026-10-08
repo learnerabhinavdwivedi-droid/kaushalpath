@@ -4,7 +4,7 @@ import { useLocation, Link } from 'wouter';
 import { getMe, type MeOut } from '../api/client';
 import { useAuthStore } from '../store/useStore';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
-import { ChatPanel } from '../components/chat/ChatPanel';
+import { RobotFaqPanel } from '../components/RobotFaqPanel';
 
 /**
  * /talk — the single shared family chat outside a room (PHASE_15). The
@@ -43,7 +43,7 @@ export const TalkPage: React.FC = () => {
           </p>
         )
       ) : me.student_id ? (
-        <ChatPanel studentId={me.student_id} />
+        <RobotFaqPanel />
       ) : (
         // A parent without a room of their own: point them at the code join.
         <div className="card space-y-3 py-8 text-center">

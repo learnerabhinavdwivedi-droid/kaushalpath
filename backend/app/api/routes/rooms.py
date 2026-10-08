@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from app.api.deps import get_current_user
 from app.db.session import get_db
 from app.models.human import Objection
-from app.models.room import CriteriaWeight, Room, RoomMember
+from app.models.room import CriteriaWeight, Room, RoomMember, CallRequest
 from app.models.student import Student
 from app.models.user import User
 from app.models.vote import Vote
@@ -333,3 +333,18 @@ def escalate(
         "status": esc.status,
         "reason": esc.reason,
     }
+
+
+@router.post("/{code}/call-request")
+def create_call_request(
+    code: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Register a human call request from a family room."""
+    room = get_room_and_verify_member(code, current_user.id, db)
+    req = CallRequest(room_id=room.id, requested_by_user_id=current_user.id)
+    db.add(req)
+    db.commit()
+    db.refresh(req)
+    return {"id": req.id, "status": req.status}

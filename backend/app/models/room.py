@@ -54,3 +54,16 @@ class CriteriaWeight(Base, TimestampMixin):
     salary: Mapped[float] = mapped_column(Float, default=0.2, nullable=False)
     local_jobs: Mapped[float] = mapped_column(Float, default=0.2, nullable=False)
     distance: Mapped[float] = mapped_column(Float, default=0.2, nullable=False)
+
+
+class CallRequest(Base, TimestampMixin):
+    __tablename__ = "call_requests"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    room_id: Mapped[int] = mapped_column(
+        ForeignKey("rooms.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    requested_by_user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    status: Mapped[str] = mapped_column(String(20), default="pending", nullable=False)

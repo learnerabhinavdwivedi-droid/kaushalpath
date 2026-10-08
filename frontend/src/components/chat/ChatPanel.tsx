@@ -113,7 +113,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ studentId, roomId, occupat
         const resp = await sendTurn(conv.id, {
           speaker: sp,
           text: trimmed,
-          occupation_ids: occupationIds ?? [],
+          occupation_id: occupationIds?.[0] ?? null,
           lang: i18n.language,
         });
         setDraft('');
