@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Bell, X } from 'lucide-react';
 import { useLocation, useRoute } from 'wouter';
 import {
   CompareResponse,
@@ -19,6 +20,7 @@ import {
   getRoom,
   recordObjection,
   updateWeights,
+  createCallRequest,
 } from '../api/client';
 import { useAuthStore, useResultsStore } from '../store/useStore';
 import { LanguageSwitcher } from '../components/LanguageSwitcher';
@@ -29,7 +31,7 @@ import { ConsensusView } from '../components/ConsensusView';
 import { RoadmapView } from '../components/RoadmapView';
 import { ShareBar } from '../components/ShareBar';
 import { AskBox } from '../components/AskBox';
-import { ChatPanel } from '../components/chat/ChatPanel';
+import { RobotFaqPanel } from '../components/RobotFaqPanel';
 
 type Tab = 'compare' | 'weights' | 'vote' | 'consensus' | 'roadmap' | 'talk';
 
@@ -60,6 +62,21 @@ export const RoomHomePage: React.FC = () => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [tab, setTab] = useState<Tab>('compare');
   const [error, setError] = useState('');
+  
+  const [callRequested, setCallRequested] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+
+  const handleCallRequest = async () => {
+    if (!code || callRequested) return;
+    try {
+      await createCallRequest(code);
+      setCallRequested(true);
+      setToastMessage("Your call request has been registered !! ✨📞 You will soon get the details of your assigned counsellor!");
+      setTimeout(() => setToastMessage(''), 8000);
+    } catch (e: any) {
+      setError(e.message || t('common.error'));
+    }
+  };
 
   const candidates = (recommendations || [])
     .map((r: any) => ({ id: r.occupation.id as number, name: r.occupation.title as string }));
@@ -190,8 +207,30 @@ export const RoomHomePage: React.FC = () => {
     <div className="min-h-screen bg-background p-4 max-w-2xl mx-auto pb-24">
       <div className="flex items-center justify-between py-2 mb-2 print-header">
         <h1 className="text-2xl font-bold text-accent">{t('room.title')}</h1>
-        <LanguageSwitcher />
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={handleCallRequest} 
+            disabled={callRequested}
+            className={`p-2 rounded-full transition-colors ${callRequested ? 'bg-green-100 text-green-600' : 'bg-orange/10 text-orange hover:bg-orange/20'}`}
+            title="Request a Human Call"
+          >
+            <Bell size={24} className={callRequested ? '' : 'animate-bounce'} />
+          </button>
+          <LanguageSwitcher />
+        </div>
       </div>
+
+      {toastMessage && (
+        <div className="fixed top-4 right-4 z-50 bg-white border-2 border-accent shadow-2xl rounded-xl p-4 max-w-sm flex items-start gap-3 animate-float">
+          <span className="text-3xl">🤖</span>
+          <div className="flex-1">
+            <p className="font-bold text-accent">{toastMessage}</p>
+          </div>
+          <button onClick={() => setToastMessage('')} className="text-gray-400 hover:text-gray-600">
+            <X size={20} />
+          </button>
+        </div>
+      )}
 
       <div className="card mb-4 no-print flex items-center justify-between">
         <div>
@@ -285,15 +324,11 @@ export const RoomHomePage: React.FC = () => {
 
       {tab === 'roadmap' && <RoadmapView roadmap={roadmap} />}
 
-      {/* Phase 15: one shared chat for learner + parent, grounded fact cards,
-          voice in/out and the human hand-off. AskBox below keeps its chips as
-          quick-record objection tags for the resistance dashboard. */}
+      {/* Phase 18: Robot FAQ replacing the old family chat */}
       {tab === 'talk' && snapshot && (
-        <ChatPanel
-          studentId={snapshot.student_id}
-          roomId={snapshot.room_id}
-          occupationId={selectedIds[0] ?? null}
-        />
+        <div className="mt-4">
+          <RobotFaqPanel />
+        </div>
       )}
 
       {/* Deterministic objection handler (records topic+sentiment) */}
@@ -307,7 +342,7 @@ export const RoomHomePage: React.FC = () => {
         </div>
       )}
 
-      {topChoiceName && <div className="mt-4"><ShareBar choiceName={topChoiceName} /></div>}
+      {topChoiceName && <div className="mt-4"><ShareBar choiceName={topChoiceName} roadmap={roadmap} /></div>}
     </div>
   );
 };

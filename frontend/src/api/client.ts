@@ -604,6 +604,36 @@ export const escalateConversation = (id: number, payload: EscalationPayload) =>
     body: JSON.stringify(payload)
   });
 
-/** Live status of the family's hand-off (lifecycle fields only, poll-safe). */
 export const getConversationEscalation = (id: number) =>
   apiRequest<EscalationAck>(`/conversations/${id}/escalation`);
+
+// --- Phase 18: Call requests & Mentor requests -----------------------------
+
+export interface CallRequestRow {
+  id: number;
+  room_id: number;
+  requested_by: number;
+  status: string;
+  created_at: string | null;
+}
+
+export interface MentorRequestRow {
+  id: number;
+  user_id: number;
+  phone_number: string;
+  status: string;
+  created_at: string | null;
+}
+
+export const createCallRequest = (code: string) =>
+  apiRequest<{ id: number; status: string }>(`/rooms/${code}/call-request`, { method: 'POST' });
+
+export const createMentorRequest = (phone_number: string) =>
+  apiRequest<{ id: number; status: string }>('/auth/mentor-request', {
+    method: 'POST',
+    body: JSON.stringify({ phone_number })
+  });
+
+export const getCallRequests = () => apiRequest<CallRequestRow[]>('/counsellor/call-requests');
+
+export const getMentorRequests = () => apiRequest<MentorRequestRow[]>('/counsellor/mentor-requests');
