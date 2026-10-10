@@ -230,3 +230,48 @@ was cross-checked on title, ministry and theme only. PS_SPEC.md says deadline
 5 Oct 2026 (already past at time of Phase 10). We are building for the prototype
 demonstration at evaluation. The team should re-confirm the PS wording against the
 portal when access is available.
+
+---
+
+# Phase 19 (data foundation) assumptions
+
+## A30 — Provenance and Evidence Grades (A–D)
+Every row across reference data tables (`occupations`, `courses`, `centres`, `market`,
+`provider_outcomes`, `trades`) must carry full provenance metadata (`source`,
+`source_url`, `source_year`, `retrieved_on`, `licence`, `is_demo`, `evidence_grade`, `n`).
+Grades follow a strict 4-tier hierarchy:
+- **Grade A:** Statistically designed government/official microdata/standards (e.g. O*NET, NCVET QP, NCO-2015, DGT ITI grading, Scheme guidelines).
+- **Grade B:** Tracer studies, administrative portal outputs (e.g. DGT STRIVE tracer, PMKVY placements, ASER 2023).
+- **Grade C:** Large-sample surveys or uncalibrated national datasets (e.g. PLFS microdata).
+- **Grade D:** Synthetic / demo seed rows.
+Synthetically seeded rows are strictly flagged `is_demo=True` and assigned Grade D.
+Per the age decay rule, data older than 3 years (`current_year - source_year > 3`) drops
+one grade level (A -> B, B -> C, C -> D).
+
+## A31 — Evidence Precedence and Minimum Cell Size Gate (n >= 30)
+When selecting evidence for display or ranking, Grade A strictly outranks Grade B,
+Grade B outranks Grade C, and Grade C outranks Grade D. Estimates from different evidence
+grades are never averaged or combined. Under the same grade, geographic resolution
+follows `provider -> district -> state -> national`. Any estimate with cell size
+`n < 30` cannot be shown or ranked, triggering automatic fallback to the next broader
+geographic level. If no row satisfies the `n >= 30` gate, the system returns
+`(None, "no_verified_data")` rather than fabricating numbers.
+
+## A32 — Canonical Trade Entity Resolution Threshold (>= 92)
+Entity matching against canonical vocational trades (`trades`) executes a multi-stage
+resolution cascade:
+1. Exact NCVT trade code or QP qualification code match (`confidence=1.0`, official).
+2. Exact NCO-2015 code match (`confidence=0.98`, official).
+3. Exact normalized name match (`confidence=0.95`, name_match).
+4. Fuzzy token-set ratio >= 92 (`confidence=score/100`, fuzzy).
+Any fuzzy match at or above 92 is flagged with `needs_review=True` and recorded in
+`backend/app/data/processed/trade_crosswalk_review.csv` for human curation. Any candidate
+below 92 is rejected (`needs_review=False`) and never linked to canonical entities.
+
+## A33 — Local Government Directory (LGD) Geography Standards
+Learner and provider geographic locations are mapped against LGD codes across 37
+canonical states/UTs and key vocational districts. Any unrecognized state or district
+is recorded in `backend/app/data/processed/geo_rejects.csv` without automated guessing.
+When falling back to state level from an unmatched or small-cell district, state-wide
+aggregate records (`district is None`) are prioritized over arbitrary sibling districts.
+

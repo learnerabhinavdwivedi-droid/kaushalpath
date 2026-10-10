@@ -8,7 +8,7 @@ Run after load_courses.py.
 """
 from __future__ import annotations
 
-from _common import SEED_DIR, read_csv, to_bool, to_float
+from _common import SEED_DIR, read_csv, to_bool, to_float, to_int, upsert
 from app.db.session import SessionLocal
 from app.models import Centre, Course, Occupation
 
@@ -36,6 +36,7 @@ def main(get_session=SessionLocal) -> None:
                 missing += 1
                 continue
 
+            is_demo_val = to_bool(raw.get("is_demo"), default=True)
             key = {
                 "course_id": course.id,
                 "name": raw["name"].strip(),
@@ -47,7 +48,7 @@ def main(get_session=SessionLocal) -> None:
                 "lon": to_float(raw.get("lon")),
                 "source": raw["source"].strip(),
                 "source_year": int(raw["source_year"]) if raw.get("source_year") else None,
-                "is_demo": to_bool(raw.get("is_demo"), default=True),
+                "is_demo": is_demo_val,
                 "needs_review": to_bool(raw.get("needs_review")),
                 "provider_type": (raw.get("provider_type") or "").strip() or None,
                 "affiliation": (raw.get("affiliation") or "").strip() or None,
@@ -55,8 +56,13 @@ def main(get_session=SessionLocal) -> None:
                 "has_hostel": to_bool(raw.get("has_hostel"), default=False),
                 "transport_note": (raw.get("transport_note") or "").strip() or None,
                 "safety_certified": to_bool(raw.get("safety_certified"), default=False),
+                "evidence_grade": raw.get("evidence_grade") or ("D" if is_demo_val else "A"),
+                "retrieved_on": raw.get("retrieved_on") or "2026-10-11",
+                "source_url": raw.get("source_url") or "local://backend/app/data/seed/centres.csv",
+                "n": to_int(raw.get("n")),
+                "metric_definition": raw.get("metric_definition") or None,
             }
-            if _upsert(session, key, values) == "insert":
+            if upsert(session, Centre, key, values) == "insert":
                 inserts += 1
             else:
                 updates += 1
@@ -66,15 +72,6 @@ def main(get_session=SessionLocal) -> None:
 
     print(f"load_centres: {inserts} inserted, {updates} updated, {missing} unmatched")
 
-
-def _upsert(session, key: dict, values: dict) -> str:
-    obj = session.query(Centre).filter_by(**key).one_or_none()
-    if obj is None:
-        session.add(Centre(**key, **values))
-        return "insert"
-    for field, value in values.items():
-        setattr(obj, field, value)
-    return "update"
 
 
 if __name__ == "__main__":

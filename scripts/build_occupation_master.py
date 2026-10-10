@@ -10,7 +10,7 @@ Run: python scripts/build_occupation_master.py
 """
 from __future__ import annotations
 
-from _common import PROCESSED_DIR, RAW_DIR, SEED_DIR, read_csv, to_bool, to_float, to_int
+from _common import PROCESSED_DIR, RAW_DIR, SEED_DIR, read_csv, to_bool, to_float, to_int, upsert
 from app.db.session import SessionLocal
 from app.models import Occupation
 
@@ -72,6 +72,7 @@ def main(get_session=SessionLocal) -> None:
         for raw in rows:
             name_en = raw["name_en"].strip()
             extra = enrich.get(name_en, {})
+            is_demo_val = to_bool(extra.get("is_demo", raw.get("is_demo")), default=True)
             values = {
                 "name_hi": extra.get("name_hi") or (raw.get("name_hi") or None),
                 "nco_code": extra.get("nco_code") or (raw.get("nco_code") or None),
@@ -87,13 +88,34 @@ def main(get_session=SessionLocal) -> None:
                 "riasec_c": to_float(raw.get("riasec_c")) or 0.0,
                 "source": extra.get("source") or raw["source"].strip(),
                 "source_year": to_int(extra.get("source_year") or raw.get("source_year")),
-                "is_demo": to_bool(extra.get("is_demo", raw.get("is_demo")), default=True),
+                "is_demo": is_demo_val,
                 "needs_review": to_bool(extra.get("needs_review", raw.get("needs_review"))),
                 "is_vocational": to_bool(
                     extra.get("is_vocational", raw.get("is_vocational")), default=True
                 ),
+                "evidence_grade": (
+                    extra.get("evidence_grade")
+                    or raw.get("evidence_grade")
+                    or ("D" if is_demo_val else "A")
+                ),
+                "retrieved_on": (
+                    extra.get("retrieved_on")
+                    or raw.get("retrieved_on")
+                    or "2026-10-11"
+                ),
+                "source_url": (
+                    extra.get("source_url")
+                    or raw.get("source_url")
+                    or "local://backend/app/data/seed/occupations.csv"
+                ),
+                "n": to_int(extra.get("n") or raw.get("n")),
+                "metric_definition": (
+                    extra.get("metric_definition")
+                    or raw.get("metric_definition")
+                    or None
+                ),
             }
-            result = _upsert_occupation(session, name_en, values)
+            result = upsert(session, Occupation, {"name_en": name_en}, values)
             if result == "insert":
                 inserts += 1
             else:
@@ -106,15 +128,6 @@ def main(get_session=SessionLocal) -> None:
     note = f" enriched from raw sources: {', '.join(raw_found)}" if raw_found else " (demo only)"
     print(f"build_occupation_master: {inserts} inserted, {updates} updated{note}")
 
-
-def _upsert_occupation(session, name_en: str, values: dict) -> str:
-    obj = session.query(Occupation).filter_by(name_en=name_en).one_or_none()
-    if obj is None:
-        session.add(Occupation(name_en=name_en, **values))
-        return "insert"
-    for field, value in values.items():
-        setattr(obj, field, value)
-    return "update"
 
 
 if __name__ == "__main__":

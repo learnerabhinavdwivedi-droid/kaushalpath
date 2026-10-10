@@ -10,7 +10,7 @@ Run after load_centres.py.
 """
 from __future__ import annotations
 
-from _common import SEED_DIR, read_csv, to_bool, to_float, to_int
+from _common import SEED_DIR, read_csv, to_bool, to_float, to_int, upsert
 from app.db.session import SessionLocal
 from app.models import Centre, Course, ProviderOutcome
 
@@ -52,14 +52,16 @@ def main(get_session=SessionLocal) -> None:
                 continue
 
             cohort_year = to_int(raw.get("cohort_year"))
+            is_demo_val = to_bool(raw.get("is_demo"), default=True)
             key = {
                 "provider_id": provider_id,
                 "course_id": course_id,
                 "cohort_year": cohort_year,
             }
+            certified_val = to_int(raw.get("certified"))
             values = {
                 "enrolled": to_int(raw.get("enrolled")),
-                "certified": to_int(raw.get("certified")),
+                "certified": certified_val,
                 "placed": to_int(raw.get("placed")),
                 "placement_rate": to_float(raw.get("placement_rate")),
                 "earnings_p25": to_float(raw.get("earnings_p25")),
@@ -69,10 +71,18 @@ def main(get_session=SessionLocal) -> None:
                 "apprenticeship_stipend_inr": to_float(raw.get("apprenticeship_stipend_inr")),
                 "source": raw["source"].strip(),
                 "source_year": to_int(raw.get("source_year")),
-                "is_demo": to_bool(raw.get("is_demo"), default=True),
+                "is_demo": is_demo_val,
                 "needs_review": to_bool(raw.get("needs_review")),
+                "evidence_grade": raw.get("evidence_grade")
+                or ("D" if is_demo_val else "B"),
+                "retrieved_on": raw.get("retrieved_on") or "2026-10-11",
+                "source_url": raw.get("source_url")
+                or "local://backend/app/data/seed/provider_outcomes.csv",
+                "n": to_int(raw.get("n")) or certified_val,
+                "metric_definition": raw.get("metric_definition")
+                or "Post-placement tracking outcome",
             }
-            if _upsert(session, key, values) == "insert":
+            if upsert(session, ProviderOutcome, key, values) == "insert":
                 inserts += 1
             else:
                 updates += 1
@@ -82,15 +92,6 @@ def main(get_session=SessionLocal) -> None:
 
     print(f"load_provider_outcomes: {inserts} inserted, {updates} updated, {missing} unmatched")
 
-
-def _upsert(session, key: dict, values: dict) -> str:
-    obj = session.query(ProviderOutcome).filter_by(**key).one_or_none()
-    if obj is None:
-        session.add(ProviderOutcome(**key, **values))
-        return "insert"
-    for field, value in values.items():
-        setattr(obj, field, value)
-    return "update"
 
 
 if __name__ == "__main__":

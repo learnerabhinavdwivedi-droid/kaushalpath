@@ -1,0 +1,188 @@
+# KaushalPath Source Registry (Phase 19 - Data Foundation)
+# Provenance contract: Every dataset in the stack is registered here with its
+# owner, license, grain, key columns, default evidence grade, and retrieval metadata.
+# Rules: Official bulk downloads only; do not scrape. (DATA ADDENDUM Rules 1, 7)
+
+sources:
+  - id: onet_interests
+    owner: "US Department of Labor / O*NET"
+    url: "https://www.onetcenter.org/database.html"
+    licence: "CC BY 4.0"
+    access_method: "bulk_download"
+    refresh_cadence: "annual"
+    grain: "occupation x interest_dimension"
+    key_columns:
+      - onetsoc_code
+      - element_id
+    evidence_grade: "A"
+    definition_notes: "Holland RIASEC profiles (0-10) and illustrative vocational activities"
+    retrieved_on: "2026-10-11"
+
+  - id: onet_abilities
+    owner: "US Department of Labor / O*NET"
+    url: "https://www.onetcenter.org/database.html"
+    licence: "CC BY 4.0"
+    access_method: "bulk_download"
+    refresh_cadence: "annual"
+    grain: "occupation x ability"
+    key_columns:
+      - onetsoc_code
+      - element_id
+    evidence_grade: "A"
+    definition_notes: "Ability requirements per occupation (number, verbal, spatial, mechanical)"
+    retrieved_on: "2026-10-11"
+
+  - id: onet_work_context
+    owner: "US Department of Labor / O*NET"
+    url: "https://www.onetcenter.org/database.html"
+    licence: "CC BY 4.0"
+    access_method: "bulk_download"
+    refresh_cadence: "annual"
+    grain: "occupation x context_element"
+    key_columns:
+      - onetsoc_code
+      - element_id
+    evidence_grade: "A"
+    definition_notes: "Physical, outdoor and hazard flags; preparation level (Job Zones 1-5) to sanity-check NSQF"
+    retrieved_on: "2026-10-11"
+
+  - id: aser_2023
+    owner: "Pratham Education Foundation"
+    url: "https://asercentre.org/aser-2023/"
+    licence: "CC BY 4.0"
+    access_method: "bulk_download"
+    refresh_cadence: "biennial"
+    grain: "respondent_cohort / district"
+    key_columns:
+      - state
+      - district
+      - age_band
+    evidence_grade: "B"
+    definition_notes: "Reading and arithmetic level mix for difficulty ladder; smartphone access for low-literacy design"
+    retrieved_on: "2026-10-11"
+
+  - id: sih_eval_or_pilot
+    owner: "MSDE / SIH Organisers / KaushalPath Pilots"
+    url: "https://www.sih.gov.in/sih2026PS"
+    licence: "PS Organiser Terms / Project Internal"
+    access_method: "direct_deposit"
+    refresh_cadence: "per_eval"
+    grain: "respondent x session"
+    key_columns:
+      - student_id
+      - session_id
+    evidence_grade: "A"
+    definition_notes: "Real answers for IRT calibration; provided placement and earnings datasets at eval"
+    retrieved_on: "2026-10-11"
+
+  - id: nco_crosswalk
+    owner: "Ministry of Labour & Employment / DGET"
+    url: "https://labour.gov.in/nco-2015"
+    licence: "Open Government Data (OGD) India"
+    access_method: "bulk_download"
+    refresh_cadence: "decadal"
+    grain: "trade / occupation code"
+    key_columns:
+      - nco_code
+      - isco_code
+      - soc_code
+    evidence_grade: "A"
+    definition_notes: "NCO-2015 with ISCO-08 and SOC crosswalks to join O*NET to Indian occupations and QPs"
+    retrieved_on: "2026-10-11"
+
+  - id: ncvet_qp
+    owner: "NCVET / NSDC"
+    url: "https://nqr.gov.in"
+    licence: "Open Government Data (OGD) India"
+    access_method: "bulk_download"
+    refresh_cadence: "monthly"
+    grain: "qualification_pack"
+    key_columns:
+      - qp_code
+      - nsqf_level
+    evidence_grade: "A"
+    definition_notes: "NCVET approved Qualification Packs and NQR qualification files: NSQF level, min education, hours"
+    retrieved_on: "2026-10-11"
+
+  - id: dgt_iti_grading
+    owner: "Directorate General of Training (DGT), MSDE"
+    url: "https://ncvtmis.gov.in"
+    licence: "Open Government Data (OGD) India"
+    access_method: "bulk_download"
+    refresh_cadence: "annual"
+    grain: "centre_code x trade_code"
+    key_columns:
+      - iti_code
+      - trade_code
+    evidence_grade: "A"
+    definition_notes: "DGT ITI list and grading scorecards (AY 2025-26): Pass %, admission %, trade diversity, female participation"
+    retrieved_on: "2026-10-11"
+
+  - id: dgt_strive
+    owner: "DGT / World Bank STRIVE Project"
+    url: "https://dgt.gov.in/STRIVE"
+    licence: "Official Project Report / Public Domain"
+    access_method: "bulk_download"
+    refresh_cadence: "per_study"
+    grain: "state x trade"
+    key_columns:
+      - state
+      - trade_id
+    evidence_grade: "B"
+    definition_notes: "DGT STRIVE tracer studies (UP, Rajasthan, Odisha, Maharashtra, national): Trade-level monthly income, employment status, apprenticeship stipend"
+    retrieved_on: "2026-10-11"
+
+  - id: pmkvy_placement
+    owner: "NSDC / MSDE"
+    url: "https://data.gov.in"
+    licence: "Government Open Data Licence - India (GODL)"
+    access_method: "api_bulk_download"
+    refresh_cadence: "quarterly"
+    grain: "state x sector x scheme_component"
+    key_columns:
+      - state
+      - sector_id
+    evidence_grade: "B"
+    definition_notes: "PMKVY placement: reported vs verified status, placement by state/sector/gender"
+    retrieved_on: "2026-10-11"
+
+  - id: plfs_microdata
+    owner: "MoSPI (Ministry of Statistics and Programme Implementation)"
+    url: "https://mospi.gov.in"
+    licence: "Open Government Data (OGD) India"
+    access_method: "bulk_download"
+    refresh_cadence: "annual"
+    grain: "occupation x state x training_status"
+    key_columns:
+      - nco_code
+      - state
+      - training_status
+    evidence_grade: "C"
+    definition_notes: "PLFS calendar year 2025 and 2023-24: Earnings p25, median, p75 by state, occupation and training status; self-employment share"
+    retrieved_on: "2026-10-11"
+
+  - id: scheme_guidelines
+    owner: "Ministry of Skill Development and Entrepreneurship (MSDE)"
+    url: "https://msde.gov.in"
+    licence: "Official Guidelines (Public Document)"
+    access_method: "bulk_download"
+    refresh_cadence: "per_release"
+    grain: "scheme_code"
+    key_columns:
+      - scheme_id
+    evidence_grade: "A"
+    definition_notes: "Scheme rules: PMKVY 4.0 guidelines, NAPS, CTS eligibility, stipends, and fees"
+    retrieved_on: "2026-10-11"
+
+  - id: demo_seed
+    owner: "KaushalPath Team"
+    url: "local://backend/app/data/seed/"
+    licence: "MIT"
+    access_method: "local_seed"
+    refresh_cadence: "static"
+    grain: "table_row"
+    key_columns:
+      - id
+    evidence_grade: "D"
+    definition_notes: "Curated synthetic baseline demo seed; all rows carry is_demo=True and evidence_grade=D"
+    retrieved_on: "2026-10-11"

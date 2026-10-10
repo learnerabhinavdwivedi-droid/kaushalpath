@@ -24,8 +24,8 @@ from app.db.base import utcnow
 from app.db.session import get_db
 from app.models.conversation import Conversation, ResistanceSnapshot, Turn
 from app.models.human import Escalation
-from app.models.room import CriteriaWeight, Room, RoomMember
 from app.models.mentor import MentorRequest
+from app.models.room import CriteriaWeight, Room, RoomMember
 from app.models.student import Student
 from app.models.user import User
 from app.schemas.auth import (

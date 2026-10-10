@@ -10,6 +10,7 @@ from app.db.base import utcnow
 from app.db.session import get_db
 from app.models import (
     Assessment,
+    CallRequest,
     CounsellorAssignment,
     CounsellorOverride,
     Escalation,
@@ -18,7 +19,6 @@ from app.models import (
     Recommendation,
     Room,
     RoomMember,
-    CallRequest,
     Student,
     User,
     Vote,

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-from sqlalchemy import DateTime, Integer, String, func
+from sqlalchemy import CheckConstraint, DateTime, Integer, String, Text, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -36,3 +36,20 @@ class SourceMixin:
     source_year: Mapped[int | None] = mapped_column(Integer, nullable=True)
     is_demo: Mapped[bool] = mapped_column(default=True, nullable=False)
     needs_review: Mapped[bool] = mapped_column(default=False, nullable=False)
+
+
+class EvidenceMixin:
+    """Phase 19 evidence policy fields."""
+
+    evidence_grade: Mapped[str] = mapped_column(
+        String(1),
+        CheckConstraint("evidence_grade IN ('A', 'B', 'C', 'D')"),
+        default="D",
+        server_default="D",
+        nullable=False,
+    )
+    n: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    source_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    retrieved_on: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    metric_definition: Mapped[str | None] = mapped_column(Text, nullable=True)
+

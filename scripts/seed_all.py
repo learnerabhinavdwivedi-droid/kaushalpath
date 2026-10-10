@@ -42,6 +42,20 @@ def main() -> None:
     load_progression.main()
     load_schemes.main()
 
+    # Phase 19 Data Foundation: canonical LGD geo and trade resolution
+    import resolve_trades
+    from app.db.session import SessionLocal
+    from app.services import geo_svc
+
+    session = SessionLocal()
+    try:
+        geo_count, alias_count = geo_svc.seed_canonical_geo(session)
+        print(f"seed_all: seeded {geo_count} canonical geo districts, {alias_count} geo aliases")
+    finally:
+        session.close()
+
+    resolve_trades.main()
+
     # Retrieval artefact for Phase 3 (no-ops if the embedding stack is absent).
     build_retrieval_index.main()
 
