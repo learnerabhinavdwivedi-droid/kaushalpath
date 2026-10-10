@@ -52,6 +52,32 @@ def to_float(value: Any) -> float | None:
     return float(value)
 
 
+def check_provenance(model: Any, key: dict[str, Any], values: dict[str, Any]) -> None:
+    """Enforce Data Addendum Rule 1: No loader writes without provenance."""
+    if hasattr(model, "evidence_grade") or hasattr(model, "source"):
+        combined = {**key, **values}
+        source = combined.get("source")
+        if not source or not str(source).strip():
+            raise ValueError(
+                f"Missing required provenance field 'source' for model {model.__name__} "
+                "(DATA ADDENDUM Rule 1)"
+            )
+        if hasattr(model, "evidence_grade"):
+            grade = combined.get("evidence_grade")
+            if not grade or grade not in {"A", "B", "C", "D"}:
+                raise ValueError(
+                    f"Missing or invalid required provenance field 'evidence_grade' "
+                    f"for model {model.__name__}: got {grade!r} (DATA ADDENDUM Rule 1)"
+                )
+        if hasattr(model, "retrieved_on"):
+            retrieved = combined.get("retrieved_on")
+            if not retrieved or not str(retrieved).strip():
+                raise ValueError(
+                    f"Missing required provenance field 'retrieved_on' for model {model.__name__} "
+                    "(DATA ADDENDUM Rule 1)"
+                )
+
+
 def upsert(
     session: Any,
     model: Any,
@@ -59,6 +85,7 @@ def upsert(
     values: dict[str, Any],
 ) -> str:
     """Insert-or-update a row by its natural key. Returns 'insert' or 'update'."""
+    check_provenance(model, key, values)
     obj = session.query(model).filter_by(**key).one_or_none()
     if obj is None:
         obj = model(**key, **values)

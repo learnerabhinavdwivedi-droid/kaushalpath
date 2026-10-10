@@ -4,7 +4,9 @@ from app.models.audit import AuditLog
 from app.models.centre import Centre
 from app.models.conversation import Conversation, ResistanceSnapshot, Turn
 from app.models.course import Course
+from app.models.crosswalk import Crosswalk
 from app.models.feedback import Feedback
+from app.models.geo import Geo, GeoAlias
 from app.models.human import (
     CounsellorAssignment,
     CounsellorOverride,
@@ -17,9 +19,10 @@ from app.models.occupation import Occupation
 from app.models.progression import ProgressionPath
 from app.models.provider_outcome import ProviderOutcome
 from app.models.recommendation import Recommendation
-from app.models.room import CriteriaWeight, Room, RoomMember, CallRequest
+from app.models.room import CallRequest, CriteriaWeight, Room, RoomMember
 from app.models.scheme import Scheme
 from app.models.student import Student
+from app.models.trade import Trade, TradeAlias
 from app.models.user import User
 from app.models.vote import Vote
 
@@ -50,4 +53,10 @@ __all__ = [
     "Conversation",
     "Turn",
     "ResistanceSnapshot",
+    "Trade",
+    "TradeAlias",
+    "Crosswalk",
+    "Geo",
+    "GeoAlias",
 ]
+

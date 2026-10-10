@@ -4,10 +4,10 @@ from __future__ import annotations
 from sqlalchemy import Float, ForeignKey, Integer, Numeric
 from sqlalchemy.orm import Mapped, mapped_column
 
-from app.db.base import Base, SourceMixin, TimestampMixin
+from app.db.base import Base, EvidenceMixin, SourceMixin, TimestampMixin
 
 
-class ProviderOutcome(Base, TimestampMixin, SourceMixin):
+class ProviderOutcome(Base, TimestampMixin, SourceMixin, EvidenceMixin):
     __tablename__ = "provider_outcomes"
 
     id: Mapped[int] = mapped_column(primary_key=True)

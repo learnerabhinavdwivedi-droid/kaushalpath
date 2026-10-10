@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from app.api.deps import get_current_user
 from app.db.session import get_db
 from app.models.human import Objection
-from app.models.room import CriteriaWeight, Room, RoomMember, CallRequest
+from app.models.room import CallRequest, CriteriaWeight, Room, RoomMember
 from app.models.student import Student
 from app.models.user import User
 from app.models.vote import Vote

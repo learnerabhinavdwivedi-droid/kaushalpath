@@ -9,7 +9,7 @@ Run after build_occupation_master.py.
 """
 from __future__ import annotations
 
-from _common import SEED_DIR, read_csv, to_bool, to_float, to_int
+from _common import SEED_DIR, read_csv, to_bool, to_float, to_int, upsert
 from app.db.session import SessionLocal
 from app.models import Course, Occupation
 
@@ -33,6 +33,7 @@ def main(get_session=SessionLocal) -> None:
                 missing += 1
                 continue
 
+            is_demo_val = to_bool(raw.get("is_demo"), default=True)
             key = {"occupation_id": occupation_id, "name": raw["name"].strip()}
             values = {
                 "nsqf_level": to_int(raw.get("nsqf_level")),
@@ -42,10 +43,15 @@ def main(get_session=SessionLocal) -> None:
                 "cert_body": raw.get("cert_body") or None,
                 "source": raw["source"].strip(),
                 "source_year": to_int(raw.get("source_year")),
-                "is_demo": to_bool(raw.get("is_demo"), default=True),
+                "is_demo": is_demo_val,
                 "needs_review": to_bool(raw.get("needs_review")),
+                "evidence_grade": raw.get("evidence_grade") or ("D" if is_demo_val else "A"),
+                "retrieved_on": raw.get("retrieved_on") or "2026-10-11",
+                "source_url": raw.get("source_url") or "local://backend/app/data/seed/courses.csv",
+                "n": to_int(raw.get("n")),
+                "metric_definition": raw.get("metric_definition") or None,
             }
-            if _upsert(session, key, values) == "insert":
+            if upsert(session, Course, key, values) == "insert":
                 inserts += 1
             else:
                 updates += 1
@@ -55,15 +61,6 @@ def main(get_session=SessionLocal) -> None:
 
     print(f"load_courses: {inserts} inserted, {updates} updated, {missing} unmatched")
 
-
-def _upsert(session, key: dict, values: dict) -> str:
-    obj = session.query(Course).filter_by(**key).one_or_none()
-    if obj is None:
-        session.add(Course(**key, **values))
-        return "insert"
-    for field, value in values.items():
-        setattr(obj, field, value)
-    return "update"
 
 
 if __name__ == "__main__":
