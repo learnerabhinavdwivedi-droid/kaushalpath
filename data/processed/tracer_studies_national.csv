@@ -1,0 +1,3 @@
+state,trade_id,occupation_name,placement_rate,earnings_raw,earnings_cpi_2026,earnings_shape,apprenticeship_stipend,sample_size_n,definition,page_ref,source_url
+National,5,Electrician,0.71,14000.0,15199.79,median,8400.0,5200,survey,"National DGT STRIVE Tracer Report 2024, Table 1.1, p. 12",https://dgt.gov.in/STRIVE
+National,1,Fitter,0.68,13400.0,14548.37,median,8100.0,4800,survey,"National DGT STRIVE Tracer Report 2024, Table 1.2, p. 14",https://dgt.gov.in/STRIVE

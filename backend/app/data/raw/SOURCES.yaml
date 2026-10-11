@@ -186,3 +186,17 @@ sources:
     evidence_grade: "D"
     definition_notes: "Curated synthetic baseline demo seed; all rows carry is_demo=True and evidence_grade=D"
     retrieved_on: "2026-10-11"
+
+  - id: cpi_series
+    owner: "MoSPI / National Statistical Office (NSO)"
+    url: "https://mospi.gov.in/cpi"
+    licence: "Open Government Data (OGD) India"
+    access_method: "official_bulletin"
+    refresh_cadence: "monthly"
+    grain: "year x index"
+    key_columns:
+      - year
+      - cpi_combined_index
+    evidence_grade: "A"
+    definition_notes: "All India Consumer Price Index (Combined) Base 2012=100 for normalising historical earnings to 2026 base year (2021: 161.3, 2022: 172.1, 2023: 181.4, 2024: 190.2, 2025: 198.8, 2026: 206.5)"
+    retrieved_on: "2026-10-11"

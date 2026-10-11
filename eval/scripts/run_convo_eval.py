@@ -18,7 +18,7 @@ BACKEND_DIR = REPO_ROOT / "backend"
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from app.services.conversation import (
+from app.services.conversation import (  # noqa: E402
     classify_utterance,
     detect_language,
     generate_response,

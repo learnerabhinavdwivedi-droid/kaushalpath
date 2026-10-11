@@ -86,14 +86,30 @@ def adaptive_top3(
 ) -> tuple[str, int]:
     """Drive the adaptive interest engine over a *fixed* response vector.
 
-    The engine chooses which item to ask; the respondent's answer to that item
-    is looked up in `responses` (the same vector the full reference is scored
-    from). Returns (top3_code, n_interest_items).
+    The engine chooses which item to ask; when top dimensions are close,
+    it asks forced-choice tie-break pairs to resolve ordering.
+    Returns (top3_code, n_interest_items).
     """
     state = adaptive.new_state()
+    full_riasec = scoring.interest_scores(responses, bank)
     while True:
-        item = adaptive.next_interest_item(state, bank)
-        if item is None or adaptive.is_interest_complete(state, bank):
+        item = adaptive.next_item(state, bank, [])
+        if item is None or state["phase"] == "aptitude":
             break
-        adaptive.record_interest_answer(state, bank, item["id"], responses[item["id"]])
+        item_id = item["id"]
+        if item_id.startswith("PAIR_"):
+            # Compare respondent's preference for the contested dimensions
+            da, db = item.get("dim_a", ""), item.get("dim_b", "")
+            if da and db:
+                choice = "A" if full_riasec.get(da, 0.5) >= full_riasec.get(db, 0.5) else "B"
+            else:
+                choice = "A"
+            adaptive.record_interest_answer(state, bank, item_id, choice)
+        else:
+            if item_id in responses:
+                adaptive.record_interest_answer(state, bank, item_id, responses[item_id])
+            else:
+                break
     return state["top3_code"], len(state["interest_responses"])
+
+

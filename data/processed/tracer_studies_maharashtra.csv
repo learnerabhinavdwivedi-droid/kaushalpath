@@ -1,0 +1,30 @@
+state,trade_id,occupation_name,placement_rate,earnings_raw,earnings_cpi_2026,earnings_shape,apprenticeship_stipend,sample_size_n,definition,page_ref,source_url
+Maharashtra,5,Electrician,0.74,14500.0,15742.64,median,8500.0,620,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.2, p. 38",https://dgt.gov.in/STRIVE
+Maharashtra,1,Fitter,0.71,13800.0,14982.65,median,8200.0,580,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.2, p. 39",https://dgt.gov.in/STRIVE
+Maharashtra,4,Welder,0.68,13200.0,14331.23,mean,7800.0,340,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.3, p. 41",https://dgt.gov.in/STRIVE
+Maharashtra,22,Solar PV Technician,0.65,14000.0,15199.79,median,8000.0,180,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.5, p. 45",https://dgt.gov.in/STRIVE
+Maharashtra,3,Machinist,0.73,15000.0,16285.49,median,9000.0,290,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.6, p. 47",https://dgt.gov.in/STRIVE
+Maharashtra,2,Turner,0.7,13500.0,14656.94,median,8000.0,210,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.6, p. 48",https://dgt.gov.in/STRIVE
+Maharashtra,7,Mechanic Motor Vehicle,0.69,14200.0,15416.93,median,8500.0,410,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.7, p. 50",https://dgt.gov.in/STRIVE
+Maharashtra,6,Electronics Mechanic,0.66,13800.0,14982.65,median,8200.0,260,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.8, p. 52",https://dgt.gov.in/STRIVE
+Maharashtra,9,Plumber,0.62,12500.0,13571.24,mean,7500.0,190,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.9, p. 55",https://dgt.gov.in/STRIVE
+Maharashtra,10,Carpenter,0.58,12000.0,13028.39,mean,7000.0,140,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.9, p. 56",https://dgt.gov.in/STRIVE
+Maharashtra,14,Computer Hardware Maintenance,0.64,13000.0,14114.09,median,7500.0,520,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.10, p. 58",https://dgt.gov.in/STRIVE
+Maharashtra,18,Foundryman,0.55,11500.0,12485.54,mean,6800.0,380,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.11, p. 60",https://dgt.gov.in/STRIVE
+Maharashtra,146,Draughtsman,0.67,14000.0,15199.79,median,8000.0,170,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.12, p. 62",https://dgt.gov.in/STRIVE
+Maharashtra,16,CNC Turning Operator,0.68,14200.0,15416.93,median,8200.0,160,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.12, p. 63",https://dgt.gov.in/STRIVE
+Maharashtra,13,Refrigeration and AC Mechanic,0.72,14800.0,16068.35,median,8800.0,240,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.13, p. 65",https://dgt.gov.in/STRIVE
+Maharashtra,8,Mechanic Diesel,0.67,13600.0,14765.51,median,8000.0,310,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.14, p. 67",https://dgt.gov.in/STRIVE
+Maharashtra,21,Wireman,0.65,12800.0,13896.95,mean,7500.0,280,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.15, p. 69",https://dgt.gov.in/STRIVE
+Maharashtra,15,Instrument Mechanic,0.7,15200.0,16502.63,median,9200.0,130,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.16, p. 71",https://dgt.gov.in/STRIVE
+Maharashtra,19,Tool and Die Maker,0.75,16000.0,17371.19,median,9500.0,150,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.18, p. 75",https://dgt.gov.in/STRIVE
+Maharashtra,147,Surveyor,0.64,13500.0,14656.94,median,7800.0,110,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.19, p. 77",https://dgt.gov.in/STRIVE
+Maharashtra,12,Painter,0.56,11800.0,12811.25,mean,7000.0,95,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.20, p. 79",https://dgt.gov.in/STRIVE
+Maharashtra,17,Sheet Metal Technician,0.63,12600.0,13679.81,mean,7400.0,120,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.21, p. 81",https://dgt.gov.in/STRIVE
+Maharashtra,11,Mason,0.54,11200.0,12159.83,mean,6500.0,85,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.22, p. 83",https://dgt.gov.in/STRIVE
+Maharashtra,20,Grinder,0.59,12000.0,13028.39,mean,7000.0,240,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.23, p. 85",https://dgt.gov.in/STRIVE
+Maharashtra,119,Food Processing Technician,0.61,12400.0,13462.67,mean,7200.0,130,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.24, p. 87",https://dgt.gov.in/STRIVE
+Maharashtra,23,Wind Turbine Technician,0.7,15500.0,16828.34,median,9200.0,140,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.25, p. 89",https://dgt.gov.in/STRIVE
+Maharashtra,24,Lift and Escalator Technician,0.72,15800.0,17154.05,median,9400.0,150,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.26, p. 91",https://dgt.gov.in/STRIVE
+Maharashtra,25,HVAC Technician,0.71,15200.0,16502.63,median,9000.0,160,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.27, p. 93",https://dgt.gov.in/STRIVE
+Maharashtra,26,Battery Assembler,0.66,14000.0,15199.79,median,8400.0,180,survey,"Maharashtra STRIVE Tracer Study 2024, Table 4.28, p. 95",https://dgt.gov.in/STRIVE

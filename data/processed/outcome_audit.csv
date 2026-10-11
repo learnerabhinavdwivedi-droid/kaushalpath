@@ -1,0 +1,13 @@
+evidence_id,trade_id,state,metric,severity,issue,page_ref,source_url
+127,5,Maharashtra,placement_rate,INFO,Data older than 3 years (source_year=2022),"NSDC PMKVY 2.0 Evaluation Study, Annexure 3, p. 112",https://data.gov.in
+128,5,Maharashtra,self_employed_pct,INFO,Data older than 3 years (source_year=2022),"NSDC PMKVY 2.0 Evaluation Study, Annexure 3, p. 112",https://data.gov.in
+129,22,Maharashtra,placement_rate,INFO,Data older than 3 years (source_year=2022),"NSDC PMKVY 2.0 Evaluation Study, Annexure 3, p. 114",https://data.gov.in
+130,22,Maharashtra,self_employed_pct,INFO,Data older than 3 years (source_year=2022),"NSDC PMKVY 2.0 Evaluation Study, Annexure 3, p. 114",https://data.gov.in
+131,43,Maharashtra,placement_rate,INFO,Data older than 3 years (source_year=2022),"NSDC PMKVY 2.0 Evaluation Study, Annexure 3, p. 118",https://data.gov.in
+132,43,Maharashtra,self_employed_pct,INFO,Data older than 3 years (source_year=2022),"NSDC PMKVY 2.0 Evaluation Study, Annexure 3, p. 118",https://data.gov.in
+137,5,Uttar Pradesh,placement_rate,INFO,Data older than 3 years (source_year=2022),"NSDC PMKVY 2.0 UP State Extract, Table 2.1, p. 45",https://data.gov.in
+138,5,Uttar Pradesh,self_employed_pct,INFO,Data older than 3 years (source_year=2022),"NSDC PMKVY 2.0 UP State Extract, Table 2.1, p. 45",https://data.gov.in
+139,5,Rajasthan,placement_rate,INFO,Data older than 3 years (source_year=2022),"NSDC PMKVY 2.0 Rajasthan Extract, Table 2.1, p. 48",https://data.gov.in
+140,5,Rajasthan,self_employed_pct,INFO,Data older than 3 years (source_year=2022),"NSDC PMKVY 2.0 Rajasthan Extract, Table 2.1, p. 48",https://data.gov.in
+141,5,Gujarat,placement_rate,INFO,Data older than 3 years (source_year=2022),"NSDC PMKVY 2.0 Gujarat Extract, Table 2.1, p. 52",https://data.gov.in
+142,5,Gujarat,self_employed_pct,INFO,Data older than 3 years (source_year=2022),"NSDC PMKVY 2.0 Gujarat Extract, Table 2.1, p. 52",https://data.gov.in

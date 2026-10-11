@@ -18,6 +18,7 @@ from sqlalchemy.orm.attributes import flag_modified
 
 from app.ml.assessment import adaptive, scoring
 from app.models import Assessment, Student, User
+from app.services.geo_svc import canonical_district_name, canonical_state_name
 
 _BAD_REQUEST = 400
 
@@ -45,16 +46,20 @@ def _item_out(item: dict, section: str, lang: str) -> dict:
         return {
             "id": item["id"],
             "section": "aptitude",
-            "dimension": item["dimension"],
+            "dimension": item.get("construct") or item.get("dimension", ""),
             "text": text,
             "options": list(item["options"]),
+            "item_type": item.get("item_type", "mcq"),
         }
     return {
         "id": item["id"],
         "section": "interest",
         "text": text,
-        "scale": [1, 2, 3, 4, 5],
+        "scale": item.get("scale", [1, 2, 3, 4, 5]),
+        "item_type": item.get("item_type", "likert5"),
+        "options": item.get("options"),
     }
+
 
 
 def _persist_state(assessment: Assessment, state: dict) -> None:
@@ -78,7 +83,12 @@ def get_or_create_student(
     student = session.scalar(select(Student).where(Student.id == student_id))
     if student is not None:
         if constraints:
-            for key, value in constraints.items():
+            c_dict = dict(constraints)
+            if c_dict.get("state"):
+                c_dict["state"] = canonical_state_name(c_dict["state"])
+            if c_dict.get("district"):
+                c_dict["district"] = canonical_district_name(c_dict["district"], c_dict.get("state"))
+            for key, value in c_dict.items():
                 if value is not None:
                     setattr(student, key, value)
             try:
@@ -88,7 +98,12 @@ def get_or_create_student(
                 raise BadRequest(str(exc.orig)) from exc
         return student
 
-    c = constraints or {}
+    c = dict(constraints or {})
+    raw_state = c.get("state")
+    canon_state = canonical_state_name(raw_state) if raw_state else "unknown"
+    raw_dist = c.get("district")
+    canon_dist = canonical_district_name(raw_dist, canon_state) if raw_dist else "unknown"
+
     user = User(
         email=f"student_{student_id}@example.test",
         hashed_password="demo-no-auth",
@@ -102,8 +117,8 @@ def get_or_create_student(
         user_id=user.id,
         age=c.get("age"),
         edu_level=c.get("edu_level", "12th"),
-        district=c.get("district", "unknown"),
-        state=c.get("state", "unknown"),
+        district=canon_dist,
+        state=canon_state,
         budget_band=c.get("budget_band", "mid"),
         income_band=c.get("income_band"),
         relocate_ok=c.get("relocate_ok", False),
@@ -210,20 +225,41 @@ def answer_item(
         raise BadRequest(f"expected answer for item {current['id']!r}, got {item_id!r}")
 
     if current["section"] == "interest":
-        try:
-            value = int(answer)
-        except (TypeError, ValueError):
-            raise BadRequest("interest answer must be an integer 1..5") from None
-        try:
-            adaptive.record_interest_answer(state, interest_bank, current["id"], value)
-        except ValueError as exc:  # engine range / unknown-item guard
-            raise BadRequest(str(exc)) from exc
+        if current.get("item_type") == "pair" or current["id"].startswith("PAIR_"):
+            try:
+                adaptive.record_interest_answer(state, interest_bank, current["id"], answer)
+            except ValueError as exc:
+                raise BadRequest(str(exc)) from exc
+        else:
+            try:
+                value = int(answer)
+            except (TypeError, ValueError):
+                raise BadRequest("interest answer must be an integer 1..5 (or 1..3 for likert3)") from None
+            try:
+                adaptive.record_interest_answer(state, interest_bank, current["id"], value)
+            except ValueError as exc:  # engine range / unknown-item guard
+                raise BadRequest(str(exc)) from exc
     else:
         if str(answer) not in [str(o) for o in current["options"]]:
             raise BadRequest("answer must be one of the item's options")
         adaptive.record_aptitude_answer(
             state, interest_bank, aptitude_bank, current["id"], answer
         )
+
+    # Telemetry logging (AssessmentResponse)
+    from app.models.assessment import AssessmentResponse
+    resp_record = AssessmentResponse(
+        session_hash=f"sess_{assessment.id}",
+        item_id=current["id"],
+        response=str(answer),
+        latency_ms=None,
+        position=state.get("items_answered", 0),
+        lang=state.get("lang", "en"),
+        device_class="mobile",
+        guardian_consent=True,
+    )
+    session.add(resp_record)
+
 
     next_item = adaptive.next_item(state, interest_bank, aptitude_bank)
     if state.get("status") == "completed":

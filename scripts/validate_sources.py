@@ -33,7 +33,8 @@ REQUIRED_FIELDS = {
     "retrieved_on",
 }
 VALID_GRADES = {"A", "B", "C", "D"}
-IGNORED_FILES = {"README.md", "SOURCES.yaml", ".gitkeep", ".gitignore"}
+CONFIG_FILES = {"aptitude_map.yaml", "work_flags.yaml"}
+IGNORED_FILES = {"README.md", "SOURCES.yaml", ".gitkeep", ".gitignore"} | CONFIG_FILES
 
 
 def validate_registry() -> tuple[dict[str, dict], list[str]]:

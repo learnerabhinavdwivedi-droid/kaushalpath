@@ -8,6 +8,7 @@ interface QuestionCardProps {
   onSelect: (optionId: string) => void;
   selectedId?: string;
   locked?: boolean;
+  itemType?: 'likert3' | 'pair' | 'likert5' | 'mcq';
 }
 
 const OPTION_COLORS = [
@@ -18,7 +19,14 @@ const OPTION_COLORS = [
   'bg-gradient-to-r from-purple-50 to-fuchsia-100 hover:from-purple-100 hover:to-fuchsia-200 border-purple-200 text-purple-950'
 ];
 
-export const QuestionCard: React.FC<QuestionCardProps> = ({ questionText, options, onSelect, selectedId, locked }) => {
+export const QuestionCard: React.FC<QuestionCardProps> = ({
+  questionText,
+  options,
+  onSelect,
+  selectedId,
+  locked,
+  itemType,
+}) => {
   const { i18n } = useTranslation();
 
   const speakText = () => {
@@ -28,6 +36,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ questionText, option
       window.speechSynthesis.speak(utterance);
     }
   };
+
+  const isLikert3 = itemType === 'likert3' || options.length === 3;
+  const isPair = itemType === 'pair';
 
   return (
     <div className="card space-y-6 bg-white/90 backdrop-blur-sm border-2 border-accent/10 shadow-xl rounded-3xl p-8">
@@ -44,7 +55,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ questionText, option
         )}
       </div>
       
-      <div className="space-y-4 pt-4">
+      <div className={isLikert3 ? 'grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4' : isPair ? 'grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4' : 'space-y-4 pt-4'}>
         {options.map((opt, index) => {
           const colorClass = OPTION_COLORS[index % OPTION_COLORS.length];
           const isSelected = selectedId === opt.id;
@@ -54,7 +65,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ questionText, option
               key={opt.id}
               onClick={() => onSelect(opt.id)}
               disabled={locked}
-              className={`w-full p-5 rounded-2xl text-left border-2 flex items-center gap-5 transition-all duration-300 transform ${
+              className={`w-full p-5 rounded-2xl text-left border-2 flex items-center justify-center gap-4 transition-all duration-300 transform ${
                 isSelected 
                   ? 'border-accent shadow-lg scale-[1.02] bg-white ring-4 ring-accent/20' 
                   : `${colorClass} ${locked ? 'opacity-50 cursor-not-allowed' : 'hover:-translate-y-1 hover:shadow-md'}`
@@ -69,3 +80,4 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ questionText, option
     </div>
   );
 };
+

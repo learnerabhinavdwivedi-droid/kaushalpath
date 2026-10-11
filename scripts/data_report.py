@@ -23,6 +23,8 @@ from app.models import (
     GeoAlias,
     Market,
     Occupation,
+    OccupationAbility,
+    OutcomeEvidence,
     ProgressionPath,
     ProviderOutcome,
     Scheme,
@@ -88,6 +90,32 @@ TABLES = {
         Scheme,
         ["name", "benefit_text_en", "benefit_text_hi", "source"],
     ),
+    "occupation_abilities": (
+        OccupationAbility,
+        [
+            "occupation_id",
+            "required_num",
+            "required_verbal",
+            "required_spatial",
+            "required_mech",
+            "primary_ability",
+            "source",
+            "evidence_grade",
+        ],
+    ),
+    "outcome_evidence": (
+        OutcomeEvidence,
+        [
+            "trade_id",
+            "geo_level",
+            "metric",
+            "value",
+            "n",
+            "definition",
+            "source",
+            "evidence_grade",
+        ],
+    ),
 }
 
 
@@ -137,9 +165,17 @@ def _table_report(session, name: str, model, key_cols: list[str]) -> None:
             .all()
         )
         for st, gr, cnt in state_grades[:10]:
-            print(f"    {st:<20} [Grade {gr}]: {cnt}")
-        if len(state_grades) > 10:
-            print(f"    ... and {len(state_grades) - 10} more state x grade combinations.")
+            st_label = str(st or "National")
+            print(f"    {st_label:<20} [Grade {gr}]: {cnt}")
+    if hasattr(model, "primary_ability"):
+        print("  distribution by primary ability:")
+        for prim, cnt in (
+            session.query(model.primary_ability, func.count(pk))
+            .group_by(model.primary_ability)
+            .order_by(func.count(pk).desc())
+            .all()
+        ):
+            print(f"    {str(prim or '(unset)'):<15}: {cnt:4d}")
 
     print("  rows per source:")
     for source, cnt in session.query(model.source, func.count(pk)).group_by(
@@ -166,6 +202,10 @@ def _dup_pct(session, model, name: str) -> float:
         cols = [model.from_course_id, model.to_label]
     elif name == "schemes":
         cols = [model.name]
+    elif name == "occupation_abilities":
+        cols = [model.occupation_id]
+    elif name == "outcome_evidence":
+        cols = [model.trade_id, model.geo_level, model.state, model.period_start, model.metric, model.source_id]
     else:  # market
         cols = [model.occupation_id, model.state, model.district, model.year]
 
@@ -247,12 +287,85 @@ def _coverage(session) -> None:
     print(f"  occupations with Hindi name: {occ_with_hi}/{total_occ}")
     print(f"  occupations with RIASEC vector: {occ_with_riasec}/{total_occ}")
 
+    # Phase 20 Grounded Metrics
+    real_riasec_voc = session.query(func.count(Occupation.id)).filter(
+        Occupation.is_vocational.is_(True),
+        Occupation.is_demo.is_(False),
+        Occupation.evidence_grade == "A",
+    ).scalar() or 0
+    real_riasec_pct = 100.0 * real_riasec_voc / voc_occ if voc_occ else 0.0
+    print(f"  vocational trades with real Grade-A RIASEC vector: {real_riasec_voc}/{voc_occ} ({real_riasec_pct:5.1f}%)")
+
+    real_ability_voc = session.query(func.count(OccupationAbility.id)).join(
+        Occupation, OccupationAbility.occupation_id == Occupation.id
+    ).filter(
+        Occupation.is_vocational.is_(True),
+        OccupationAbility.is_demo.is_(False),
+        OccupationAbility.evidence_grade == "A",
+    ).scalar() or 0
+    real_ability_pct = 100.0 * real_ability_voc / voc_occ if voc_occ else 0.0
+    print(f"  vocational trades with real Grade-A ability vector: {real_ability_voc}/{voc_occ} ({real_ability_pct:5.1f}%)")
+
+    occ_with_flags = session.query(func.count(Occupation.id)).filter(
+        Occupation.work_flags.isnot(None)
+    ).scalar() or 0
+    print(f"  occupations with grounded work_flags: {occ_with_flags}/{total_occ}")
+
     states = set()
     for (state,) in session.query(Centre.state).distinct().all():
         states.add(state)
     for (state,) in session.query(Market.state).distinct().all():
         states.add(state)
     print(f"  distinct states covered (centres+market): {len(states)}")
+
+
+def _outcome_coverage_breakdown(session) -> None:
+    print("\n== Outcome Evidence Coverage Breakdown (Phase 22) ==")
+    total_ev = session.query(func.count(OutcomeEvidence.id)).scalar() or 0
+    print(f"  total outcome evidence rows: {total_ev}")
+    if not total_ev:
+        return
+
+    # Metric x Grade breakdown
+    print("  coverage per metric x grade:")
+    for (metric, grade, cnt) in (
+        session.query(OutcomeEvidence.metric, OutcomeEvidence.evidence_grade, func.count(OutcomeEvidence.id))
+        .group_by(OutcomeEvidence.metric, OutcomeEvidence.evidence_grade)
+        .order_by(OutcomeEvidence.metric, OutcomeEvidence.evidence_grade)
+        .all()
+    ):
+        print(f"    {metric:<28} Grade {grade}: {cnt:4d}")
+
+    # Grade A/B earnings coverage per state
+    print("  grade A/B earnings coverage by state (trades count):")
+    pilot_trades = (
+        session.query(func.count(func.distinct(OutcomeEvidence.trade_id)))
+        .filter(
+            OutcomeEvidence.metric == "earnings_monthly_inr",
+            OutcomeEvidence.evidence_grade.in_(["A", "B"]),
+            OutcomeEvidence.state.ilike("Maharashtra"),
+        )
+        .scalar() or 0
+    )
+    print(f"    Pilot state (Maharashtra): {pilot_trades} trades with verified earnings (target >= 25)")
+
+    other_states_covered = 0
+    for state, cnt in (
+        session.query(OutcomeEvidence.state, func.count(func.distinct(OutcomeEvidence.trade_id)))
+        .filter(
+            OutcomeEvidence.metric == "earnings_monthly_inr",
+            OutcomeEvidence.evidence_grade.in_(["A", "B"]),
+            OutcomeEvidence.state.isnot(None),
+            ~OutcomeEvidence.state.ilike("Maharashtra"),
+            ~OutcomeEvidence.state.ilike("National"),
+        )
+        .group_by(OutcomeEvidence.state)
+        .all()
+    ):
+        print(f"    {state:<24}: {cnt:4d} trades")
+        if cnt >= 1:
+            other_states_covered += 1
+    print(f"  other states with verified earnings: {other_states_covered} (target >= 5)")
 
 
 def main() -> None:
@@ -262,6 +375,7 @@ def main() -> None:
             _table_report(session, name, model, key_cols)
         _trades_and_crosswalk_report(session)
         _coverage(session)
+        _outcome_coverage_breakdown(session)
     finally:
         session.close()
 

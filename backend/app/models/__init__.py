@@ -1,5 +1,5 @@
 """Import all models so `Base.metadata` is fully populated (Alembic + create_all)."""
-from app.models.assessment import Assessment
+from app.models.assessment import Assessment, AssessmentResponse
 from app.models.audit import AuditLog
 from app.models.centre import Centre
 from app.models.conversation import Conversation, ResistanceSnapshot, Turn
@@ -16,6 +16,8 @@ from app.models.human import (
 from app.models.market import Market
 from app.models.mentor import MentorRequest
 from app.models.occupation import Occupation
+from app.models.occupation_ability import OccupationAbility
+from app.models.outcome_evidence import OutcomeEvidence
 from app.models.progression import ProgressionPath
 from app.models.provider_outcome import ProviderOutcome
 from app.models.recommendation import Recommendation
@@ -30,7 +32,10 @@ __all__ = [
     "User",
     "Student",
     "Assessment",
+    "AssessmentResponse",
     "Occupation",
+    "OccupationAbility",
+    "OutcomeEvidence",
     "Course",
     "Centre",
     "Market",

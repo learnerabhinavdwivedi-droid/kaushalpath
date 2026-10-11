@@ -22,6 +22,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 import resolve_trades  # noqa: E402
 from _common import check_provenance  # noqa: E402
+
 from app.models.market import Market  # noqa: E402
 from app.services import evidence_svc, geo_svc  # noqa: E402
 

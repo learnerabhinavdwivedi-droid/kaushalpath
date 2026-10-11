@@ -537,5 +537,15 @@
     "whatsapp": "WhatsApp",
     "share_pdf": "Share PDF",
     "share_unsupported": "Direct PDF sharing is not supported on this browser. Opening WhatsApp..."
+  },
+  "profile": {
+    "title": "Your Profile & Preferences",
+    "edu_level": "Highest Education Level",
+    "district": "Home District",
+    "state": "Home State",
+    "budget": "Maximum Course Fee Budget (INR)",
+    "duration": "Preferred Maximum Duration (Months)",
+    "relocate": "Open to relocating or commuting outside home district",
+    "relocate_hint": "Enable to discover opportunities across your state and nationwide hubs"
   }
 }

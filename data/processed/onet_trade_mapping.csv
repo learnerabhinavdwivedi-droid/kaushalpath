@@ -1,0 +1,104 @@
+name_en,primary_onet_code,contributing_codes,riasec_r,riasec_i,riasec_a,riasec_s,riasec_e,riasec_c,max_spread,required_num,required_verbal,required_spatial,required_mech,primary_ability,outdoor,hazard,physical_effort,customer_contact,method,confidence,needs_review
+Fitter,49-9041.00,49-9041.00,1.0,0.335,0.0017,0.0,0.0283,0.555,0.0,0.3168,0.484,0.4085,0.7534,mech,True,True,True,True,official,1.0,False
+Turner,51-4041.00,51-4041.00,1.0,0.45,0.1583,0.0267,0.035,0.5667,0.0,0.432,0.4745,0.396,0.566,mech,True,True,True,True,official,1.0,False
+Machinist,51-4041.00,51-4041.00,1.0,0.45,0.1583,0.0267,0.035,0.5667,0.0,0.432,0.4745,0.396,0.566,mech,True,True,True,True,official,1.0,False
+Welder,51-4121.00,51-4121.00,1.0,0.18,0.0667,0.0133,0.0883,0.4417,0.0,0.248,0.4073,0.3632,0.4884,mech,True,True,True,True,official,1.0,False
+Electrician,47-2111.00,47-2111.00,1.0,0.2833,0.04,0.0533,0.135,0.515,0.0,0.4629,0.5709,0.4415,0.5429,verbal,True,True,True,True,official,1.0,False
+Electronics Mechanic,49-2094.00,49-2094.00,1.0,0.4733,0.0,0.0,0.0733,0.7117,0.0,0.432,0.5752,0.3413,0.7759,mech,True,True,True,True,official,1.0,False
+Mechanic Motor Vehicle,49-3023.00,49-3023.00,1.0,0.43,0.0,0.075,0.1,0.5517,0.0,0.2673,0.5218,0.4608,0.8236,mech,False,True,True,True,official,1.0,False
+Mechanic Diesel,49-3031.00,49-3031.00,1.0,0.3783,0.0,0.09,0.0483,0.455,0.0,0.2626,0.4953,0.3995,0.8967,mech,True,True,True,True,official,1.0,False
+Plumber,47-2152.00,47-2152.00,1.0,0.2,0.0,0.0267,0.0,0.4533,0.0,0.3521,0.4771,0.4565,0.7603,mech,True,True,True,True,official,1.0,False
+Carpenter,47-2031.00,47-2031.00,0.9583,0.1517,0.1967,0.15,0.1317,0.41,0.0,0.4221,0.5088,0.5109,0.5874,mech,True,True,True,True,official,1.0,False
+Mason,47-2021.00,47-2021.00,0.9917,0.17,0.1117,0.0183,0.035,0.47,0.0,0.3818,0.4628,0.4427,0.5154,mech,True,True,True,True,official,1.0,False
+Painter,47-2141.00,47-2141.00,1.0,0.0783,0.2517,0.0433,0.0,0.4167,0.0,0.2446,0.4629,0.3255,0.336,verbal,False,True,True,True,official,1.0,False
+Refrigeration and AC Mechanic,49-9021.00,49-9021.00,0.9933,0.3033,0.0067,0.0783,0.0333,0.5483,0.0,0.3382,0.5349,0.4074,0.809,mech,True,True,True,True,official,1.0,False
+Computer Hardware Maintenance,15-1232.00,15-1232.00,0.5217,0.4617,0.0,0.385,0.2267,0.8367,0.0,0.3394,0.6547,0.2312,0.648,verbal,True,True,True,True,official,1.0,False
+CNC Turning Operator,51-9161.00,51-9161.00,0.9067,0.3133,0.0317,0.0,0.0617,0.7317,0.0,0.448,0.5059,0.4068,0.7084,mech,True,True,True,True,official,1.0,False
+Sheet Metal Technician,47-2211.00,47-2211.00,1.0,0.1783,0.0917,0.0,0.0,0.43,0.0,0.4329,0.4813,0.4675,0.7573,mech,False,True,True,True,official,1.0,False
+Foundryman,51-9195.00,51-9195.00,0.94,0.2083,0.19,0.0017,0.0,0.5483,0.0,0.2408,0.4724,0.3513,0.4637,verbal,False,True,True,True,official,1.0,False
+Tool and Die Maker,51-4111.00,51-4111.00,0.99,0.33,0.15,0.0,0.0,0.5317,0.0,0.3793,0.5167,0.3973,0.8008,mech,True,True,True,True,official,1.0,False
+Grinder,47-2053.00,47-2053.00,1.0,0.1333,0.155,0.0,0.0,0.38,0.0,0.2648,0.3613,0.3516,0.5027,mech,True,True,True,True,name_match,0.95,False
+Wireman,47-2111.00,47-2111.00;47-3013.00,1.0,0.2452,0.0213,0.1101,0.072,0.5033,0.0955,0.3794,0.5125,0.3974,0.5999,mech,True,True,True,True,official,0.75,False
+Solar PV Technician,47-2231.00,47-2231.00,1.0,0.275,0.065,0.0317,0.1217,0.5133,0.0,0.3201,0.4989,0.4404,0.7884,mech,True,True,True,True,official,1.0,False
+Wind Turbine Technician,49-9081.00,49-9081.00,1.0,0.4333,0.0,0.1033,0.1283,0.5483,0.0,0.3,0.5689,0.3992,0.8607,mech,True,True,True,True,official,1.0,False
+Lift and Escalator Technician,47-4021.00,47-4021.00,1.0,0.24,0.0,0.0633,0.0367,0.4867,0.0,0.3168,0.5392,0.4066,0.7856,mech,True,True,True,True,official,1.0,False
+HVAC Technician,49-9021.00,49-9021.00,0.9933,0.3033,0.0067,0.0783,0.0333,0.5483,0.0,0.3382,0.5349,0.4074,0.809,mech,True,True,True,True,official,1.0,False
+Battery Assembler,51-2092.00,51-2092.00,0.7283,0.0717,0.1,0.2367,0.4883,0.5967,0.0,0.2166,0.4888,0.3013,0.6415,mech,True,True,True,True,official,1.0,False
+Data Scientist,15-2051.00,15-2051.00,0.195,0.9967,0.2683,0.11,0.1183,0.7317,0.0,0.6552,0.684,0.2183,0.0802,verbal,True,True,True,False,official,1.0,False
+Database Administrator,15-1242.00,15-1242.00,0.305,0.6383,0.0333,0.215,0.3233,0.935,0.0,0.4745,0.651,0.2315,0.1777,verbal,True,True,True,True,official,1.0,False
+Network Administrator,15-1244.00,15-1244.00,0.5317,0.5067,0.0,0.2033,0.41,0.8633,0.0,0.4146,0.6612,0.2643,0.2105,verbal,True,True,True,True,official,1.0,False
+System Administrator,15-1244.00,15-1244.00,0.5317,0.5067,0.0,0.2033,0.41,0.8633,0.0,0.4146,0.6612,0.2643,0.2105,verbal,True,True,True,True,official,1.0,False
+UI UX Designer,15-1255.00,15-1255.00,0.265,0.6467,0.58,0.2,0.355,0.5667,0.0,0.3425,0.6169,0.2158,0.0,verbal,True,True,True,True,official,1.0,False
+IT Support Technician,15-1232.00,15-1232.00,0.5217,0.4617,0.0,0.385,0.2267,0.8367,0.0,0.3394,0.6547,0.2312,0.648,verbal,True,True,True,True,official,1.0,False
+Computer Operator,43-9021.00,43-9021.00;15-1232.00,0.4317,0.34,0.0,0.2083,0.1692,0.9183,0.2498,0.3189,0.5981,0.1941,0.3894,verbal,True,True,True,True,official,0.85,True
+Digital Marketer,13-1161.00,13-1161.00,0.0133,0.6,0.26,0.245,0.7533,0.6033,0.0,0.5192,0.6776,0.1581,0.014,verbal,True,True,True,True,official,1.0,False
+Graphic Designer,27-1024.00,27-1024.00,0.3967,0.31,1.0,0.1933,0.405,0.4867,0.0,0.2586,0.594,0.2618,0.1669,verbal,True,True,True,True,official,1.0,False
+Staff Nurse,29-1141.00,29-1141.00,0.41,0.6183,0.0567,0.7617,0.23,0.625,0.0,0.4629,0.6989,0.2833,0.0915,verbal,True,True,False,True,official,1.0,False
+Nursing Assistant,31-1131.00,31-1131.00,0.5967,0.2867,0.0,0.7833,0.1283,0.54,0.0,0.2828,0.5542,0.1573,0.2866,verbal,True,True,True,True,official,1.0,False
+Pharmacy Technician,29-2052.00,29-2052.00,0.535,0.3317,0.0,0.3867,0.2533,1.0,0.0,0.4531,0.6497,0.1456,0.1188,verbal,True,True,True,True,official,1.0,False
+Medical Lab Technician,29-2012.00,29-2012.00,0.835,0.815,0.0,0.3133,0.0,0.6417,0.0,0.4397,0.6005,0.1873,0.4187,verbal,True,True,True,True,official,1.0,False
+Radiology Technician,29-1224.00,29-1224.00,0.6483,0.9367,0.0617,0.475,0.195,0.5783,0.0,0.4721,0.7815,0.281,0.0737,verbal,True,True,True,True,official,1.0,False
+Physiotherapy Assistant,31-2022.00,31-2022.00,0.6233,0.2633,0.0117,0.825,0.1767,0.4867,0.0,0.2586,0.5137,0.1658,0.1682,verbal,True,True,True,True,official,1.0,False
+Paramedic,29-2042.00,29-2042.00;29-2043.00,0.7217,0.6333,0.0,0.7542,0.1225,0.4317,0.0542,0.1555,0.293,0.1652,0.1683,verbal,True,True,True,True,official,1.0,False
+Health Sanitary Inspector,19-5011.00,19-5011.00,0.575,0.6633,0.0467,0.4083,0.3667,0.6167,0.0,0.4698,0.6529,0.3371,0.5539,verbal,True,True,True,True,official,0.9,False
+ANM Midwife,29-1141.00,29-1141.00,0.41,0.6183,0.0567,0.7617,0.23,0.625,0.0,0.4629,0.6989,0.2833,0.0915,verbal,True,True,False,True,official,0.85,False
+Dental Hygienist,29-1292.00,29-1292.00,0.7117,0.5867,0.02,0.725,0.1217,0.5517,0.0,0.2742,0.5797,0.2244,0.2142,verbal,True,True,True,True,official,1.0,False
+Nutritionist,29-1031.00,29-1031.00,0.3383,0.6333,0.2333,0.75,0.4033,0.3917,0.0,0.4745,0.6989,0.183,0.0715,verbal,True,True,True,True,official,1.0,False
+Occupational Therapist Assistant,31-2011.00,31-2011.00,0.4217,0.4133,0.1767,0.85,0.0233,0.535,0.0,0.2712,0.6335,0.2473,0.2464,verbal,True,True,True,True,official,1.0,False
+Optometrist,29-1041.00,29-1041.00,0.6333,0.7967,0.1,0.67,0.2117,0.4867,0.0,0.4738,0.7227,0.2315,0.2317,verbal,True,True,True,True,official,1.0,False
+Dialysis Technician,29-2055.00,29-2055.00,0.8767,0.37,0.0,0.47,0.1017,0.6417,0.0,0.3812,0.5682,0.268,0.4134,verbal,True,True,True,True,official,0.9,False
+Child Care Professional,39-9011.00,39-9011.00,0.3467,0.08,0.43,0.8633,0.2917,0.4067,0.0,0.2591,0.5535,0.226,0.0343,verbal,True,True,True,True,name_match,0.95,False
+Special Educator,25-2056.00,25-2056.00,0.2117,0.49,0.4417,1.0,0.1283,0.4133,0.0,0.3832,0.6731,0.2333,0.05,verbal,True,True,True,True,name_match,0.95,False
+Librarian,25-4022.00,25-4022.00,0.22,0.4383,0.275,0.5067,0.2917,0.805,0.0,0.2629,0.6726,0.2032,0.0889,verbal,True,True,True,True,name_match,0.95,False
+Training Coordinator,11-3131.00,11-3131.00,0.15,0.34,0.2617,0.7567,0.8917,0.5067,0.0,0.3868,0.6513,0.1947,0.0287,verbal,True,True,True,True,name_match,0.95,False
+Accountant,13-2011.00,13-2011.00,0.0233,0.4283,0.0133,0.1883,0.4783,1.0,0.0,0.611,0.6341,0.162,0.0704,verbal,True,True,True,True,name_match,0.95,False
+Bookkeeper,43-3031.00,43-3031.00,0.105,0.1967,0.0,0.0817,0.3117,1.0,0.0,0.6102,0.6432,0.125,0.1039,verbal,True,True,True,True,name_match,0.95,False
+Teller,43-3071.00,43-3071.00,0.2117,0.07,0.0,0.24,0.5317,0.98,0.0,0.5215,0.5673,0.1414,0.0434,verbal,True,True,True,True,name_match,0.95,False
+Financial Advisor,13-2052.00,13-2052.00,0.0,0.3783,0.115,0.5117,0.8083,0.7683,0.0,0.6091,0.6547,0.1296,0.0107,verbal,True,True,True,True,name_match,0.95,False
+Insurance Agent,41-3021.00,41-3021.00,0.0,0.2083,0.015,0.4517,0.825,0.7433,0.0,0.4698,0.6595,0.125,0.0065,verbal,False,True,True,True,name_match,0.95,False
+Retail Associate,41-2031.00,41-2031.00,0.3667,0.0,0.1633,0.3267,0.855,0.695,0.0,0.3751,0.5366,0.1685,0.2198,verbal,True,True,True,True,name_match,0.95,False
+Cashier,41-2011.00,41-2011.00,0.3167,0.0,0.0,0.265,0.4367,0.8683,0.0,0.3374,0.5178,0.1086,0.1773,verbal,True,True,True,True,name_match,0.95,False
+Logistics Coordinator,43-5011.00,43-5011.00,0.3583,0.0867,0.0,0.19,0.6383,0.8867,0.0,0.3778,0.6379,0.2138,0.3937,verbal,True,True,True,True,name_match,0.95,False
+Fashion Designer,27-1022.00,27-1022.00,0.5567,0.195,1.0,0.225,0.4933,0.3233,0.0,0.3159,0.6239,0.3095,0.155,verbal,True,True,False,True,name_match,0.95,False
+Interior Designer,27-1025.00,27-1025.00,0.52,0.345,0.76,0.28,0.45,0.47,0.0,0.4466,0.648,0.4211,0.3639,verbal,True,True,False,True,name_match,0.95,False
+Photographer,27-4021.00,27-4021.00,0.7567,0.1967,0.7133,0.1567,0.2133,0.3917,0.0,0.2546,0.5756,0.4094,0.2952,verbal,True,True,True,True,name_match,0.95,False
+Videographer,27-4031.00,27-4031.00,0.6483,0.1667,0.6733,0.1333,0.2133,0.4417,0.0,0.2673,0.5324,0.4259,0.3403,verbal,True,True,True,True,name_match,0.95,False
+Animator,27-1014.00,27-1014.00,0.4517,0.295,1.0,0.1967,0.27,0.355,0.0,0.3684,0.6661,0.3273,0.1203,verbal,True,True,True,True,name_match,0.95,False
+Video Editor,27-4032.00,27-4032.00,0.3567,0.1517,0.7683,0.16,0.3467,0.4583,0.0,0.2673,0.6266,0.2962,0.1766,verbal,False,True,True,True,name_match,0.95,False
+Singer,27-2042.00,27-2042.00,0.3117,0.0883,0.9433,0.4017,0.4033,0.195,0.0,0.2646,0.6002,0.2482,0.1636,verbal,True,True,True,True,name_match,0.95,False
+Dancer,27-2031.00,27-2031.00,0.6383,0.0717,0.8983,0.4417,0.3633,0.1017,0.0,0.0945,0.5016,0.3159,0.0752,verbal,True,True,True,True,name_match,0.95,False
+Actor,27-2011.00,27-2011.00,0.215,0.1933,1.0,0.5133,0.5,0.135,0.0,0.0227,0.6387,0.2599,0.0635,verbal,True,True,False,True,name_match,0.95,False
+Beautician,39-5012.00,39-5012.00,0.7333,0.09,0.3733,0.4533,0.375,0.4867,0.0,0.2936,0.5139,0.2843,0.1365,verbal,True,True,True,True,name_match,0.95,False
+Hair Stylist,39-5011.00,39-5011.00,0.7317,0.0,0.285,0.43,0.425,0.4817,0.0,0.1888,0.4648,0.2383,0.315,verbal,True,True,True,True,name_match,0.95,False
+Florist,27-1023.00,27-1023.00,0.6783,0.1067,0.575,0.2417,0.4567,0.48,0.0,0.2667,0.5473,0.3883,0.1912,verbal,False,True,True,True,name_match,0.95,False
+Dairy Farmer,45-2093.00,45-2093.00,0.9633,0.2767,0.07,0.25,0.1533,0.325,0.0,0.2639,0.5088,0.371,0.5448,mech,True,True,True,True,name_match,0.95,False
+Poultry Farmer,45-2093.00,45-2093.00,0.9633,0.2767,0.07,0.25,0.1533,0.325,0.0,0.2639,0.5088,0.371,0.5448,mech,True,True,True,True,name_match,0.95,False
+Beekeeper,11-9013.00,11-9013.00,0.6933,0.29,0.01,0.2717,0.7533,0.5883,0.0,0.4744,0.6389,0.4482,0.5669,verbal,True,False,True,True,name_match,0.95,False
+Horticulturist,19-1013.00,19-1013.00,0.905,0.9517,0.185,0.1117,0.1183,0.4017,0.0,0.5048,0.7407,0.3065,0.4837,verbal,True,True,True,True,name_match,0.95,False
+Crop Advisor,19-1012.00,19-1012.00,0.675,0.785,0.2417,0.1933,0.2633,0.4917,0.0,0.5424,0.7134,0.1994,0.4093,verbal,True,True,True,True,name_match,0.95,False
+Chef,35-1011.00,35-1011.00,0.64,0.1133,0.2867,0.325,0.6883,0.5583,0.0,0.4698,0.5967,0.3212,0.3593,verbal,True,True,True,True,name_match,0.95,False
+Baker,35-1011.00,35-1011.00,0.64,0.1133,0.2867,0.325,0.6883,0.5583,0.0,0.4698,0.5967,0.3212,0.3593,verbal,True,True,True,True,name_match,0.95,False
+Confectioner,35-1011.00,35-1011.00,0.64,0.1133,0.2867,0.325,0.6883,0.5583,0.0,0.4698,0.5967,0.3212,0.3593,verbal,True,True,True,True,name_match,0.95,False
+Waiter,35-3031.00,35-3031.00,0.52,0.0,0.14,0.62,0.51,0.6583,0.0,0.252,0.4976,0.2165,0.1516,verbal,True,True,True,True,name_match,0.95,False
+Barista,35-3023.00,35-3023.00,0.6383,0.0,0.075,0.4133,0.4083,0.66,0.0,0.2574,0.3729,0.1575,0.0746,verbal,True,True,True,True,name_match,0.95,False
+Housekeeping Supervisor,37-1011.00,37-1011.00,0.5233,0.0633,0.0,0.4383,0.7833,0.725,0.0,0.3287,0.5276,0.2322,0.2057,verbal,True,True,True,True,name_match,0.95,False
+Driver,43-5021.00,43-5021.00,0.5783,0.0117,0.0,0.3267,0.31,0.6783,0.0,0.2568,0.5157,0.3491,0.1416,verbal,True,True,False,True,name_match,0.95,False
+Crane Operator,53-7021.00,53-7021.00,1.0,0.2033,0.0,0.0317,0.05,0.49,0.0,0.3154,0.4773,0.4646,0.628,mech,True,True,True,True,name_match,0.95,False
+Travel Agent,41-3041.00,41-3041.00,0.025,0.085,0.15,0.5517,0.7967,0.795,0.0,0.41,0.6379,0.1538,0.006,verbal,True,True,True,True,name_match,0.95,False
+Security Guard,33-9032.00,33-9032.00,0.9017,0.215,0.0,0.2733,0.3133,0.6267,0.0,0.2,0.5225,0.3235,0.3263,verbal,True,True,True,True,name_match,0.95,False
+Fireman,33-2011.00,33-2011.00,0.915,0.32,0.0517,0.3983,0.335,0.4117,0.0,0.3585,0.5711,0.5292,0.5909,mech,True,True,True,True,name_match,0.95,False
+Tour Guide,39-7011.00,39-7011.00,0.3883,0.2333,0.41,0.725,0.44,0.3083,0.0,0.2,0.5703,0.2196,0.1813,verbal,True,True,True,True,name_match,0.95,False
+Surveyor,17-1022.00,17-1022.00,0.7083,0.6217,0.1867,0.105,0.1467,0.715,0.0,0.6503,0.6503,0.5194,0.3287,num,True,True,True,True,name_match,0.95,False
+Clerk,43-4071.00,43-4071.00,0.235,0.0467,0.0017,0.175,0.1267,1.0,0.0,0.295,0.5896,0.1376,0.1774,verbal,True,True,False,True,name_match,0.95,False
+Data Entry Operator,43-9021.00,43-9021.00,0.3417,0.2183,0.0,0.0317,0.1117,1.0,0.0,0.2984,0.5416,0.157,0.1307,verbal,True,True,True,True,name_match,0.95,False
+Office Assistant,43-4071.00,43-4071.00,0.235,0.0467,0.0017,0.175,0.1267,1.0,0.0,0.295,0.5896,0.1376,0.1774,verbal,True,True,False,True,name_match,0.95,False
+Lab Technician,51-9151.00,51-9151.00,0.7483,0.1883,0.32,0.0183,0.0183,0.6983,0.0,0.3401,0.5387,0.2547,0.412,verbal,False,True,True,True,name_match,0.95,False
+Machine Operator,43-9071.00,43-9071.00,0.5917,0.1883,0.0267,0.1133,0.1767,0.9283,0.0,0.3744,0.5079,0.1976,0.2907,verbal,True,True,False,True,name_match,0.95,False
+Assembly Line Worker,51-2031.00,51-2031.00,1.0,0.2817,0.0383,0.0,0.0117,0.565,0.0,0.2673,0.4721,0.4087,0.7011,mech,True,True,True,True,name_match,0.95,False
+Quality Inspector,51-9061.00,51-9061.00,0.7883,0.4033,0.0,0.0,0.0633,0.7267,0.0,0.3324,0.5324,0.3059,0.5438,mech,True,True,True,True,name_match,0.95,False
+Weaver,51-6063.00,51-6063.00,0.9917,0.135,0.0933,0.0033,0.06,0.5467,0.0,0.189,0.4407,0.2428,0.4224,verbal,True,True,True,True,name_match,0.95,False
+Cobbler,51-6041.00,51-6041.00,0.99,0.105,0.355,0.0533,0.0883,0.365,0.0,0.222,0.4387,0.2726,0.428,verbal,True,True,True,True,name_match,0.95,False
+Watch Repairer,49-9064.00,49-9064.00,0.9233,0.1633,0.0567,0.0683,0.0217,0.5733,0.0,0.2632,0.4724,0.2555,0.6513,mech,True,True,True,True,name_match,0.95,False
+Call Center Agent,41-9041.00,41-9041.00,0.145,0.015,0.04,0.435,0.7267,0.6783,0.0,0.1463,0.5552,0.0644,0.058,verbal,True,True,True,True,name_match,0.95,False
+Yoga Instructor,39-9031.00,39-9031.00,0.705,0.285,0.2333,0.77,0.4183,0.33,0.0,0.1886,0.4902,0.2104,0.108,verbal,True,True,True,True,name_match,0.95,False
+Event Photographer,27-4021.00,27-4021.00,0.7567,0.1967,0.7133,0.1567,0.2133,0.3917,0.0,0.2546,0.5756,0.4094,0.2952,verbal,True,True,True,True,name_match,0.95,False

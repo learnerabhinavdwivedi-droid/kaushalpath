@@ -32,6 +32,19 @@ const INTEREST_EMOJI: Record<number, string> = {
 
 function toCardOptions(item: AssessmentItem) {
   if (item.section === 'interest') {
+    if (item.item_type === 'pair' && item.options && item.options.length >= 2) {
+      return [
+        { id: 'A', label: item.options[0], icon: '🅰️' },
+        { id: 'B', label: item.options[1], icon: '🅱️' },
+      ];
+    }
+    if (item.item_type === 'likert3' || item.scale?.length === 3) {
+      return [
+        { id: '1', label: 'Dislike (नापसंद)', icon: '👎' },
+        { id: '2', label: 'Unsure (पक्का नहीं)', icon: '😐' },
+        { id: '3', label: 'Like (पसंद)', icon: '👍' },
+      ];
+    }
     const scale = item.scale && item.scale.length ? item.scale : [1, 2, 3, 4, 5];
     return scale.map((n) => ({ id: String(n), label: `${INTEREST_EMOJI[n] ?? ''} ${n}` }));
   }
@@ -171,6 +184,7 @@ export const AssessmentPage: React.FC = () => {
             onSelect={handleSelect}
             selectedId={selections[current.id]}
             locked={!!selections[current.id]}
+            itemType={current.item_type}
           />
         ) : null}
       </div>

@@ -318,3 +318,67 @@ def seed_canonical_geo(session: Any) -> tuple[int, int]:
 
     session.commit()
     return geo_count, alias_count
+
+
+def canonical_state_name(state_input: str | None) -> str | None:
+    """Return canonical state name (e.g. 'UP' -> 'Uttar Pradesh'), or cleaned original if unmatched."""
+    if not state_input or not state_input.strip():
+        return None
+    res = lookup_state(state_input)
+    if res:
+        return res[1]
+    return state_input.strip()
+
+
+def canonical_district_name(district_input: str | None, state_input: str | None = None) -> str | None:
+    """Return canonical district name if resolvable, or cleaned original."""
+    if not district_input or not district_input.strip():
+        return None
+    if state_input:
+        s_res = lookup_state(state_input)
+        if s_res:
+            d_res = lookup_district(s_res[0], district_input)
+            if d_res:
+                return d_res[1]
+    return district_input.strip()
+
+
+def match_state(state_a: str | None, state_b: str | None) -> bool:
+    """Check if two state strings represent the same state, resolving abbreviations and aliases."""
+    if not state_a or not state_b:
+        return False
+    norm_a = _normalize(state_a)
+    norm_b = _normalize(state_b)
+    if norm_a == norm_b:
+        return True
+    res_a = lookup_state(state_a)
+    res_b = lookup_state(state_b)
+    if res_a and res_b and res_a[0] == res_b[0]:
+        return True
+    if res_a and norm_b == _normalize(res_a[1]):
+        return True
+    if res_b and norm_a == _normalize(res_b[1]):
+        return True
+    return False
+
+
+def match_district(district_a: str | None, district_b: str | None, state: str | None = None) -> bool:
+    """Check if two district strings match, optionally within a state."""
+    if not district_a or not district_b:
+        return False
+    norm_a = _normalize(district_a)
+    norm_b = _normalize(district_b)
+    if norm_a == norm_b:
+        return True
+    if state:
+        s_res = lookup_state(state)
+        if s_res:
+            d_a = lookup_district(s_res[0], district_a)
+            d_b = lookup_district(s_res[0], district_b)
+            if d_a and d_b and d_a[0] == d_b[0]:
+                return True
+            if d_a and norm_b == _normalize(d_a[1]):
+                return True
+            if d_b and norm_a == _normalize(d_b[1]):
+                return True
+    return False

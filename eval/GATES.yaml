@@ -1,0 +1,112 @@
+# Pre-registered Evaluation Gates for KaushalPath Assessment & Recommendation (Phase 24)
+# Hash of this file is computed and reported in docs/EVAL_REPORT.md.
+# Targets are fixed prior to evaluation execution and must never be lowered.
+
+version: "2.0.0"
+pre_registration_date: "2026-10-11"
+description: "Pre-registered evaluation protocol: Tier 1 rule properties, Tier 2 expert & empirical metrics, Tier 3 consistency checks."
+
+tier_1_rule_properties:
+  G1_violations_pct:
+    metric: "Hard-eligibility violations rate"
+    data_source: "Deterministic catalogue rule validation on student constraints"
+    min_n: 100
+    target: 0.0
+    operator: "<="
+    definition: "Percentage of top-3 recommendations that violate minimum education, budget band, or district/relocate constraints."
+  G5_explanation_coverage:
+    metric: "Explanation coverage"
+    data_source: "Serve-time explanation pipeline verification"
+    min_n: 100
+    target: 1.0
+    operator: ">="
+    definition: "Share of recommendations that return >=2 data-grounded reason codes with evidence_id, source, and grade."
+
+tier_2_expert_and_pilot_validated:
+  expert_gold_ndcg_5:
+    metric: "NDCG@5 on expert gold"
+    data_source: "eval/gold/expert_ratings.csv (independent counsellor ratings)"
+    min_n: 150
+    target: 0.80
+    operator: ">="
+    definition: "Normalized Discounted Cumulative Gain at rank 5 against 0-3 expert counsellor suitability ratings without showing model scores."
+  expert_acceptable_top3_hit_rate:
+    metric: "Expert-acceptable top-3 hit-rate"
+    data_source: "eval/gold/expert_ratings.csv"
+    min_n: 150
+    target: 0.90
+    operator: ">="
+    definition: "Share of learner profiles whose top-3 recommendations contain at least one expert-acceptable (rating >= 2) course."
+  krippendorff_alpha:
+    metric: "Inter-rater reliability (Krippendorff's alpha)"
+    data_source: "eval/gold/expert_ratings.csv (>=3 independent raters)"
+    min_n: 150
+    target: 0.60
+    operator: ">="
+    definition: "Krippendorff's alpha agreement among independent vocational counsellors rating candidate courses on 0-3 ordinal scale."
+  test_retest_r:
+    metric: "Test-retest reliability Pearson r per RIASEC dimension"
+    data_source: "Phase 21 retest cohort (interval >= 14 days)"
+    min_n: 60
+    target: 0.70
+    operator: ">="
+    definition: "Pearson correlation r per Holland RIASEC dimension between two assessment sessions >= 14 days apart."
+  convergent_r:
+    metric: "Convergent validity Pearson r"
+    data_source: "Phase 21 external validity pilot vs O*NET Short Form"
+    min_n: 200
+    target: 0.60
+    operator: ">="
+    definition: "Pearson correlation r between KaushalPath adaptive scores and external benchmark Holland codes."
+  known_groups_auc:
+    metric: "Known-groups validity ROC AUC"
+    data_source: "Phase 21 ITI trainee cohort across trade families"
+    min_n: 60
+    target: 0.65
+    operator: ">="
+    definition: "One-vs-Rest ROC AUC predicting enrolled trade family from assessed RIASEC interest profile."
+  outcome_interval_coverage_80:
+    metric: "Outcome 80% credibility interval coverage"
+    data_source: "Multi-period trade x state cells from outcome_evidence"
+    min_n: 30
+    target_min: 0.70
+    target_max: 0.90
+    operator: "between"
+    definition: "Percentage of observed later-period outcome rates and earnings falling within earlier-period predicted 80% empirical Bayes intervals."
+  fairness_slice_gap:
+    metric: "Demographic slice gap on expert gold"
+    data_source: "eval/gold/expert_ratings.csv demographic subsets"
+    min_n: 150
+    target: 0.03
+    operator: "<="
+    definition: "Maximum difference in expert-acceptable top-3 hit-rate across urban/rural, income, education, or language slices."
+  data_coverage_gap:
+    metric: "Regional unverified outcome data gap"
+    data_source: "Production course catalogue outcomes audit"
+    min_n: 100
+    target: 0.10
+    operator: "<="
+    definition: "Maximum difference between demographic slices in the share of top-3 courses lacking verified empirical outcome evidence."
+
+tier_3_simulated_consistency:
+  G2_simulated_top3_hit_rate:
+    metric: "Simulated top-3 hit-rate vs rubric gold"
+    data_source: "eval/gold/labels.jsonl (heuristic catalogue rubric)"
+    min_n: 100
+    target: 0.95
+    operator: ">="
+    definition: "Internal consistency check against synthetic persona catalogue rubric labels."
+  G3_simulated_ndcg_5:
+    metric: "Simulated NDCG@5 vs rubric gold"
+    data_source: "eval/gold/labels.jsonl (heuristic catalogue rubric)"
+    min_n: 100
+    target: 0.90
+    operator: ">="
+    definition: "Internal consistency check measuring rank correlation against rubric-generated labels."
+  G4_simulated_adaptive_agreement:
+    metric: "Adaptive assessment top-3 set agreement"
+    data_source: "eval/gold/convo.jsonl (simulated item responses)"
+    min_n: 100
+    target: 0.95
+    operator: ">="
+    definition: "Internal consistency check comparing adaptive stopping rule outputs against exhaustive 30-item test."

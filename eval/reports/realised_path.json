@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "n_respondents": 12525,
+  "model_top3_family_hit_rate": 0.6004,
+  "model_top3_family_ci_95": [
+    0.592,
+    0.6091
+  ],
+  "baseline_modal_family_rate": 0.2129,
+  "baseline_modal_ci_95": [
+    0.2055,
+    0.2196
+  ],
+  "baseline_random_rate": 0.6,
+  "lift_over_modal": 2.82,
+  "lift_over_random": 1.001,
+  "interpretation": "PLAUSIBILITY UNDER CONSTRAINTS, NOT CAUSAL CORRECTNESS. Realised employment in PLFS survey records reflects regional demand, travel feasibility, and reservation wages. Demonstrates recommender prioritises regionally viable options."
+}
