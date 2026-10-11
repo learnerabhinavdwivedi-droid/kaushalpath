@@ -24,6 +24,7 @@ from app.models import (
     Market,
     Occupation,
     OccupationAbility,
+    OutcomeEvidence,
     ProgressionPath,
     ProviderOutcome,
     Scheme,
@@ -102,6 +103,19 @@ TABLES = {
             "evidence_grade",
         ],
     ),
+    "outcome_evidence": (
+        OutcomeEvidence,
+        [
+            "trade_id",
+            "geo_level",
+            "metric",
+            "value",
+            "n",
+            "definition",
+            "source",
+            "evidence_grade",
+        ],
+    ),
 }
 
 
@@ -151,7 +165,8 @@ def _table_report(session, name: str, model, key_cols: list[str]) -> None:
             .all()
         )
         for st, gr, cnt in state_grades[:10]:
-            print(f"    {st:<20} [Grade {gr}]: {cnt}")
+            st_label = str(st or "National")
+            print(f"    {st_label:<20} [Grade {gr}]: {cnt}")
     if hasattr(model, "primary_ability"):
         print("  distribution by primary ability:")
         for prim, cnt in (
@@ -189,6 +204,8 @@ def _dup_pct(session, model, name: str) -> float:
         cols = [model.name]
     elif name == "occupation_abilities":
         cols = [model.occupation_id]
+    elif name == "outcome_evidence":
+        cols = [model.trade_id, model.geo_level, model.state, model.period_start, model.metric, model.source_id]
     else:  # market
         cols = [model.occupation_id, model.state, model.district, model.year]
 
@@ -302,6 +319,55 @@ def _coverage(session) -> None:
     print(f"  distinct states covered (centres+market): {len(states)}")
 
 
+def _outcome_coverage_breakdown(session) -> None:
+    print("\n== Outcome Evidence Coverage Breakdown (Phase 22) ==")
+    total_ev = session.query(func.count(OutcomeEvidence.id)).scalar() or 0
+    print(f"  total outcome evidence rows: {total_ev}")
+    if not total_ev:
+        return
+
+    # Metric x Grade breakdown
+    print("  coverage per metric x grade:")
+    for (metric, grade, cnt) in (
+        session.query(OutcomeEvidence.metric, OutcomeEvidence.evidence_grade, func.count(OutcomeEvidence.id))
+        .group_by(OutcomeEvidence.metric, OutcomeEvidence.evidence_grade)
+        .order_by(OutcomeEvidence.metric, OutcomeEvidence.evidence_grade)
+        .all()
+    ):
+        print(f"    {metric:<28} Grade {grade}: {cnt:4d}")
+
+    # Grade A/B earnings coverage per state
+    print("  grade A/B earnings coverage by state (trades count):")
+    pilot_trades = (
+        session.query(func.count(func.distinct(OutcomeEvidence.trade_id)))
+        .filter(
+            OutcomeEvidence.metric == "earnings_monthly_inr",
+            OutcomeEvidence.evidence_grade.in_(["A", "B"]),
+            OutcomeEvidence.state.ilike("Maharashtra"),
+        )
+        .scalar() or 0
+    )
+    print(f"    Pilot state (Maharashtra): {pilot_trades} trades with verified earnings (target >= 25)")
+
+    other_states_covered = 0
+    for state, cnt in (
+        session.query(OutcomeEvidence.state, func.count(func.distinct(OutcomeEvidence.trade_id)))
+        .filter(
+            OutcomeEvidence.metric == "earnings_monthly_inr",
+            OutcomeEvidence.evidence_grade.in_(["A", "B"]),
+            OutcomeEvidence.state.isnot(None),
+            ~OutcomeEvidence.state.ilike("Maharashtra"),
+            ~OutcomeEvidence.state.ilike("National"),
+        )
+        .group_by(OutcomeEvidence.state)
+        .all()
+    ):
+        print(f"    {state:<24}: {cnt:4d} trades")
+        if cnt >= 1:
+            other_states_covered += 1
+    print(f"  other states with verified earnings: {other_states_covered} (target >= 5)")
+
+
 def main() -> None:
     session = SessionLocal()
     try:
@@ -309,6 +375,7 @@ def main() -> None:
             _table_report(session, name, model, key_cols)
         _trades_and_crosswalk_report(session)
         _coverage(session)
+        _outcome_coverage_breakdown(session)
     finally:
         session.close()
 

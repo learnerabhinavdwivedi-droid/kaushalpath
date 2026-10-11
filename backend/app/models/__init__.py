@@ -17,6 +17,7 @@ from app.models.market import Market
 from app.models.mentor import MentorRequest
 from app.models.occupation import Occupation
 from app.models.occupation_ability import OccupationAbility
+from app.models.outcome_evidence import OutcomeEvidence
 from app.models.progression import ProgressionPath
 from app.models.provider_outcome import ProviderOutcome
 from app.models.recommendation import Recommendation
@@ -34,6 +35,7 @@ __all__ = [
     "AssessmentResponse",
     "Occupation",
     "OccupationAbility",
+    "OutcomeEvidence",
     "Course",
     "Centre",
     "Market",

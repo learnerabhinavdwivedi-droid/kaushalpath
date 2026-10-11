@@ -391,4 +391,27 @@ The cognitive and vocational aptitude matching function (`aptitude_match` in `ap
   **89.5%** (exceeding the 74% unadjusted baseline), requiring an average of 22.9 interest items
   (target $\le 24$, max 27). Labelled simulated until field pilot survey collection.
 
+## A43 — Empirical Bayes Shrinkage for Outcome Evidence
+Beta-binomial empirical Bayes shrinkage for rates (placement, self-employed, pass, admission)
+toward parent geography with prior strength $m=20.0$. Log-median shrinkage for monthly earnings
+with between-trade variance scaling $k=50.0$ and $\sigma_{\log} = 0.35$. Credible intervals
+calculated at an 80% two-sided level ($z = 1.28155$) reflecting realistic vocational survey precision.
+
+## A44 — Strict Reporting of Earnings Shapes & No Synthetic Quartiles
+Earnings are stored strictly as reported by administrative tracer studies and survey microdata
+(mean, median, or band). Per Data Addendum Rule 7, the engine never manufactures synthetic
+$p25/p75$ percentiles from an arithmetic mean.
+
+## A45 — Cell Size Suppression ($n < 30$) & Zero Silent Fallbacks
+Any outcome observation with sample size $n < 30$ is strictly suppressed from public read models
+and API exports. When a queried state or district lacks verified Grade A/B/C data for a trade,
+the engine returns explicit status `no_verified_data` rather than silently substituting another
+state or ungrounded national average.
+
+## A46 — CPI Base-Year Deflation Series (Base 2012=100)
+Nominal earnings across different reporting years (2020–2026) are adjusted to constant 2026 prices
+using the official MoSPI All-India Consumer Price Index (Combined) Base 2012=100 annual series
+(2020: 153.8, 2021: 161.3, 2022: 172.1, 2023: 181.4, 2024: 190.2, 2025: 198.8, 2026: 206.5)
+tracked in `backend/app/data/raw/SOURCES.yaml`.
+
 

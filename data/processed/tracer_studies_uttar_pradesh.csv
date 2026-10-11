@@ -1,0 +1,4 @@
+state,trade_id,occupation_name,placement_rate,earnings_raw,earnings_cpi_2026,earnings_shape,apprenticeship_stipend,sample_size_n,definition,page_ref,source_url
+Uttar Pradesh,5,Electrician,0.68,13200.0,15026.46,median,8000.0,750,survey,"UP STRIVE Tracer Study 2023, Table 3.1, p. 24",https://dgt.gov.in/STRIVE
+Uttar Pradesh,1,Fitter,0.65,12600.0,14343.44,median,7800.0,690,survey,"UP STRIVE Tracer Study 2023, Table 3.2, p. 26",https://dgt.gov.in/STRIVE
+Uttar Pradesh,4,Welder,0.63,12100.0,13774.26,mean,7500.0,420,survey,"UP STRIVE Tracer Study 2023, Table 3.3, p. 28",https://dgt.gov.in/STRIVE

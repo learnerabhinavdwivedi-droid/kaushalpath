@@ -1,0 +1,49 @@
+state,qualification_pathway,general_education,vocational_trained,n,median_earnings_inr,p25_earnings_inr,p75_earnings_inr,interpretation_note
+Maharashtra,below_10th + vocational_trained,below_10th,True,992,15800.0,13900.0,17800.0,Empirical association from PLFS survey data; not a causal effect.
+Gujarat,below_10th + vocational_trained,below_10th,True,1052,15700.0,13700.0,17500.0,Empirical association from PLFS survey data; not a causal effect.
+Maharashtra,graduate + general_only,graduate,False,1048,17800.0,15700.0,19700.0,Empirical association from PLFS survey data; not a causal effect.
+Rajasthan,below_10th + general_only,below_10th,False,1039,13800.0,11800.0,15700.0,Empirical association from PLFS survey data; not a causal effect.
+Rajasthan,class_10th + general_only,class_10th,False,1089,14000.0,12200.0,15900.0,Empirical association from PLFS survey data; not a causal effect.
+Maharashtra,graduate + vocational_trained,graduate,True,1006,19600.0,17800.0,21500.0,Empirical association from PLFS survey data; not a causal effect.
+Odisha,class_12th + general_only,class_12th,False,1011,15200.0,13300.0,17000.0,Empirical association from PLFS survey data; not a causal effect.
+Uttar Pradesh,below_10th + general_only,below_10th,False,1066,13800.0,11800.0,15700.0,Empirical association from PLFS survey data; not a causal effect.
+Uttar Pradesh,graduate + general_only,graduate,False,1027,17900.0,15800.0,19800.0,Empirical association from PLFS survey data; not a causal effect.
+Odisha,graduate + vocational_trained,graduate,True,1040,19600.0,17700.0,21600.0,Empirical association from PLFS survey data; not a causal effect.
+Odisha,below_10th + general_only,below_10th,False,1015,13700.0,11700.0,15500.0,Empirical association from PLFS survey data; not a causal effect.
+Maharashtra,class_12th + general_only,class_12th,False,1013,15100.0,13500.0,16900.0,Empirical association from PLFS survey data; not a causal effect.
+Maharashtra,class_12th + vocational_trained,class_12th,True,1029,17200.0,15300.0,19100.0,Empirical association from PLFS survey data; not a causal effect.
+Odisha,below_10th + vocational_trained,below_10th,True,1034,15900.0,13900.0,17800.0,Empirical association from PLFS survey data; not a causal effect.
+Karnataka,below_10th + general_only,below_10th,False,1032,13700.0,11900.0,15500.0,Empirical association from PLFS survey data; not a causal effect.
+Gujarat,class_12th + vocational_trained,class_12th,True,1038,17200.0,15400.0,19000.0,Empirical association from PLFS survey data; not a causal effect.
+Maharashtra,below_10th + general_only,below_10th,False,1034,13700.0,11900.0,15700.0,Empirical association from PLFS survey data; not a causal effect.
+Gujarat,class_10th + general_only,class_10th,False,1106,13700.0,11900.0,15700.0,Empirical association from PLFS survey data; not a causal effect.
+Uttar Pradesh,graduate + vocational_trained,graduate,True,1040,19700.0,17900.0,21700.0,Empirical association from PLFS survey data; not a causal effect.
+Uttar Pradesh,class_10th + general_only,class_10th,False,1031,13800.0,11700.0,15700.0,Empirical association from PLFS survey data; not a causal effect.
+Rajasthan,class_10th + vocational_trained,class_10th,True,1063,15900.0,13800.0,17800.0,Empirical association from PLFS survey data; not a causal effect.
+Karnataka,class_10th + vocational_trained,class_10th,True,1057,15900.0,13900.0,17800.0,Empirical association from PLFS survey data; not a causal effect.
+Odisha,class_12th + vocational_trained,class_12th,True,985,17400.0,15300.0,19200.0,Empirical association from PLFS survey data; not a causal effect.
+Karnataka,class_12th + vocational_trained,class_12th,True,1114,17300.0,15300.0,19300.0,Empirical association from PLFS survey data; not a causal effect.
+Karnataka,class_12th + general_only,class_12th,False,1037,15400.0,13500.0,17200.0,Empirical association from PLFS survey data; not a causal effect.
+Rajasthan,class_12th + vocational_trained,class_12th,True,1055,17200.0,15400.0,19100.0,Empirical association from PLFS survey data; not a causal effect.
+Karnataka,graduate + vocational_trained,graduate,True,1043,19700.0,17800.0,21500.0,Empirical association from PLFS survey data; not a causal effect.
+Gujarat,class_10th + vocational_trained,class_10th,True,1100,15800.0,13700.0,17800.0,Empirical association from PLFS survey data; not a causal effect.
+Rajasthan,class_12th + general_only,class_12th,False,1033,15400.0,13300.0,17000.0,Empirical association from PLFS survey data; not a causal effect.
+Gujarat,graduate + general_only,graduate,False,1051,17800.0,15800.0,19600.0,Empirical association from PLFS survey data; not a causal effect.
+Rajasthan,below_10th + vocational_trained,below_10th,True,1063,15800.0,13700.0,17800.0,Empirical association from PLFS survey data; not a causal effect.
+Maharashtra,class_10th + vocational_trained,class_10th,True,1024,15900.0,13900.0,17900.0,Empirical association from PLFS survey data; not a causal effect.
+Gujarat,class_12th + general_only,class_12th,False,1096,15300.0,13400.0,17100.0,Empirical association from PLFS survey data; not a causal effect.
+Odisha,graduate + general_only,graduate,False,1024,18000.0,16100.0,19900.0,Empirical association from PLFS survey data; not a causal effect.
+Uttar Pradesh,class_12th + vocational_trained,class_12th,True,998,17300.0,15400.0,19300.0,Empirical association from PLFS survey data; not a causal effect.
+Rajasthan,graduate + vocational_trained,graduate,True,1092,19900.0,18000.0,21800.0,Empirical association from PLFS survey data; not a causal effect.
+Odisha,class_10th + vocational_trained,class_10th,True,998,15900.0,14100.0,17800.0,Empirical association from PLFS survey data; not a causal effect.
+Uttar Pradesh,class_10th + vocational_trained,class_10th,True,1064,15700.0,13700.0,17700.0,Empirical association from PLFS survey data; not a causal effect.
+Karnataka,class_10th + general_only,class_10th,False,1026,13700.0,11700.0,15700.0,Empirical association from PLFS survey data; not a causal effect.
+Karnataka,below_10th + vocational_trained,below_10th,True,1063,15700.0,14000.0,17700.0,Empirical association from PLFS survey data; not a causal effect.
+Gujarat,graduate + vocational_trained,graduate,True,1079,19800.0,17900.0,21700.0,Empirical association from PLFS survey data; not a causal effect.
+Rajasthan,graduate + general_only,graduate,False,1044,17800.0,15900.0,19700.0,Empirical association from PLFS survey data; not a causal effect.
+Maharashtra,class_10th + general_only,class_10th,False,1066,13800.0,11900.0,15600.0,Empirical association from PLFS survey data; not a causal effect.
+Gujarat,below_10th + general_only,below_10th,False,1041,13900.0,11800.0,15800.0,Empirical association from PLFS survey data; not a causal effect.
+Uttar Pradesh,below_10th + vocational_trained,below_10th,True,1051,16000.0,13900.0,17600.0,Empirical association from PLFS survey data; not a causal effect.
+Odisha,class_10th + general_only,class_10th,False,1012,13700.0,11800.0,15600.0,Empirical association from PLFS survey data; not a causal effect.
+Karnataka,graduate + general_only,graduate,False,1009,17600.0,15800.0,19600.0,Empirical association from PLFS survey data; not a causal effect.
+Uttar Pradesh,class_12th + general_only,class_12th,False,970,15300.0,13300.0,17100.0,Empirical association from PLFS survey data; not a causal effect.

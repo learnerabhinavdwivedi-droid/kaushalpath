@@ -1,0 +1,3 @@
+state,trade_id,occupation_name,placement_rate,earnings_raw,earnings_cpi_2026,earnings_shape,apprenticeship_stipend,sample_size_n,definition,page_ref,source_url
+Karnataka,5,Electrician,0.75,15200.0,16502.63,median,9000.0,560,survey,"Karnataka STRIVE Tracer Study 2024, Table 5.1, p. 44",https://dgt.gov.in/STRIVE
+Karnataka,6,Electronics Mechanic,0.71,14800.0,16068.35,median,8800.0,320,survey,"Karnataka STRIVE Tracer Study 2024, Table 5.3, p. 48",https://dgt.gov.in/STRIVE

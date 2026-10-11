@@ -43,6 +43,7 @@ backend/data/processed/*
 backend/app/data/raw/**
 !backend/app/data/raw/README.md
 !backend/app/data/raw/SOURCES.yaml
+data/raw/**
 *.faiss
 *.bin
 *.joblib
