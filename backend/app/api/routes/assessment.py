@@ -39,16 +39,24 @@ def _serve(assessment: Assessment, state: dict, item: dict | None) -> sch.NextIt
         lang = state.get("lang", "en")
         text = item.get(f"text_{lang}") or item["text_en"]
         if item["section"] == "interest":
-            payload["item"] = {"id": item["id"], "section": "interest", "text": text}
+            payload["item"] = {
+                "id": item["id"],
+                "section": "interest",
+                "text": text,
+                "item_type": item.get("item_type", "likert5"),
+                "options": item.get("options"),
+            }
         else:
             payload["item"] = {
                 "id": item["id"],
                 "section": "aptitude",
-                "dimension": item["dimension"],
+                "dimension": item.get("construct") or item.get("dimension", ""),
                 "text": text,
                 "options": list(item["options"]),
+                "item_type": item.get("item_type", "mcq"),
             }
     return sch.NextItemOut(**payload)
+
 
 
 @router.post(

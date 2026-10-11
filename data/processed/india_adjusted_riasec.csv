@@ -1,0 +1,25 @@
+trade_name,dimension,onet_prior,incumbent_mean,incumbent_n,shrinkage_weight,adjusted_score
+Electrician,R,0.85,0.8,40,0.6667,0.8167
+Electrician,I,0.6,0.4,40,0.6667,0.4667
+Electrician,A,0.1,0.4,40,0.6667,0.3
+Electrician,S,0.2,0.4,40,0.6667,0.3333
+Electrician,E,0.3,0.4,40,0.6667,0.3667
+Electrician,C,0.5,0.4,40,0.6667,0.4333
+Fitter,R,0.9,0.88,15,0.4286,0.8914
+Fitter,I,0.45,0.35,15,0.4286,0.4071
+Fitter,A,0.1,0.35,15,0.4286,0.2071
+Fitter,S,0.15,0.35,15,0.4286,0.2357
+Fitter,E,0.25,0.35,15,0.4286,0.2929
+Fitter,C,0.4,0.35,15,0.4286,0.3786
+Health Sanitary Inspector,R,0.3,0.3,0,0.0,0.3
+Health Sanitary Inspector,I,0.55,0.55,0,0.0,0.55
+Health Sanitary Inspector,A,0.15,0.15,0,0.0,0.15
+Health Sanitary Inspector,S,0.85,0.85,0,0.0,0.85
+Health Sanitary Inspector,E,0.4,0.4,0,0.0,0.4
+Health Sanitary Inspector,C,0.6,0.6,0,0.0,0.6
+Computer Operator & Programming Assistant,R,0.25,0.25,0,0.0,0.25
+Computer Operator & Programming Assistant,I,0.5,0.5,0,0.0,0.5
+Computer Operator & Programming Assistant,A,0.2,0.2,0,0.0,0.2
+Computer Operator & Programming Assistant,S,0.3,0.3,0,0.0,0.3
+Computer Operator & Programming Assistant,E,0.4,0.4,0,0.0,0.4
+Computer Operator & Programming Assistant,C,0.85,0.85,0,0.0,0.85

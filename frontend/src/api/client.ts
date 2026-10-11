@@ -74,6 +74,7 @@ export interface AssessmentItem {
   dimension?: string;
   scale?: number[];
   options?: string[];
+  item_type?: 'likert3' | 'pair' | 'likert5' | 'mcq';
 }
 
 export interface NextItemOut {

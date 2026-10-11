@@ -341,4 +341,54 @@ against thresholds in `work_flags.yaml` and written to `occupations.work_flags` 
 - **Licence Attribution:** O*NET 31.0 is licensed under CC BY 4.0; official attribution notice is
   documented in `docs/ATTRIBUTION.md`.
 
+---
+
+# Phase 21 (Assessment v2 Grounded Items, 2PL IRT Calibration & Aptitude Fit) Assumptions
+
+## A39 — 2PL IRT Calibration Model Details & Calibration Sample Threshold
+Item calibration uses a Two-Parameter Logistic (2PL) Item Response Theory model:
+$$P(Y_{ij} = 1 \mid \theta_i) = \frac{1}{1 + e^{-a_j (\theta_i - b_j)}}$$
+- **Parameters:** Discrimination $a_j \in [0.2, 3.0]$ and Difficulty $b_j \in [-3.0, 3.0]$.
+- **Calibration Engine:** Marginal Maximum Likelihood (MML) via Expectation-Maximization (EM)
+  with Gauss-Hermite numerical quadrature over standard latent distribution $\theta \sim \mathcal{N}(0, 1)$.
+- **Operational Sample Threshold ($n \ge 300$):** Real-world item parameter updates require at least
+  300 respondent observations per item. In initial development and before field pilots, `calibrate_items.py`
+  runs with synthetic respondent simulations recovering parameters within $|\Delta a|, |\Delta b| \le 0.25$,
+  or seeds calibrated values with Bayesian priors centered on curricular bands.
+- **Adaptive Selection:** Items are indexed and selected by Fisher information distance weighted by
+  calibrated discrimination parameter $a_j$, picking maximally informative items close to current latent $\theta$.
+
+## A40 — Forced-Choice Tie-Break Rule (1 SEM Threshold, Max 3 Pairs)
+- **Contested Criterion:** After the adaptive Likert phase, if the score difference between any top-3
+  adjacent dimensions (or the rank-3 vs rank-4 boundary dimension) is within 1 Standard Error of
+  Measurement ($\Delta \le \max(\text{SEM}_a, \text{SEM}_b)$), the pair is classified as contested.
+- **Forced-Choice Mechanism:** The engine serves forced-choice pairwise comparison items (`item_type='pair'`)
+  asking respondents to choose between two concrete trade-contextualized activities (`dim_a` vs `dim_b`).
+- **Score Adjustment:** Selecting option A boosts `dim_a` and adjusts `dim_b` on the running signed scale,
+  resolving ambiguous boundary ties.
+- **Item Budget & Safety Cap:** Tie-break items are capped at `MAX_TIE_BREAKS = 3` pairs. Combined
+  interest Likert items and tie-break pairs are strictly capped at `HARD_CAP = 30` items to maintain
+  learner focus and prevent assessment fatigue.
+
+## A41 — Pure Aptitude Fit Function: Shortfall Only, Surplus Unpenalized & SE Shrinkage
+The cognitive and vocational aptitude matching function (`aptitude_match` in `app.ml.ranking.aptitude_fit`):
+- **Percentile Linking Default:** Normalizes raw aptitude scores against normative percentiles
+  anchored to ASER 2023 foundational numeracy/literacy bands.
+- **One-Sided Shortfall:** Penalizes only shortfall below occupational requirement:
+  $$\text{shortfall}_c = \max(0.0, \text{requirement}_c - \theta_c)$$
+  Surplus ability is never penalized ($\text{shortfall}_c = 0.0$ when $\theta_c \ge \text{requirement}_c$).
+- **Measurement Uncertainty Shrinkage:** When standard error $\text{SE}_c$ is high, confidence is discounted
+  ($\text{confidence} = \prod (1 - \min(1.0, 2 \cdot \text{SE}_c))$) and the raw fit score shrinks toward
+  the uninformative neutral midpoint 0.50 via Bayesian reliability weighting:
+  $$\text{score} = \text{confidence} \cdot \text{raw\_fit} + (1 - \text{confidence}) \cdot 0.50$$
+
+## A42 — Validity Study Harness & G4 Agreement Numbers (Simulated Baseline)
+- **Validity Suite:** `scripts/validity_studies.py` evaluates test-retest reliability ($r \ge 0.70$),
+  convergent validity against vocational inventory benchmarks ($r \ge 0.60$), and known-groups criterion
+  validity (AUC $\ge 0.75$ across trade tracks).
+- **G4 Agreement (Simulated):** On 200 synthetic respondents (`eval/scripts/sim_assessment.py`),
+  top-3 letter set agreement achieves **96.5%** (target $\ge 95\%$) with exact-order agreement at
+  **89.5%** (exceeding the 74% unadjusted baseline), requiring an average of 22.9 interest items
+  (target $\le 24$, max 27). Labelled simulated until field pilot survey collection.
+
 

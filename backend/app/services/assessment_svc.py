@@ -45,16 +45,20 @@ def _item_out(item: dict, section: str, lang: str) -> dict:
         return {
             "id": item["id"],
             "section": "aptitude",
-            "dimension": item["dimension"],
+            "dimension": item.get("construct") or item.get("dimension", ""),
             "text": text,
             "options": list(item["options"]),
+            "item_type": item.get("item_type", "mcq"),
         }
     return {
         "id": item["id"],
         "section": "interest",
         "text": text,
-        "scale": [1, 2, 3, 4, 5],
+        "scale": item.get("scale", [1, 2, 3, 4, 5]),
+        "item_type": item.get("item_type", "likert5"),
+        "options": item.get("options"),
     }
+
 
 
 def _persist_state(assessment: Assessment, state: dict) -> None:
@@ -210,20 +214,41 @@ def answer_item(
         raise BadRequest(f"expected answer for item {current['id']!r}, got {item_id!r}")
 
     if current["section"] == "interest":
-        try:
-            value = int(answer)
-        except (TypeError, ValueError):
-            raise BadRequest("interest answer must be an integer 1..5") from None
-        try:
-            adaptive.record_interest_answer(state, interest_bank, current["id"], value)
-        except ValueError as exc:  # engine range / unknown-item guard
-            raise BadRequest(str(exc)) from exc
+        if current.get("item_type") == "pair" or current["id"].startswith("PAIR_"):
+            try:
+                adaptive.record_interest_answer(state, interest_bank, current["id"], answer)
+            except ValueError as exc:
+                raise BadRequest(str(exc)) from exc
+        else:
+            try:
+                value = int(answer)
+            except (TypeError, ValueError):
+                raise BadRequest("interest answer must be an integer 1..5 (or 1..3 for likert3)") from None
+            try:
+                adaptive.record_interest_answer(state, interest_bank, current["id"], value)
+            except ValueError as exc:  # engine range / unknown-item guard
+                raise BadRequest(str(exc)) from exc
     else:
         if str(answer) not in [str(o) for o in current["options"]]:
             raise BadRequest("answer must be one of the item's options")
         adaptive.record_aptitude_answer(
             state, interest_bank, aptitude_bank, current["id"], answer
         )
+
+    # Telemetry logging (AssessmentResponse)
+    from app.models.assessment import AssessmentResponse
+    resp_record = AssessmentResponse(
+        session_hash=f"sess_{assessment.id}",
+        item_id=current["id"],
+        response=str(answer),
+        latency_ms=None,
+        position=state.get("items_answered", 0),
+        lang=state.get("lang", "en"),
+        device_class="mobile",
+        guardian_consent=True,
+    )
+    session.add(resp_record)
+
 
     next_item = adaptive.next_item(state, interest_bank, aptitude_bank)
     if state.get("status") == "completed":

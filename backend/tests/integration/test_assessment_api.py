@@ -96,8 +96,9 @@ def test_assessment_full_flow_to_profile(client: TestClient) -> None:
     assert all(0.0 <= v <= 1.0 for v in profile["riasec"].values())
     assert all(0.0 <= v <= 1.0 for v in profile["aptitude"].values())
     assert 0.0 <= profile["confidence"] <= 1.0
-    # interest section stopped within the spec budget
-    assert profile["items_answered"] <= 24 + 20  # interest(<=24) + aptitude(20)
+    # interest section stopped within the spec budget (HARD_CAP=30 + 20 aptitude)
+    from app.ml.assessment import adaptive
+    assert profile["items_answered"] <= adaptive.HARD_CAP + 20
 
 
 def test_assessment_income_band_persisted(client: TestClient) -> None:

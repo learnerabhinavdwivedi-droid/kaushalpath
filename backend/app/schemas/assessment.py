@@ -57,6 +57,8 @@ class InterestItemOut(BaseModel):
     section: str = "interest"
     text: str
     scale: list[int] = Field(default_factory=lambda: [1, 2, 3, 4, 5])
+    item_type: str = "likert5"
+    options: list[str] | None = None
 
 
 class AptitudeItemOut(BaseModel):
@@ -65,6 +67,8 @@ class AptitudeItemOut(BaseModel):
     dimension: str
     text: str
     options: list[str]
+    item_type: str = "mcq"
+
 
 
 class NextItemOut(BaseModel):

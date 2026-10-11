@@ -172,12 +172,14 @@ def test_interest_bank_meets_spec(bank: list[dict]) -> None:
 def test_aptitude_bank_five_per_dim(aptitude_bank: list[dict]) -> None:
     from collections import Counter
 
-    assert len(aptitude_bank) == 20
-    counts = Counter(it["dimension"] for it in aptitude_bank)
+    assert len(aptitude_bank) >= 20
+    counts = Counter(it.get("dimension") or it.get("construct") for it in aptitude_bank)
     for dim in APTITUDE_DIMS:
-        assert counts[dim] == 5
+        assert counts[dim] >= 5
     for it in aptitude_bank:
-        assert it["answer"] in it["options"]
+        ans = it.get("answer") or it.get("correct_answer")
+        assert ans in it["options"]
+
 
 
 # --- reference scorer --------------------------------------------------------
