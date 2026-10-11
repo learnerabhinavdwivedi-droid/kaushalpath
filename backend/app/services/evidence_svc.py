@@ -24,6 +24,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models.outcome_evidence import OutcomeEvidence
+from app.services.geo_svc import match_district, match_state
 
 VALID_GRADES = ("A", "B", "C", "D")
 DEFAULT_CURRENT_YEAR = 2026
@@ -354,10 +355,10 @@ class EvidenceService:
                 district
                 and r.geo_level == "district"
                 and r.district
-                and r.district.lower() == district.lower()
+                and match_district(district, r.district, state)
             ):
                 candidates.append(r)
-            elif state and r.geo_level == "state" and r.state and r.state.lower() == state.lower():
+            elif state and r.geo_level == "state" and r.state and match_state(state, r.state):
                 candidates.append(r)
             elif r.geo_level == "national":
                 candidates.append(r)

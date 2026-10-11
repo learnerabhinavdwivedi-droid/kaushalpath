@@ -18,6 +18,7 @@ from sqlalchemy.orm.attributes import flag_modified
 
 from app.ml.assessment import adaptive, scoring
 from app.models import Assessment, Student, User
+from app.services.geo_svc import canonical_district_name, canonical_state_name
 
 _BAD_REQUEST = 400
 
@@ -82,7 +83,12 @@ def get_or_create_student(
     student = session.scalar(select(Student).where(Student.id == student_id))
     if student is not None:
         if constraints:
-            for key, value in constraints.items():
+            c_dict = dict(constraints)
+            if c_dict.get("state"):
+                c_dict["state"] = canonical_state_name(c_dict["state"])
+            if c_dict.get("district"):
+                c_dict["district"] = canonical_district_name(c_dict["district"], c_dict.get("state"))
+            for key, value in c_dict.items():
                 if value is not None:
                     setattr(student, key, value)
             try:
@@ -92,7 +98,12 @@ def get_or_create_student(
                 raise BadRequest(str(exc.orig)) from exc
         return student
 
-    c = constraints or {}
+    c = dict(constraints or {})
+    raw_state = c.get("state")
+    canon_state = canonical_state_name(raw_state) if raw_state else "unknown"
+    raw_dist = c.get("district")
+    canon_dist = canonical_district_name(raw_dist, canon_state) if raw_dist else "unknown"
+
     user = User(
         email=f"student_{student_id}@example.test",
         hashed_password="demo-no-auth",
@@ -106,8 +117,8 @@ def get_or_create_student(
         user_id=user.id,
         age=c.get("age"),
         edu_level=c.get("edu_level", "12th"),
-        district=c.get("district", "unknown"),
-        state=c.get("state", "unknown"),
+        district=canon_dist,
+        state=canon_state,
         budget_band=c.get("budget_band", "mid"),
         income_band=c.get("income_band"),
         relocate_ok=c.get("relocate_ok", False),

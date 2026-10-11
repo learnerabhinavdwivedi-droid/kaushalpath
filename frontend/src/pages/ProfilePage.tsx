@@ -22,6 +22,9 @@ export const ProfilePage: React.FC = () => {
   const [stateName, setStateName] = useState(profile.state || 'Maharashtra');
   const [budget, setBudget] = useState(profile.budget || 50000);
   const [duration, setDuration] = useState(profile.duration || 12);
+  const [relocateOk, setRelocateOk] = useState(
+    profile.relocate_ok !== undefined ? profile.relocate_ok : true
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -44,6 +47,7 @@ export const ProfilePage: React.FC = () => {
         state: stateName,
         budget,
         duration,
+        relocate_ok: relocateOk,
       });
 
       await saveConstraints(sid, {
@@ -52,7 +56,7 @@ export const ProfilePage: React.FC = () => {
         state: stateName,
         budget_band: budgetToBand(budget),
         income_band: profile.income_band || null,
-        relocate_ok: false,
+        relocate_ok: relocateOk,
         language: i18n.language,
         max_duration_months: duration,
       });
@@ -127,6 +131,24 @@ export const ProfilePage: React.FC = () => {
             value={duration}
             onChange={e => setDuration(Number(e.target.value))}
           />
+        </div>
+
+        <div className="flex items-start gap-3 p-3 bg-white/60 dark:bg-slate-800/60 rounded-lg border border-slate-200 dark:border-slate-700">
+          <input
+            id="relocate_ok"
+            type="checkbox"
+            checked={relocateOk}
+            onChange={e => setRelocateOk(e.target.checked)}
+            className="mt-1 h-5 w-5 rounded border-gray-300 text-accent focus:ring-accent cursor-pointer"
+          />
+          <label htmlFor="relocate_ok" className="cursor-pointer">
+            <span className="block font-medium text-slate-800 dark:text-slate-200">
+              {t('profile.relocate')}
+            </span>
+            <span className="block text-sm text-slate-500 dark:text-slate-400">
+              {t('profile.relocate_hint')}
+            </span>
+          </label>
         </div>
 
         <button type="submit" disabled={loading} className="btn-primary w-full mt-8">

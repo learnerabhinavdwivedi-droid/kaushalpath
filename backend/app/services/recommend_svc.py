@@ -44,6 +44,7 @@ from app.models import (
     Student,
 )
 from app.services.evidence_svc import EvidenceService
+from app.services.geo_svc import match_district, match_state
 
 logger = logging.getLogger(__name__)
 
@@ -221,8 +222,10 @@ class RecommendService:
         if retrieval_results:
             retrieved_occ_ids = {occ_id for occ_id, _ in retrieval_results}
             shortlisted = [c for c in eligible_courses if c.occupation_id in retrieved_occ_ids]
-            if shortlisted:
-                candidate_courses = shortlisted
+            other_eligible = [c for c in eligible_courses if c.occupation_id not in retrieved_occ_ids]
+            candidate_courses = (shortlisted + other_eligible)[:50] if shortlisted else eligible_courses[:50]
+        else:
+            candidate_courses = eligible_courses[:50]
 
         # 3. Pre-fetch best available outcome evidence across eligible occupations
         # and compute trade-level percentiles
@@ -558,9 +561,9 @@ _RIASEC_WORD = {
 def _distance_km(student: Student, course: Course, centres: list[Centre]) -> float | None:
     if not centres:
         return None
-    if any(c.district == student.district for c in centres):
+    if any(match_district(student.district, c.district, student.state) for c in centres):
         return _DIST_HOME_DISTRICT
-    if any(c.state == student.state for c in centres):
+    if any(match_state(student.state, c.state) for c in centres):
         return _DIST_HOME_STATE
     return _DIST_OTHER
 
@@ -570,7 +573,7 @@ def _local_demand(rows: list[Market], state: str | None = None) -> float | None:
         return None
     target_rows = rows
     if state:
-        state_rows = [r for r in rows if r.state and r.state.lower() == state.lower()]
+        state_rows = [r for r in rows if r.state and match_state(state, r.state)]
         if state_rows:
             target_rows = state_rows
 
@@ -600,9 +603,9 @@ def _order_centres_by_quality(
 
     def _sort_key(c: Centre) -> tuple[int, int, float]:
         # 1. Distance tier: home district (0) -> home state (1) -> other (2)
-        if c.district == student.district:
+        if match_district(student.district, c.district, student.state):
             dist_tier = 0
-        elif c.state == student.state:
+        elif match_state(student.state, c.state):
             dist_tier = 1
         else:
             dist_tier = 2

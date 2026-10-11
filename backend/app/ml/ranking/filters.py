@@ -15,6 +15,7 @@ from app.core.budget import BUDGET_LIMITS
 from app.core.education import EDU_HIERARCHY
 from app.models.course import Course
 from app.models.student import Student
+from app.services.geo_svc import match_district, match_state
 
 
 def filter_courses(
@@ -79,14 +80,13 @@ def _reachability_reasons(student: Student, course: Course, centres: Sequence[An
     if student.relocate_ok:
         return []  # willing to travel; any centre in the country qualifies
         
-    s_dist = student.district.lower().strip() if student.district else ""
-    s_state = student.state.lower().strip() if student.state else ""
-    
     in_home_district = any(
-        (c.district or "").lower().strip() == s_dist for c in centres
+        match_district(student.district, getattr(c, "district", None), student.state)
+        for c in centres
     )
     in_home_state = any(
-        (c.state or "").lower().strip() == s_state for c in centres
+        match_state(student.state, getattr(c, "state", None))
+        for c in centres
     )
     
     if in_home_district or in_home_state:

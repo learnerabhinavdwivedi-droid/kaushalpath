@@ -51,6 +51,7 @@ interface ProfileState {
   budget: number;
   duration: number;
   income_band: string;
+  relocate_ok: boolean;
   setProfile: (profile: Partial<ProfileState>) => void;
 }
 
@@ -63,6 +64,7 @@ export const useProfileStore = create<ProfileState>()(
       budget: 0,
       duration: 0,
       income_band: '',
+      relocate_ok: true,
       setProfile: (profile) => set((state) => ({ ...state, ...profile })),
     }),
     { name: 'profile-storage', storage }
