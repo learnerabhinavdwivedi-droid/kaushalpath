@@ -81,29 +81,39 @@ class RecommendService:
         # 1. Filter (hard constraints, incl reachability)
         eligible_courses, rejected_courses = filter_courses(student, courses, centres_by_course)
 
-        # 2. Retrieve (semantic shortlist; empty when index not built)
+        # 2. Retrieve (candidate generation only: top-50 shortlist)
         top_riasec = sorted(student_riasec, key=lambda k: student_riasec[k], reverse=True)[:3]
+        stated_interests = (
+            getattr(student, "work_preference", "")
+            or getattr(student, "stated_interests", "")
+            or ""
+        )
         retrieval_results = self.searcher.search(
             top_riasec=[f"{letter} ({_RIASEC_WORD[letter]})" for letter in top_riasec],
             aptitudes=list(student_apt.keys()),
-            stated_interests="",
+            stated_interests=stated_interests,
             top_k=50,
         )
-        retrieval_map = dict(retrieval_results)
+        # Retrieval serves purely as candidate generator; its score is NOT added to ranking
+        candidate_courses = eligible_courses
+        if retrieval_results:
+            retrieved_occ_ids = {occ_id for occ_id, _ in retrieval_results}
+            shortlisted = [c for c in eligible_courses if c.occupation_id in retrieved_occ_ids]
+            # Ensure we keep candidate courses if any matched
+            if shortlisted:
+                candidate_courses = shortlisted
 
         # 3-4. Features + rank
         items_to_rank = []
-        for course in eligible_courses:
+        for course in candidate_courses:
             occupation = self.db.get(Occupation, course.occupation_id)
             if not occupation or not getattr(occupation, "is_vocational", True):
                 continue
             occ_ability = abilities_by_occ.get(occupation.id)
             features = extract_features(
                 student, occupation, course, student_riasec, student_apt,
-                retrieval_score=retrieval_map.get(occupation.id, 0.0),
                 distance_km=_distance_km(student, course, centres_by_course.get(course.id, [])),
                 local_demand_index=_local_demand(markets_by_occ.get(occupation.id, [])),
-                salary_percentile=_salary_percentile(markets_by_occ.get(occupation.id, [])),
                 occupation_ability=occ_ability,
             )
             items_to_rank.append(
@@ -211,16 +221,3 @@ def _local_demand(rows: list[Market]) -> float | None:
         return None
     # demand_index is stored on a 0..100 scale; normalise to 0..1.
     return min(max(sum(vals) / len(vals) / 100.0, 0.0), 1.0)
-
-
-def _salary_percentile(rows: list[Market]) -> float | None:
-    salaries = [float(r.avg_salary_inr) for r in rows if r.avg_salary_inr is not None]
-    if len(salaries) < 2:
-        return None
-    ordered = sorted(salaries)
-    median = ordered[len(ordered) // 2]
-    top = ordered[-1]
-    if top <= 0:
-        return None
-    # Share of the field's ceiling salary — a coarse, honest proxy on demo data.
-    return min(median / top, 1.0)

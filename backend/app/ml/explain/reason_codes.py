@@ -11,6 +11,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from app.core.budget import get_budget_limit
 from app.models.course import Course
 from app.models.occupation import Occupation
 from app.models.student import Student
@@ -89,15 +90,17 @@ def generate_reason_codes(
             "description": desc,
         })
 
-    # 3. Within budget
-    if course.fee_inr is not None and features.get("fee_ratio", 1.0) <= 1.0:
+    # 3. Within budget (fires ONLY when fee <= learner's band limit, states that limit)
+    budget_limit = get_budget_limit(student.budget_band)
+    if course.fee_inr is not None and float(course.fee_inr) <= budget_limit:
         fee = float(course.fee_inr)
+        limit_val = int(budget_limit) if budget_limit != float("inf") else "Unlimited"
         reasons.append({
             "code": "WITHIN_BUDGET",
-            "params": {"fee": int(fee)},
+            "params": {"fee": int(fee), "limit": limit_val},
             "evidence": fee,
             "source": "Course Data",
-            "description": _text("WITHIN_BUDGET", lang, fee=int(fee)),
+            "description": _text("WITHIN_BUDGET", lang, fee=int(fee), limit=limit_val),
         })
 
     # 4. Nearby centre
@@ -120,18 +123,6 @@ def generate_reason_codes(
             "evidence": round(demand, 2),
             "source": "Market Data",
             "description": _text("HIGH_LOCAL_DEMAND", lang, demand=round(demand, 2)),
-        })
-
-    # 6. Good earnings
-    salary_pct = features.get("salary_percentile")
-    if salary_pct is not None and salary_pct >= 0.6:
-        pct = round(salary_pct * 100)
-        reasons.append({
-            "code": "GOOD_EARNINGS",
-            "params": {"salary_percentile": pct},
-            "evidence": pct,
-            "source": "Market Data",
-            "description": _text("GOOD_EARNINGS", lang, salary_percentile=pct),
         })
 
     # Guarantee at least two codes (transparency contract).

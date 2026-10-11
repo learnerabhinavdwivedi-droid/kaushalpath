@@ -51,10 +51,9 @@ class Ranker:
             + g("aptitude_fit", 0.0) * s.ranker_weight_aptitude
             + g("local_demand_index", 0.0) * s.ranker_weight_demand
             + g("salary_percentile", 0.0) * s.ranker_weight_salary
-            + g("retrieval_score", 0.0) * s.ranker_weight_retrieval
         )
         # Lower-is-better signals (subtract their cost, scaled to ~[0,1])
-        score -= g("fee_ratio", 0.0) * s.ranker_weight_fee
+        score -= min(g("fee_ratio", 0.0), 1.0) * s.ranker_weight_fee
         score -= g("nsqf_gap", 0.0) * s.ranker_weight_nsqf
         score -= min(g("distance_km", 0.0) / 500.0, 1.0) * s.ranker_weight_distance
         return score

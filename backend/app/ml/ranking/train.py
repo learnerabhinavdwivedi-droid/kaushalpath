@@ -35,7 +35,7 @@ from app.ml.paths import (
 )
 from app.ml.ranking.features import FEATURE_ORDER, extract_features
 from app.models import Centre, Course, Market, Occupation, Student
-from app.services.recommend_svc import _distance_km, _local_demand, _salary_percentile
+from app.services.recommend_svc import _distance_km, _local_demand
 
 logger = logging.getLogger(__name__)
 
@@ -98,7 +98,6 @@ class _DataIndex:
             retrieval_score=0.0,  # neutral; FAISS index may be absent at train time
             distance_km=_distance_km(student, course, centres),
             local_demand_index=_local_demand(markets),
-            salary_percentile=_salary_percentile(markets),
         )
         return [float(feats[name]) for name in FEATURE_ORDER]
 

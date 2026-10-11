@@ -11,23 +11,10 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from typing import Any
 
+from app.core.budget import BUDGET_LIMITS
+from app.core.education import EDU_HIERARCHY
 from app.models.course import Course
 from app.models.student import Student
-
-EDU_HIERARCHY = {
-    "8th": 1,
-    "10th": 2,
-    "12th": 3,
-    "ITI": 3,
-    "diploma": 4,
-    "graduate": 5,
-}
-
-BUDGET_LIMITS = {
-    "low": 20000.0,
-    "mid": 60000.0,
-    "high": float("inf"),
-}
 
 
 def filter_courses(

@@ -11,9 +11,25 @@ from __future__ import annotations
 import math
 from typing import Any
 
+from app.core.budget import BUDGET_LIMITS, get_budget_limit
+from app.core.education import EDU_TO_NSQF, resolve_course_nsqf
 from app.models.course import Course
 from app.models.occupation import Occupation
 from app.models.student import Student
+
+__all__ = [
+    "BUDGET_LIMITS",
+    "EDU_TO_NSQF",
+    "FEATURE_ORDER",
+    "RIASEC_LETTERS",
+    "centered_cosine",
+    "compute_aptitude_fit",
+    "cosine_similarity",
+    "extract_features",
+    "get_budget_limit",
+    "resolve_course_nsqf",
+    "to_vector",
+]
 
 RIASEC_LETTERS = ["R", "I", "A", "S", "E", "C"]
 
@@ -30,9 +46,6 @@ FEATURE_ORDER: list[str] = [
     "retrieval_score",
     "salary_percentile",
 ]
-
-EDU_TO_NSQF = {"8th": 2, "10th": 3, "12th": 4, "ITI": 4, "diploma": 5, "graduate": 6}
-BUDGET_LIMITS = {"low": 10000.0, "mid": 50000.0, "high": 200000.0}
 
 
 def cosine_similarity(v1: list[float], v2: list[float]) -> float:
@@ -154,12 +167,12 @@ def extract_features(
     """
     student_vec = [student_riasec.get(letter, 0.0) for letter in RIASEC_LETTERS]
     occ_vec = [
-        occupation.riasec_r,
-        occupation.riasec_i,
-        occupation.riasec_a,
-        occupation.riasec_s,
-        occupation.riasec_e,
-        occupation.riasec_c,
+        float(occupation.riasec_r or 0.0),
+        float(occupation.riasec_i or 0.0),
+        float(occupation.riasec_a or 0.0),
+        float(occupation.riasec_s or 0.0),
+        float(occupation.riasec_e or 0.0),
+        float(occupation.riasec_c or 0.0),
     ]
 
     # 1. RIASEC cosine (centred: shape agreement, not shared positivity)
@@ -174,13 +187,18 @@ def extract_features(
 
     # 4. NSQF gap (reachable-level distance; smaller is better)
     student_nsqf = EDU_TO_NSQF.get(student.edu_level, 1)
-    occ_nsqf = occupation.nsqf_level or course.nsqf_level or student_nsqf
+    occ_nsqf = resolve_course_nsqf(course.nsqf_level, occupation.nsqf_level, student_nsqf)
     nsqf_gap = abs(student_nsqf - occ_nsqf) / 6.0
 
-    # 5. Fee ratio (fee / budget; capped at 1 — higher is worse)
-    budget = BUDGET_LIMITS.get(student.budget_band, 50000.0)
+    # 5. Fee ratio (uncapped for explanation; cap only inside scoring)
+    budget = get_budget_limit(student.budget_band)
     fee = float(course.fee_inr) if course.fee_inr is not None else 0.0
-    fee_ratio = min(fee / budget, 1.0) if budget > 0 else 1.0
+    if budget == float("inf"):
+        fee_ratio = 0.0
+    elif budget > 0:
+        fee_ratio = fee / budget
+    else:
+        fee_ratio = 1.0
 
     # 6. Duration fit (course duration / max preferred)
     max_dur = student.max_duration_months or 24
