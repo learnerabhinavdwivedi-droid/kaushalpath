@@ -57,6 +57,7 @@ occupation_mapping.json
 *.swp
 .DS_Store
 Thumbs.db
+~$*
 
 # --- Logs / tmp ---
 *.log

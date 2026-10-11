@@ -18,7 +18,16 @@ from app.ml.ranking.features import extract_features
 from app.ml.ranking.filters import filter_courses
 from app.ml.ranking.ranker import Ranker
 from app.ml.retrieval.searcher import Searcher
-from app.models import Assessment, Centre, Course, Market, Occupation, Recommendation, Student
+from app.models import (
+    Assessment,
+    Centre,
+    Course,
+    Market,
+    Occupation,
+    OccupationAbility,
+    Recommendation,
+    Student,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -64,9 +73,10 @@ class RecommendService:
         if not courses:
             return {"recommendations": [], "rejected": []}
 
-        # Pre-load centre + market reference data once for the whole pass.
+        # Pre-load centre, market, and ability reference data once for the whole pass.
         centres_by_course = self._centres_by_course()
         markets_by_occ = self._markets_by_occ()
+        abilities_by_occ = self._abilities_by_occ()
 
         # 1. Filter (hard constraints, incl reachability)
         eligible_courses, rejected_courses = filter_courses(student, courses, centres_by_course)
@@ -87,15 +97,22 @@ class RecommendService:
             occupation = self.db.get(Occupation, course.occupation_id)
             if not occupation or not getattr(occupation, "is_vocational", True):
                 continue
+            occ_ability = abilities_by_occ.get(occupation.id)
             features = extract_features(
                 student, occupation, course, student_riasec, student_apt,
                 retrieval_score=retrieval_map.get(occupation.id, 0.0),
                 distance_km=_distance_km(student, course, centres_by_course.get(course.id, [])),
                 local_demand_index=_local_demand(markets_by_occ.get(occupation.id, [])),
                 salary_percentile=_salary_percentile(markets_by_occ.get(occupation.id, [])),
+                occupation_ability=occ_ability,
             )
             items_to_rank.append(
-                {"course": course, "occupation": occupation, "features": features}
+                {
+                    "course": course,
+                    "occupation": occupation,
+                    "features": features,
+                    "occupation_ability": occ_ability,
+                }
             )
 
         ranked_items = self.ranker.rank(items_to_rank)
@@ -107,7 +124,13 @@ class RecommendService:
         for rank, item in enumerate(top_items, start=1):
             course, occupation = item["course"], item["occupation"]
             reasons = generate_reason_codes(
-                student, occupation, course, item["features"], student_riasec, lang=lang
+                student,
+                occupation,
+                course,
+                item["features"],
+                student_riasec,
+                lang=lang,
+                occupation_ability=item.get("occupation_ability"),
             )
             rec = Recommendation(
                 student_id=student_id,
@@ -157,6 +180,12 @@ class RecommendService:
         grouped: dict[int, list[Market]] = {}
         for row in self.db.scalars(select(Market)).all():
             grouped.setdefault(row.occupation_id, []).append(row)
+        return grouped
+
+    def _abilities_by_occ(self) -> dict[int, OccupationAbility]:
+        grouped: dict[int, OccupationAbility] = {}
+        for row in self.db.scalars(select(OccupationAbility)).all():
+            grouped[row.occupation_id] = row
         return grouped
 
 

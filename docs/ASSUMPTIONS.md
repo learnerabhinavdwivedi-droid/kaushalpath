@@ -275,3 +275,70 @@ is recorded in `backend/app/data/processed/geo_rejects.csv` without automated gu
 When falling back to state level from an unmatched or small-cell district, state-wide
 aggregate records (`district is None`) are prioritized over arbitrary sibling districts.
 
+---
+
+# Phase 20 (grounded aptitude & ability requirements) assumptions
+
+## A34 — Grounded Aptitude Requirements & O*NET Ability Concordance
+Resolves audit Finding 2 (`aptitude_fit` previously evaluated to the identical mean of student
+scores across every candidate career, wasting its 0.15 weight). In Phase 20, aptitude fit is
+grounded in empirical trade-specific ability profiles (`occupation_abilities`, O*NET 31.0 Abilities
+and Knowledge, Grade A, n >= 30).
+- **Core Dimensions:** 4 vocational dimensions (`required_num`, `required_verbal`,
+  `required_spatial`, `required_mech`), normalized on a 0.0–1.0 scale.
+- **Requirement-Weighted Concordance:**
+  `weighted_score = sum(r_d * s_d) / sum(r_d)` across the 4 dimensions. Trades heavily
+  demanding mechanical and spatial reasoning (e.g. Welder, Fitter) reward student manual and spatial
+  dexterity while deprioritizing irrelevant verbal scores.
+- **Primary Ability Alignment:** Trades define a distinguishing `primary_ability` (e.g. 'mech'
+  for mechanics/welders, 'num' for data entry/accounting, 'verbal' for healthcare/counselling,
+  'spatial' for drafting/design). Composite fit blends `0.7 * weighted_score + 0.3 * primary_ratio`.
+- **Explainability Transparency:** When `aptitude_fit > 0.70`, `generate_reason_codes` surfaces
+  the specific primary dimension (`APTITUDE_STRONG_DIM`) with `"O*NET Abilities (Grade A)"`
+  provenance badge in English and Hindi.
+- **Graceful Fallback:** When an occupation carries no ability requirement record,
+  `compute_aptitude_fit` falls back to the mean of student aptitude scores.
+
+## A35 — O*NET 31.0 Career Interests Normalization Formula & High-Point Codes
+O*NET 31.0 long-format `Career Interest Types.txt` is pivoted to provide per-occupation
+RIASEC vectors. Per O*NET Scales Reference:
+- **Scale OI (Occupational Interests):** Min 1.0, Max 7.0. Rescaling formula to [0.0, 1.0]:
+  `norm_oi = (val - 1.0) / 6.0`, strictly bounded to [0.0, 1.0].
+- **Scale IH (High-Point Codes):** High-point codes 1=R, 2=I, 3=A, 4=S, 5=E, 6=C, 0=None
+  are captured for first, second, and third interest high-points.
+- Provenance: Stored as `source='onet_interests'`, `evidence_grade='A'`, `is_demo=False`,
+  `retrieved_on='2026-10-11'`. Sample size `n` and `standard_error` remain NULL (per data dictionary).
+
+## A36 — Construct Requirement Formula & Content Model Validation
+Cognitive and vocational ability requirements are derived from `Abilities.txt` and `Knowledge.txt`
+using construct mappings in `backend/app/data/raw/aptitude_map.yaml`:
+- **Formula:** `requirement = sqrt(norm_importance * norm_level)` averaged over mapped elements.
+  - `norm_importance = (IM - 1.0) / 4.0` (Scale IM: 1.0 - 5.0)
+  - `norm_level = LV / 7.0` (Scale LV: 0.0 - 7.0)
+- **Validation:** Element names in `aptitude_map.yaml` are verified against `Content Model Reference.txt`
+  and fail loudly (`ValueError`) if any unknown element is encountered.
+- **Primary Ability:** Construct with the highest requirement score.
+
+## A37 — Family Safety Work Context Flags (Soft Filtering Only)
+Environmental and physical characteristics from O*NET 31.0 `Work Context.txt` are evaluated
+against thresholds in `work_flags.yaml` and written to `occupations.work_flags` JSON:
+- `{outdoor, hazard, physical_effort, customer_contact}`
+- **Fairness Guarantee:** Work flags address parental and learner safety questions and drive
+  an optional SOFT learner preference. They are NEVER a hard filter and NEVER gated by gender.
+
+## A38 — O*NET-to-India Trade Concordance, Job Zone & RIASEC Spread Reviews
+- **Precedence Hierarchy:** PS-provided (Tier 1) > O*NET-derived (Tier 2, Grade A) > Curated Demo
+  (Tier 3, Grade D). Unmapped trades retain demo values (`is_demo=True`, Grade D). Never blend
+  demo and real values inside one vector.
+- **Coverage:** 103 of 135 vocational trades (76.3%) achieve Grade-A empirical grounding,
+  exceeding the >= 70% target.
+- **Spread Flag:** When aggregating across multiple O*NET codes for a trade, if the sample
+  standard deviation of any RIASEC dimension exceeds 0.2, the trade is flagged with `needs_review=True`
+  and written to `data/processed/riasec_spread_review.csv`.
+- **Job Zone Sanity Check:** Mismatches between O*NET Job Zones (1-5) and NSQF levels are written
+  to `data/processed/jobzone_nsqf_review.csv` for human review (report only, never auto-corrected).
+- **Hindi Titles:** Retained from NCVT/NSDC titles in `occupations.csv`, avoiding ESCO machine translation.
+- **Licence Attribution:** O*NET 31.0 is licensed under CC BY 4.0; official attribution notice is
+  documented in `docs/ATTRIBUTION.md`.
+
+

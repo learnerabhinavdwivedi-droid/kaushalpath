@@ -64,6 +64,74 @@ def centered_cosine(v1: list[float], v2: list[float]) -> float:
     return (cosine_similarity([x - m1 for x in v1], [x - m2 for x in v2]) + 1.0) / 2.0
 
 
+def compute_aptitude_fit(
+    student_aptitude: dict[str, float],
+    occupation_ability: Any | None = None,
+) -> float:
+    """Compute trade-grounded aptitude fit in [0, 1].
+
+    When `occupation_ability` (O*NET 31.0 ability profile) is provided:
+      1. Weighted requirement score: sum(r_d * s_d) / sum(r_d) over the 4
+         dimensions (num, verbal, spatial, mech). Trades requiring high
+         mechanical skill heavily reward high student mechanical ability.
+      2. Primary ability alignment: evaluates whether student satisfies
+         the trade's primary distinguishing requirement.
+      3. Composite fit: 0.7 * weighted_score + 0.3 * primary_ratio.
+
+    Fallback (no ability profile):
+      Mean of student's aptitude scores (backward compatible).
+    """
+    if not student_aptitude:
+        return 0.5
+
+    if occupation_ability is not None:
+        r_num = getattr(occupation_ability, "required_num", None)
+        if r_num is None and isinstance(occupation_ability, dict):
+            r_num = occupation_ability.get("required_num")
+
+        r_verbal = getattr(occupation_ability, "required_verbal", None)
+        if r_verbal is None and isinstance(occupation_ability, dict):
+            r_verbal = occupation_ability.get("required_verbal")
+
+        r_spatial = getattr(occupation_ability, "required_spatial", None)
+        if r_spatial is None and isinstance(occupation_ability, dict):
+            r_spatial = occupation_ability.get("required_spatial")
+
+        r_mech = getattr(occupation_ability, "required_mech", None)
+        if r_mech is None and isinstance(occupation_ability, dict):
+            r_mech = occupation_ability.get("required_mech")
+
+        primary_dim = getattr(occupation_ability, "primary_ability", None)
+        if primary_dim is None and isinstance(occupation_ability, dict):
+            primary_dim = occupation_ability.get("primary_ability")
+
+        reqs = {
+            "num": float(r_num or 0.0),
+            "verbal": float(r_verbal or 0.0),
+            "spatial": float(r_spatial or 0.0),
+            "mech": float(r_mech or 0.0),
+        }
+        total_req = sum(reqs.values())
+        if total_req > 0:
+            weighted_score = sum(
+                reqs[d] * float(student_aptitude.get(d, 0.0))
+                for d in ("num", "verbal", "spatial", "mech")
+            ) / total_req
+
+            if primary_dim and primary_dim in reqs and reqs[primary_dim] > 0:
+                s_prim = float(student_aptitude.get(primary_dim, 0.0))
+                r_prim = reqs[primary_dim]
+                primary_ratio = min(s_prim / r_prim, 1.0)
+                fit = 0.7 * weighted_score + 0.3 * primary_ratio
+            else:
+                fit = weighted_score
+
+            return max(0.0, min(1.0, fit))
+
+    apt_vals = [v for v in student_aptitude.values() if v is not None]
+    return sum(apt_vals) / len(apt_vals) if apt_vals else 0.5
+
+
 def extract_features(
     student: Student,
     occupation: Occupation,
@@ -75,12 +143,14 @@ def extract_features(
     distance_km: float | None = None,
     local_demand_index: float | None = None,
     salary_percentile: float | None = None,
+    occupation_ability: Any | None = None,
 ) -> dict[str, float]:
     """Extract the full feature dict for one candidate course/occupation.
 
     `distance_km`, `local_demand_index` and `salary_percentile` are optional
     DB-derived signals; when the data isn't available they fall back to a
     neutral value (never a manufactured penalty).
+    `occupation_ability` provides empirical O*NET 31.0 ability requirements.
     """
     student_vec = [student_riasec.get(letter, 0.0) for letter in RIASEC_LETTERS]
     occ_vec = [
@@ -99,10 +169,8 @@ def extract_features(
     overlap = _top3_letters(student_vec) & _top3_letters(occ_vec)
     top3_code_overlap = len(overlap) / 3.0
 
-    # 3. Aptitude fit (composite of the student's aptitudes; occupations carry
-    #    no aptitude-requirement vector yet, so this is a student-side signal).
-    apt_vals = [v for v in student_aptitude.values() if v is not None]
-    aptitude_fit = sum(apt_vals) / len(apt_vals) if apt_vals else 0.5
+    # 3. Aptitude fit (grounded in trade-specific ability requirements)
+    aptitude_fit = compute_aptitude_fit(student_aptitude, occupation_ability)
 
     # 4. NSQF gap (reachable-level distance; smaller is better)
     student_nsqf = EDU_TO_NSQF.get(student.edu_level, 1)

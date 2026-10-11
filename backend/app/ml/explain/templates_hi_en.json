@@ -7,6 +7,10 @@
     "en": "Your aptitude is strong for this field ({evidence}% match)",
     "hi": "इस क्षेत्र के लिए आपकी योग्यता प्रबल है ({evidence}% मेल)"
   },
+  "APTITUDE_STRONG_DIM": {
+    "en": "Your {dimension} aptitude is a strong fit for this field ({evidence}% match)",
+    "hi": "इस क्षेत्र के लिए आपकी {dimension} योग्यता प्रबल है ({evidence}% मेल)"
+  },
   "WITHIN_BUDGET": {
     "en": "Fee (INR {fee}) is within your budget",
     "hi": "फ़ीस (₹{fee}) आपके बजट के भीतर है"

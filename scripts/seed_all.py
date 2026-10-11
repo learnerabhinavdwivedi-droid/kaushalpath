@@ -13,28 +13,34 @@ import _common  # noqa: F401  # bootstraps sys.path so app.* + loader imports re
 import app.models  # noqa: F401  # register all tables on Base.metadata
 import build_occupation_master
 import build_retrieval_index
+import derive_work_flags
 import load_centres
 import load_courses
 import load_esco
 import load_market
+import load_occupation_abilities
 import load_onet
 import load_progression
 import load_provided_dataset
 import load_provider_outcomes
 import load_schemes
+import map_onet_to_india
 from app.db import Base, engine
 
 
 def main() -> None:
     Base.metadata.create_all(bind=engine)
 
-    # Optional real-data ingestion first (no-ops with a TODO if raw/ is empty).
+    # Phase 20: Ingest O*NET 31.0 interests, abilities, work flags and trade mappings
     load_onet.main()
+    derive_work_flags.main()
+    map_onet_to_india.main()
     load_esco.main()
     load_provided_dataset.main()
 
-    # Demo + merged reference data.
+    # Occupation master & reference data
     build_occupation_master.main()
+    load_occupation_abilities.main()
     load_courses.main()
     load_centres.main()
     load_market.main()

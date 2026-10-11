@@ -23,6 +23,7 @@ from app.models import (
     GeoAlias,
     Market,
     Occupation,
+    OccupationAbility,
     ProgressionPath,
     ProviderOutcome,
     Scheme,
@@ -88,6 +89,19 @@ TABLES = {
         Scheme,
         ["name", "benefit_text_en", "benefit_text_hi", "source"],
     ),
+    "occupation_abilities": (
+        OccupationAbility,
+        [
+            "occupation_id",
+            "required_num",
+            "required_verbal",
+            "required_spatial",
+            "required_mech",
+            "primary_ability",
+            "source",
+            "evidence_grade",
+        ],
+    ),
 }
 
 
@@ -138,8 +152,15 @@ def _table_report(session, name: str, model, key_cols: list[str]) -> None:
         )
         for st, gr, cnt in state_grades[:10]:
             print(f"    {st:<20} [Grade {gr}]: {cnt}")
-        if len(state_grades) > 10:
-            print(f"    ... and {len(state_grades) - 10} more state x grade combinations.")
+    if hasattr(model, "primary_ability"):
+        print("  distribution by primary ability:")
+        for prim, cnt in (
+            session.query(model.primary_ability, func.count(pk))
+            .group_by(model.primary_ability)
+            .order_by(func.count(pk).desc())
+            .all()
+        ):
+            print(f"    {str(prim or '(unset)'):<15}: {cnt:4d}")
 
     print("  rows per source:")
     for source, cnt in session.query(model.source, func.count(pk)).group_by(
@@ -166,6 +187,8 @@ def _dup_pct(session, model, name: str) -> float:
         cols = [model.from_course_id, model.to_label]
     elif name == "schemes":
         cols = [model.name]
+    elif name == "occupation_abilities":
+        cols = [model.occupation_id]
     else:  # market
         cols = [model.occupation_id, model.state, model.district, model.year]
 
@@ -246,6 +269,30 @@ def _coverage(session) -> None:
     ).scalar() or 0
     print(f"  occupations with Hindi name: {occ_with_hi}/{total_occ}")
     print(f"  occupations with RIASEC vector: {occ_with_riasec}/{total_occ}")
+
+    # Phase 20 Grounded Metrics
+    real_riasec_voc = session.query(func.count(Occupation.id)).filter(
+        Occupation.is_vocational.is_(True),
+        Occupation.is_demo.is_(False),
+        Occupation.evidence_grade == "A",
+    ).scalar() or 0
+    real_riasec_pct = 100.0 * real_riasec_voc / voc_occ if voc_occ else 0.0
+    print(f"  vocational trades with real Grade-A RIASEC vector: {real_riasec_voc}/{voc_occ} ({real_riasec_pct:5.1f}%)")
+
+    real_ability_voc = session.query(func.count(OccupationAbility.id)).join(
+        Occupation, OccupationAbility.occupation_id == Occupation.id
+    ).filter(
+        Occupation.is_vocational.is_(True),
+        OccupationAbility.is_demo.is_(False),
+        OccupationAbility.evidence_grade == "A",
+    ).scalar() or 0
+    real_ability_pct = 100.0 * real_ability_voc / voc_occ if voc_occ else 0.0
+    print(f"  vocational trades with real Grade-A ability vector: {real_ability_voc}/{voc_occ} ({real_ability_pct:5.1f}%)")
+
+    occ_with_flags = session.query(func.count(Occupation.id)).filter(
+        Occupation.work_flags.isnot(None)
+    ).scalar() or 0
+    print(f"  occupations with grounded work_flags: {occ_with_flags}/{total_occ}")
 
     states = set()
     for (state,) in session.query(Centre.state).distinct().all():

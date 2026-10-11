@@ -32,6 +32,14 @@ def _text(code: str, lang: str, **params: Any) -> str:
         return tpl
 
 
+DIMENSION_LABELS: dict[str, dict[str, str]] = {
+    "mech": {"en": "mechanical", "hi": "यांत्रिक (mechanical)"},
+    "num": {"en": "numerical", "hi": "संख्यात्मक (numerical)"},
+    "spatial": {"en": "spatial / visual", "hi": "स्थानिक (spatial)"},
+    "verbal": {"en": "communication", "hi": "मौखिक (verbal)"},
+}
+
+
 def generate_reason_codes(
     student: Student,
     occupation: Occupation,
@@ -39,6 +47,8 @@ def generate_reason_codes(
     features: dict[str, float],
     student_riasec: dict[str, float],
     lang: str = "en",
+    *,
+    occupation_ability: Any | None = None,
 ) -> list[dict[str, Any]]:
     """Return >=2 reason codes with evidence, source and localised text."""
     reasons: list[dict[str, Any]] = []
@@ -58,12 +68,25 @@ def generate_reason_codes(
     # 2. Strong aptitude
     if features.get("aptitude_fit", 0.0) > 0.7:
         ev = round(features["aptitude_fit"] * 100)
+        primary_dim = getattr(occupation_ability, "primary_ability", None)
+        if primary_dim is None and isinstance(occupation_ability, dict):
+            primary_dim = occupation_ability.get("primary_ability")
+        if primary_dim and primary_dim in DIMENSION_LABELS:
+            dim_label = DIMENSION_LABELS[primary_dim].get(lang, primary_dim)
+            desc = _text("APTITUDE_STRONG_DIM", lang, dimension=dim_label, evidence=ev)
+            source_badge = "O*NET Abilities (Grade A)"
+            params = {"evidence": ev, "dimension": dim_label}
+        else:
+            desc = _text("APTITUDE_STRONG", lang, evidence=ev)
+            source_badge = "Assessment"
+            params = {"evidence": ev}
+
         reasons.append({
             "code": "APTITUDE_STRONG",
-            "params": {"evidence": ev},
+            "params": params,
             "evidence": ev,
-            "source": "Assessment",
-            "description": _text("APTITUDE_STRONG", lang, evidence=ev),
+            "source": source_badge,
+            "description": desc,
         })
 
     # 3. Within budget
