@@ -410,12 +410,15 @@ class EvidenceService:
 
         return {
             "status": "ok",
+            "id": selected.id,
             "value": value,
             "interval": [ci_low, ci_high] if ci_low is not None and ci_high is not None else None,
             "n": selected.n,
             "level_used": selected.geo_level,
             "grade": selected.evidence_grade,
             "definition": selected.definition,
+            "source": selected.source,
+            "year": selected.source_year or DEFAULT_CURRENT_YEAR,
             "as_of": selected.period_end or selected.period_start or str(selected.source_year),
             "source_url": selected.source_url,
         }

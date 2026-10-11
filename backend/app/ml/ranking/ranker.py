@@ -9,6 +9,7 @@ native stack.
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 from app.core.config import get_settings
 from app.ml.paths import RANKER_MODEL_PATH
@@ -41,24 +42,93 @@ class Ranker:
             logger.warning("Could not load LightGBM model (%s); using fallback scorer.", exc)
             self.model = None
 
-    def _fallback_score(self, features: dict) -> float:
+    def _fallback_score(
+        self,
+        features: dict[str, Any],
+        *,
+        interest_confidence: float = 1.0,
+    ) -> float:
         s = self.settings
-        g = features.get
-        # Higher-is-better signals
-        score = (
-            g("riasec_cosine", 0.0) * s.ranker_weight_riasec
-            + g("top3_code_overlap", 0.0) * s.ranker_weight_overlap
-            + g("aptitude_fit", 0.0) * s.ranker_weight_aptitude
-            + g("local_demand_index", 0.0) * s.ranker_weight_demand
-            + g("salary_percentile", 0.0) * s.ranker_weight_salary
-        )
-        # Lower-is-better signals (subtract their cost, scaled to ~[0,1])
-        score -= min(g("fee_ratio", 0.0), 1.0) * s.ranker_weight_fee
-        score -= g("nsqf_gap", 0.0) * s.ranker_weight_nsqf
-        score -= min(g("distance_km", 0.0) / 500.0, 1.0) * s.ranker_weight_distance
-        return score
 
-    def score(self, features: dict) -> float:
+        # Normalise higher-is-better representations
+        raw_dist = features.get("distance_km")
+        dist_score = (1.0 - min(raw_dist / 500.0, 1.0)) if raw_dist is not None else None
+
+        raw_cost = features.get("net_cost_ratio")
+        if raw_cost is None:
+            raw_cost = features.get("fee_ratio")
+        cost_score = (1.0 - min(raw_cost, 1.0)) if raw_cost is not None else None
+
+        raw_prog = features.get("progression_value")
+        prog_score = min(raw_prog / 3.0, 1.0) if raw_prog is not None else None
+
+        feature_values: dict[str, float | None] = {
+            "riasec_cosine": features.get("riasec_cosine"),
+            "top3_code_overlap": features.get("top3_code_overlap"),
+            "aptitude_fit_occ": features.get("aptitude_fit_occ", features.get("aptitude_fit")),
+            "placement_est": features.get("placement_est"),
+            "earnings_median_pct": features.get("earnings_median_pct"),
+            "earnings_floor_pct": features.get("earnings_floor_pct"),
+            "local_demand": features.get("local_demand", features.get("local_demand_index")),
+            "net_cost_score": cost_score,
+            "distance_score": dist_score,
+            "progression_value": prog_score,
+        }
+
+        # Base transparent weights per Phase 23 Step 4 (sum = 1.0)
+        base_weights: dict[str, float] = {
+            "riasec_cosine": getattr(s, "ranker_weight_riasec", 0.22),
+            "top3_code_overlap": getattr(s, "ranker_weight_overlap", 0.08),
+            "aptitude_fit_occ": getattr(s, "ranker_weight_aptitude", 0.20),
+            "placement_est": getattr(s, "ranker_weight_placement", 0.10),
+            "earnings_median_pct": getattr(s, "ranker_weight_earnings_median", 0.08),
+            "earnings_floor_pct": getattr(s, "ranker_weight_earnings_floor", 0.07),
+            "local_demand": getattr(s, "ranker_weight_local_demand", 0.08),
+            "net_cost_score": getattr(s, "ranker_weight_net_cost", 0.07),
+            "distance_score": getattr(s, "ranker_weight_distance", 0.05),
+            "progression_value": getattr(s, "ranker_weight_progression", 0.05),
+        }
+
+        # Shift weight from interest to aptitude & outcomes when interest_confidence is low
+        weights = dict(base_weights)
+        c = max(0.0, min(1.0, float(interest_confidence)))
+        if c < 0.70:
+            shift_ratio = (0.70 - c) / 0.70
+            tot_interest = weights["riasec_cosine"] + weights["top3_code_overlap"]
+            shift_amt = tot_interest * shift_ratio * 0.5
+            w_riasec = weights["riasec_cosine"]
+            w_top3 = weights["top3_code_overlap"]
+            weights["riasec_cosine"] -= shift_amt * (w_riasec / tot_interest)
+            weights["top3_code_overlap"] -= shift_amt * (w_top3 / tot_interest)
+            weights["aptitude_fit_occ"] += shift_amt * 0.40
+            outcomes_tot = (
+                weights["placement_est"]
+                + weights["earnings_median_pct"]
+                + weights["earnings_floor_pct"]
+            )
+            if outcomes_tot > 0:
+                share_pl = weights["placement_est"] / outcomes_tot
+                share_med = weights["earnings_median_pct"] / outcomes_tot
+                share_fl = weights["earnings_floor_pct"] / outcomes_tot
+                weights["placement_est"] += shift_amt * 0.60 * share_pl
+                weights["earnings_median_pct"] += shift_amt * 0.60 * share_med
+                weights["earnings_floor_pct"] += shift_amt * 0.60 * share_fl
+
+        # Missing data neutrality (Step 3):
+        # Renormalise weights across available features only; never fill 0.5 constants
+        present_weights = 0.0
+        weighted_sum = 0.0
+        for name, val in feature_values.items():
+            if val is not None:
+                w = weights.get(name, 0.0)
+                present_weights += w
+                weighted_sum += w * float(val)
+
+        if present_weights > 0:
+            return round(weighted_sum / present_weights, 4)
+        return 0.5
+
+    def score(self, features: dict, *, interest_confidence: float = 1.0) -> float:
         if self.model is not None:
             try:
                 import numpy as np
@@ -67,12 +137,12 @@ class Ranker:
                 return float(self.model.predict(vec)[0])
             except Exception as exc:
                 logger.warning("Model predict failed (%s); using fallback.", exc)
-        return self._fallback_score(features)
+        return self._fallback_score(features, interest_confidence=interest_confidence)
 
-    def rank(self, items: list[dict]) -> list[dict]:
+    def rank(self, items: list[dict], *, interest_confidence: float = 1.0) -> list[dict]:
         """Sort items (each carrying a 'features' dict) by score, descending."""
         for item in items:
-            item["score"] = self.score(item["features"])
+            item["score"] = self.score(item["features"], interest_confidence=interest_confidence)
         return sorted(items, key=lambda x: x["score"], reverse=True)
 
     @property

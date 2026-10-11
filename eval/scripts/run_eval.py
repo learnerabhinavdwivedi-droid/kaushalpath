@@ -36,7 +36,7 @@ from app.ml.explain.reason_codes import generate_reason_codes  # noqa: E402
 from app.ml.ranking.features import extract_features  # noqa: E402
 from app.ml.ranking.filters import filter_courses  # noqa: E402
 from app.ml.ranking.ranker import Ranker  # noqa: E402
-from app.services.recommend_svc import _distance_km, _local_demand, _salary_percentile  # noqa: E402
+from app.services.recommend_svc import _distance_km, _local_demand  # noqa: E402
 from eval_common import (  # noqa: E402
     GOLD_DIR,
     LABELS_PATH,
@@ -107,7 +107,6 @@ def rank_persona(catalogue: Catalogue, ranker: Ranker, persona: dict):
             retrieval_score=0.0,
             distance_km=_distance_km(student, course, centres),
             local_demand_index=_local_demand(markets),
-            salary_percentile=_salary_percentile(markets),
         )
         items.append({"course": course, "occupation": occupation, "features": feats})
     return ranker.rank(items)

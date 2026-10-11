@@ -23,7 +23,7 @@ from app.db.session import SessionLocal  # noqa: E402
 from app.ml.ranking.features import cosine_similarity  # noqa: E402
 from app.ml.ranking.filters import filter_courses  # noqa: E402
 from app.models import Centre, Course, Market, Occupation, Student  # noqa: E402
-from app.services.recommend_svc import _distance_km, _local_demand, _salary_percentile  # noqa: E402
+from app.services.recommend_svc import _distance_km, _local_demand  # noqa: E402
 
 GOLD_DIR = REPO_ROOT / "eval" / "gold"
 PERSONAS_PATH = GOLD_DIR / "personas.jsonl"
@@ -111,7 +111,9 @@ class Catalogue:
         return sum(parts) / len(parts) if parts else 0.5
 
     def salary_percentile(self, occupation: Occupation) -> float | None:
-        return _salary_percentile(self.markets_by_occ.get(occupation.id, []))
+        rows = self.markets_by_occ.get(occupation.id, [])
+        vals = [r.avg_salary_inr for r in rows if r.avg_salary_inr is not None]
+        return min(max(float(max(vals)) / 50000.0, 0.0), 1.0) if vals else None
 
     def distance_km(self, persona: dict, course: Course) -> float | None:
         student = persona_to_student(persona)

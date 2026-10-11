@@ -8,10 +8,10 @@ Principles:
    - Learner percentiles linked against normative pilot distribution.
    - Occupation requirements linked against distribution across vocational occupations.
 2. Shortfall only:
-   - If learner ability is below the occupation requirement, count the gap as a shortfall.
-   - If learner ability exceeds the requirement (surplus), shortfall is 0.0 (surplus is NEVER penalized).
+   - If learner ability is below occupation requirement, count gap as shortfall.
+   - If learner ability exceeds requirement (surplus), shortfall is 0.0 (surplus not penalized).
 3. Empirical Bayes / SEM Shrinkage:
-   - When measurement error (SE) is high, shrink score toward neutral midpoint (0.50) and lower confidence.
+   - When measurement error (SE) is high, shrink score toward midpoint (0.50).
 """
 from __future__ import annotations
 
@@ -86,7 +86,7 @@ def aptitude_match(
         learner_p = _norm_cdf(theta_c, l_mean, l_sd)
         req_p = _norm_cdf(req_c, o_mean, o_sd)
 
-        # SHORTFALL only: if learner is below requirement, record shortfall; surplus is never penalized
+        # SHORTFALL only: if learner is below requirement, record shortfall; surplus not penalized
         if learner_p < req_p:
             gap = req_p - learner_p
         else:

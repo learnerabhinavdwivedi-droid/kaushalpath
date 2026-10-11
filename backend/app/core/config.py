@@ -68,7 +68,7 @@ class Settings(BaseSettings):
 
     # ML Models
     embedder_model_name: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-    model_version: str = "kaushalpath-rank-0.1.0"
+    model_version: str = "kaushalpath-rank-0.2.0"
 
     # LLM Settings (Phase 12 conversational engine)
     llm_provider: str = "none"  # "none" | "openai_compat" | "gemini"
@@ -96,16 +96,31 @@ class Settings(BaseSettings):
     # Which notifier adapter delivers the counsellor hand-off: console | sms_stub | whatsapp
     notifier_provider: str = "console"
 
-    # Fallback ranker weights (used when the LightGBM model is not trained)
-    ranker_weight_riasec: float = 0.35
-    ranker_weight_overlap: float = 0.10
-    ranker_weight_aptitude: float = 0.15
-    ranker_weight_demand: float = 0.10
-    ranker_weight_salary: float = 0.05
-    ranker_weight_retrieval: float = 0.20
-    ranker_weight_fee: float = 0.10
+    # Phase 23 Recommender v2 weights (transparent scorer; sum = 1.00)
+    # interest 0.30 (riasec 0.22, top3 overlap 0.08)
+    # aptitude_fit_occ 0.20
+    # outcomes 0.25 (placement_est 0.10, earnings_median_pct 0.08, earnings_floor_pct 0.07)
+    # local_demand 0.08
+    # cost (net_cost_ratio) 0.07
+    # distance 0.05
+    # progression_value 0.05
+    ranker_weight_riasec: float = 0.22
+    ranker_weight_overlap: float = 0.08
+    ranker_weight_aptitude: float = 0.20
+    ranker_weight_placement: float = 0.10
+    ranker_weight_earnings_median: float = 0.08
+    ranker_weight_earnings_floor: float = 0.07
+    ranker_weight_local_demand: float = 0.08
+    ranker_weight_net_cost: float = 0.07
+    ranker_weight_distance: float = 0.05
+    ranker_weight_progression: float = 0.05
+
+    # Backward compatibility aliases
+    ranker_weight_demand: float = 0.08
+    ranker_weight_salary: float = 0.08
+    ranker_weight_retrieval: float = 0.0
+    ranker_weight_fee: float = 0.07
     ranker_weight_nsqf: float = 0.05
-    ranker_weight_distance: float = 0.10
 
     @model_validator(mode="after")
     def _prod_hardening(self) -> Settings:

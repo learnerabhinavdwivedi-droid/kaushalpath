@@ -33,7 +33,7 @@ from app.ml.paths import (
     RANKER_META_PATH,
     RANKER_MODEL_PATH,
 )
-from app.ml.ranking.features import FEATURE_ORDER, extract_features
+from app.ml.ranking.features import FEATURE_ORDER, extract_features, to_vector
 from app.models import Centre, Course, Market, Occupation, Student
 from app.services.recommend_svc import _distance_km, _local_demand
 
@@ -99,7 +99,7 @@ class _DataIndex:
             distance_km=_distance_km(student, course, centres),
             local_demand_index=_local_demand(markets),
         )
-        return [float(feats[name]) for name in FEATURE_ORDER]
+        return to_vector(feats)
 
 
 def _group_by_persona(rows: list[dict]):
@@ -242,7 +242,7 @@ def train(db: Session | None = None) -> dict:
             start += g
         val_ndcg = round(_ndcg_at_k(pairs, k=5), 4) if pairs else None
 
-    version = "kaushalpath-rank-lambdarank-0.1.0"
+    version = "kaushalpath-rank-lambdarank-0.2.0"
     meta.update({
         "version": version, "trained": True,
         "train_date": _dt.datetime.now(_dt.UTC).isoformat(),
