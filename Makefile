@@ -37,7 +37,7 @@ eval:
 	$(ACT) && python eval/scripts/run_eval.py val
 
 eval-final:
-	$(ACT) && python eval/scripts/run_eval.py test
+	$(ACT) && python eval/scripts/run_eval_v2.py
 
 # Build schema (if needed) + load demo/merged reference data + retrieval index.
 # Idempotent, and OFFLINE-safe: onet/esco loaders are no-ops without raw/ and

@@ -1,0 +1,52 @@
+{
+  "status": "PASS",
+  "total_transitions_evaluated": 832,
+  "overall_80pct_interval_coverage": 0.762,
+  "target_interval_coverage": "[0.70, 0.90]",
+  "by_metric": {
+    "placement_rate": {
+      "n_transitions": 6,
+      "mae_raw": 0.12,
+      "mae_shrunk": 0.12,
+      "interval_coverage_80": 0.8333
+    },
+    "earnings_monthly_inr": {
+      "n_transitions": 823,
+      "mae_raw": 2591.47,
+      "mae_shrunk": 2024.75,
+      "interval_coverage_80": 0.7606
+    },
+    "self_employed_pct": {
+      "n_transitions": 1,
+      "mae_raw": 0.04,
+      "mae_shrunk": 0.04,
+      "interval_coverage_80": 1.0
+    },
+    "pass_rate": {
+      "n_transitions": 1,
+      "mae_raw": 0.02,
+      "mae_shrunk": 0.02,
+      "interval_coverage_80": 1.0
+    },
+    "admission_rate": {
+      "n_transitions": 1,
+      "mae_raw": 0.04,
+      "mae_shrunk": 0.04,
+      "interval_coverage_80": 1.0
+    }
+  },
+  "by_grade": {
+    "B": {
+      "n_transitions": 31,
+      "interval_coverage_80": 0.3226
+    },
+    "C": {
+      "n_transitions": 799,
+      "interval_coverage_80": 0.7785
+    },
+    "A": {
+      "n_transitions": 2,
+      "interval_coverage_80": 1.0
+    }
+  }
+}
