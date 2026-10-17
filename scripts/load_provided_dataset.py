@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from _common import RAW_DIR, read_csv
+from _common import PROCESSED_DIR, RAW_DIR, read_csv
 from app.db.session import SessionLocal
 from app.models import Centre, Course, Market, Occupation, ProviderOutcome
 
@@ -30,7 +30,8 @@ DEFAULT_SYNONYMS: dict[str, list[str]] = {
     # Occupation / trade
     "name_en": [
         "trade", "trade_name", "job_role", "occupation", "occupation_name",
-        "role", "name_en", "trade_title",
+        "role", "name_en", "trade_title", "vyavsay_trade", "candidate_stream",
+        "trade_discipline", "course_trade", "vyavsay",
     ],
     "name_hi": ["name_hi", "hindi_name", "trade_hi", "vyavsay_naam"],
     "nco_code": ["nco", "nco_code", "nco_2015", "nco_id"],
@@ -41,11 +42,17 @@ DEFAULT_SYNONYMS: dict[str, list[str]] = {
     # Market / outcomes
     "occupation_name_en": [
         "trade", "trade_name", "occupation", "occupation_name", "job_role", "course_name",
+        "vyavsay_trade", "candidate_stream", "trade_discipline", "course_trade", "vyavsay",
     ],
-    "state": ["state", "state_name", "pradesh", "region"],
-    "district": ["district", "district_name", "dist", "city", "location"],
+    "state": [
+        "state", "state_name", "pradesh", "region", "pradesh_naam",
+        "state_territory", "state_ut", "pradesh_stithi",
+    ],
+    "district": ["district", "district_name", "dist", "city", "location", "zila", "revenue_district", "district_hq"],
     "avg_salary_inr": [
         "avg_salary", "average_salary", "salary", "avg_salary_inr", "mean_salary", "monthly_salary",
+        "vetan_masik_inr", "annual_ctc_package", "annual_ctc", "median_monthly_take_home",
+        "vetan_inr", "ctc_package",
     ],
     "earnings_p25": [
         "earnings_p25", "salary_p25", "p25_salary", "p25_earnings", "min_salary",
@@ -53,6 +60,7 @@ DEFAULT_SYNONYMS: dict[str, list[str]] = {
     ],
     "earnings_median": [
         "earnings_median", "median_salary", "salary_median", "median_earnings", "typical_salary",
+        "vetan_masik_inr", "annual_ctc_package", "median_monthly_take_home", "annual_ctc", "vetan_inr",
     ],
     "earnings_p75": [
         "earnings_p75", "salary_p75", "p75_salary", "p75_earnings", "max_salary",
@@ -60,17 +68,25 @@ DEFAULT_SYNONYMS: dict[str, list[str]] = {
     ],
     "placement_rate": [
         "placement_rate", "placement_pct", "placement", "placed_pct",
-        "placement_percentage", "job_placement_rate",
+        "placement_percentage", "job_placement_rate", "niyojan_pratishat",
+        "job_placement_ratio", "roji_roti_rate", "placement_ratio",
     ],
     "demand_index": ["demand_index", "demand", "industry_demand", "market_demand"],
-    "cohort_year": ["cohort_year", "year", "batch_year", "passing_year", "eval_year"],
+    "cohort_year": [
+        "cohort_year", "year", "batch_year", "passing_year", "eval_year",
+        "batch_varsh", "convocation_date", "project_completion_timestamp", "pass_out_year",
+    ],
 
     # Provider / centre
     "provider_name": [
         "provider_name", "centre_name", "center_name", "institute_name", "iti_name",
-        "provider", "name",
+        "provider", "shikshan_sansthan", "centre_title", "institute_legal_name",
+        "training_center_name",
     ],
-    "course_name": ["course", "course_name", "trade", "trade_name", "program", "programme_name"],
+    "course_name": [
+        "course", "course_name", "trade", "trade_name", "program_name", "programme_name",
+        "vyavsay_trade", "candidate_stream", "trade_discipline", "course_trade",
+    ],
     "provider_type": ["provider_type", "type", "institute_type", "category"],
     "affiliation": ["affiliation", "board", "certifying_body", "affiliated_to"],
     "has_female_trainers": ["has_female_trainers", "female_trainers", "women_instructors"],
@@ -79,19 +95,34 @@ DEFAULT_SYNONYMS: dict[str, list[str]] = {
     "safety_certified": ["safety_certified", "safety_certification", "safe_campus"],
 
     # Cohort counts
-    "enrolled": ["enrolled", "total_enrolled", "admitted", "intake", "students_enrolled"],
-    "certified": ["certified", "passed", "graduated", "completed"],
-    "placed": ["placed", "total_placed", "placed_candidates", "employed"],
-    "self_employed_pct": ["self_employed_pct", "self_employed", "self_employment_rate"],
+    "enrolled": [
+        "enrolled", "total_enrolled", "admitted", "intake", "students_enrolled",
+        "total_enrolment_count", "total_enrolment",
+    ],
+    "certified": [
+        "certified", "passed", "graduated", "completed",
+        "successful_certifications", "certified_trainees",
+    ],
+    "placed": [
+        "placed", "total_placed", "placed_candidates", "employed",
+        "hired_candidates",
+    ],
+    "self_employed_pct": [
+        "self_employed_pct", "self_employed", "self_employment_rate",
+        "self_employed_ratio",
+    ],
     "apprenticeship_stipend_inr": [
         "apprenticeship_stipend_inr", "stipend", "apprentice_stipend", "naps_stipend",
+        "apprentice_monthly_stipend", "stipend_during_apprenticeship",
     ],
 }
 
 
-def normalize_header(header: str) -> str:
+def normalize_header(header: str | None) -> str:
     """Normalize raw column header to lowercase snake_case."""
-    cleaned = header.strip().lower()
+    if not header:
+        return ""
+    cleaned = str(header).strip().lower()
     cleaned = re.sub(r"[^\w\s]", "_", cleaned)
     cleaned = re.sub(r"\s+", "_", cleaned)
     cleaned = re.sub(r"_+", "_", cleaned)
@@ -110,18 +141,26 @@ def load_mapping_file(mapping_path: Path) -> dict[str, str]:
             for target, aliases in data.items():
                 if isinstance(aliases, list):
                     for alias in aliases:
-                        result[normalize_header(str(alias))] = target
+                        norm = normalize_header(str(alias))
+                        if norm:
+                            result[norm] = target
                 elif isinstance(aliases, str):
-                    result[normalize_header(aliases)] = target
+                    norm = normalize_header(aliases)
+                    if norm:
+                        result[norm] = target
             return result
     except Exception as exc:
         print(f"load_provided_dataset: warning reading {mapping_path.name}: {exc}")
         return {}
 
 
-def match_column(col_raw: str, explicit_mapping: dict[str, str]) -> str | None:
+def match_column(col_raw: str | None, explicit_mapping: dict[str, str]) -> str | None:
     """Match a raw CSV header to a canonical field."""
+    if not col_raw:
+        return None
     norm = normalize_header(col_raw)
+    if not norm:
+        return None
     if norm in explicit_mapping:
         return explicit_mapping[norm]
 
@@ -129,28 +168,37 @@ def match_column(col_raw: str, explicit_mapping: dict[str, str]) -> str | None:
     if norm in DEFAULT_SYNONYMS:
         return norm
 
-    # Check synonyms
+    # Check exact synonyms
     for canonical, syns in DEFAULT_SYNONYMS.items():
         if norm in syns or norm == canonical:
             return canonical
-        # Partial substring match for common compound forms
+
+    # Check token/compound match (e.g. 'col_monthly_salary' matches 'monthly_salary')
+    for canonical, syns in DEFAULT_SYNONYMS.items():
         for syn in syns:
-            if syn in norm or norm in syn:
-                return canonical
+            if len(syn) >= 4 and len(norm) >= 4:
+                if f"_{syn}" in norm or f"{syn}_" in norm:
+                    return canonical
     return None
 
 
 def clean_currency(val: Any) -> float | None:
-    """Parse INR currency values with symbols, commas, 'k', 'lakh'."""
+    """Parse INR currency values with symbols, commas, 'k', 'lakh', 'LPA', and annual CTC."""
     if val is None or str(val).strip() == "":
         return None
     s = str(val).strip().lower()
+    is_annual = any(
+        kw in s
+        for kw in [
+            "/yr", "/year", "annum", "annual", "ctc", "/a", "lpa", "p.a", "pa", "per_year"
+        ]
+    )
     s = (
         s.replace("₹", "").replace("rs.", "").replace("rs", "")
         .replace("inr", "").replace(",", "").strip()
     )
     multiplier = 1.0
-    if "lakh" in s or "lac" in s:
+    if "lakh" in s or "lac" in s or "lpa" in s:
         multiplier = 100000.0
         s = re.sub(r"[^\d.]", "", s)
     elif "k" in s:
@@ -162,9 +210,25 @@ def clean_currency(val: Any) -> float | None:
     if not s:
         return None
     try:
-        return float(s) * multiplier
+        raw_num = float(s) * multiplier
+        # Vocational wages are monthly in database (12k to 40k).
+        # If explicitly annual or raw amount > 75,000, normalize to monthly.
+        if is_annual or raw_num > 75000.0:
+            return round(raw_num / 12.0, 2)
+        return round(raw_num, 2)
     except ValueError:
         return None
+
+
+def clean_year(val: Any) -> int | None:
+    """Parse 4-digit cohort year from fiscal years ('2024-25'), dates ('15/07/2025'), or timestamps."""
+    if val is None or str(val).strip() == "":
+        return None
+    s = str(val).strip()
+    m = re.search(r"(20\d{2})", s)
+    if m:
+        return int(m.group(1))
+    return clean_int(val)
 
 
 def clean_percentage(val: Any) -> float | None:
@@ -223,7 +287,7 @@ def main(get_session=SessionLocal, base_dir: Path | None = None) -> dict[str, An
             if not rows:
                 continue
 
-            fieldnames = list(rows[0].keys())
+            fieldnames = [f for f in rows[0].keys() if f is not None and str(f).strip() != ""]
             header_map: dict[str, str] = {}
             file_unmapped: list[str] = []
 
@@ -237,82 +301,22 @@ def main(get_session=SessionLocal, base_dir: Path | None = None) -> dict[str, An
             all_unmapped.extend(file_unmapped)
             if file_unmapped:
                 print(
-                    f"load_provided_dataset: [{csv_path.name}] unmapped columns: {file_unmapped}"
+                    f"load_provided_dataset: [{csv_path.name}] NOTICE: {len(file_unmapped)} unmapped column(s) logged (will not be ingested):"
                 )
+                for ucol in file_unmapped:
+                    print(f"  - unmapped: '{ucol}'")
 
             for row_idx, raw_row in enumerate(rows, start=1):
                 clean_row: dict[str, Any] = {
                     header_map[k]: v for k, v in raw_row.items() if k in header_map and v
                 }
 
-                # 1. Market record (has state and salary/placement)
-                if "state" in clean_row and (
-                    "avg_salary_inr" in clean_row
-                    or "placement_rate" in clean_row
-                    or "earnings_median" in clean_row
-                ):
-                    occ_name = clean_row.get("occupation_name_en") or clean_row.get("name_en")
-                    if not occ_name:
-                        rejects.append({
-                            **raw_row,
-                            "rejection_reason": f"Row {row_idx}: missing occupation/trade name",
-                        })
-                        continue
-
-                    occ = session.query(Occupation).filter_by(name_en=occ_name).first()
-                    if not occ:
-                        # Auto-create occupation if provided data contains new occupation
-                        occ = Occupation(
-                            name_en=occ_name,
-                            source="msde_provided_2026",
-                            source_year=2026,
-                            is_demo=False,
-                            is_vocational=True,
-                        )
-                        session.add(occ)
-                        session.flush()
-
-                    salary = clean_currency(
-                        clean_row.get("avg_salary_inr") or clean_row.get("earnings_median")
-                    )
-                    p25 = clean_currency(clean_row.get("earnings_p25")) or (
-                        salary * 0.85 if salary else None
-                    )
-                    p75 = clean_currency(clean_row.get("earnings_p75")) or (
-                        salary * 1.25 if salary else None
-                    )
-                    rate = clean_percentage(clean_row.get("placement_rate"))
-
-                    m_key = {
-                        "occupation_id": occ.id,
-                        "state": clean_row["state"].strip(),
-                        "district": clean_row.get("district", "").strip() or None,
-                        "year": clean_int(clean_row.get("cohort_year")) or 2026,
-                    }
-                    m_vals = {
-                        "avg_salary_inr": salary,
-                        "earnings_p25": p25,
-                        "earnings_p75": p75,
-                        "placement_rate": rate,
-                        "demand_index": clean_currency(clean_row.get("demand_index")) or 70.0,
-                        "source": "msde_provided_2026",
-                        "source_year": 2026,
-                        "is_demo": False,
-                        "needs_review": False,
-                    }
-                    existing_m = session.query(Market).filter_by(**m_key).one_or_none()
-                    if existing_m:
-                        for k, v in m_vals.items():
-                            setattr(existing_m, k, v)
-                    else:
-                        session.add(Market(**m_key, **m_vals))
-                    loaded_counts["market"] += 1
-
-                # 2. Provider outcomes (provider_name + placement_rate/placed/earnings)
-                elif "provider_name" in clean_row and (
+                # 1. Provider outcomes (provider_name + placement/placed/earnings/salary)
+                if "provider_name" in clean_row and (
                     "placement_rate" in clean_row
                     or "placed" in clean_row
                     or "earnings_median" in clean_row
+                    or "avg_salary_inr" in clean_row
                 ):
                     prov_name = clean_row["provider_name"].strip()
                     dist = clean_row.get("district", "Generic").strip()
@@ -344,7 +348,7 @@ def main(get_session=SessionLocal, base_dir: Path | None = None) -> dict[str, An
                     cr = session.query(Course).filter_by(name=course_name).first()
                     course_id = cr.id if cr else centre.course_id
 
-                    cohort_year = clean_int(clean_row.get("cohort_year")) or 2025
+                    cohort_year = clean_year(clean_row.get("cohort_year")) or 2025
                     salary_med = clean_currency(
                         clean_row.get("earnings_median") or clean_row.get("avg_salary_inr")
                     )
@@ -386,6 +390,69 @@ def main(get_session=SessionLocal, base_dir: Path | None = None) -> dict[str, An
                         session.add(ProviderOutcome(**po_key, **po_vals))
                     loaded_counts["provider_outcomes"] += 1
 
+                # 2. Market record (has state and salary/placement, without provider_name)
+                elif "state" in clean_row and (
+                    "avg_salary_inr" in clean_row
+                    or "placement_rate" in clean_row
+                    or "earnings_median" in clean_row
+                ):
+                    occ_name = clean_row.get("occupation_name_en") or clean_row.get("name_en")
+                    if not occ_name:
+                        rejects.append({
+                            **raw_row,
+                            "rejection_reason": f"Row {row_idx}: missing occupation/trade name",
+                        })
+                        continue
+
+                    occ = session.query(Occupation).filter_by(name_en=occ_name).first()
+                    if not occ:
+                        # Auto-create occupation if provided data contains new occupation
+                        occ = Occupation(
+                            name_en=occ_name,
+                            source="msde_provided_2026",
+                            source_year=2026,
+                            is_demo=False,
+                            is_vocational=True,
+                        )
+                        session.add(occ)
+                        session.flush()
+
+                    salary = clean_currency(
+                        clean_row.get("avg_salary_inr") or clean_row.get("earnings_median")
+                    )
+                    p25 = clean_currency(clean_row.get("earnings_p25")) or (
+                        salary * 0.85 if salary else None
+                    )
+                    p75 = clean_currency(clean_row.get("earnings_p75")) or (
+                        salary * 1.25 if salary else None
+                    )
+                    rate = clean_percentage(clean_row.get("placement_rate"))
+
+                    m_key = {
+                        "occupation_id": occ.id,
+                        "state": clean_row["state"].strip(),
+                        "district": clean_row.get("district", "").strip() or None,
+                        "year": clean_year(clean_row.get("cohort_year")) or 2026,
+                    }
+                    m_vals = {
+                        "avg_salary_inr": salary,
+                        "earnings_p25": p25,
+                        "earnings_p75": p75,
+                        "placement_rate": rate,
+                        "demand_index": clean_currency(clean_row.get("demand_index")) or 70.0,
+                        "source": "msde_provided_2026",
+                        "source_year": 2026,
+                        "is_demo": False,
+                        "needs_review": False,
+                    }
+                    existing_m = session.query(Market).filter_by(**m_key).one_or_none()
+                    if existing_m:
+                        for k, v in m_vals.items():
+                            setattr(existing_m, k, v)
+                    else:
+                        session.add(Market(**m_key, **m_vals))
+                    loaded_counts["market"] += 1
+
                 # 3. Occupation definition
                 elif "name_en" in clean_row:
                     name_en = clean_row["name_en"].strip()
@@ -421,18 +488,37 @@ def main(get_session=SessionLocal, base_dir: Path | None = None) -> dict[str, An
     finally:
         session.close()
 
-    # Dump rejects if any
+    # Dump rejects or clean up stale rejects file
+    rejects_path = provided_dir / "provided_rejects.csv"
     if rejects:
-        rejects_path = provided_dir / "provided_rejects.csv"
         fieldnames = list(rejects[0].keys())
         with rejects_path.open("w", newline="", encoding="utf-8") as fh:
             writer = csv.DictWriter(fh, fieldnames=fieldnames, extrasaction="ignore")
             writer.writeheader()
             writer.writerows(rejects)
         print(f"load_provided_dataset: wrote {len(rejects)} rejected rows to {rejects_path.name}")
+    elif rejects_path.exists():
+        try:
+            rejects_path.unlink()
+        except Exception:
+            pass
+
+    # Save unmapped columns audit record in PROCESSED_DIR
+    try:
+        from datetime import datetime, timezone
+        now_iso = datetime.now(timezone.utc).isoformat()
+        unmapped_csv = PROCESSED_DIR / "provided_unmapped_columns.csv"
+        PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+        unmapped_rows = [{"column_name": c, "logged_at": now_iso} for c in all_unmapped]
+        with unmapped_csv.open("w", newline="", encoding="utf-8") as fh:
+            writer = csv.DictWriter(fh, fieldnames=["column_name", "logged_at"])
+            writer.writeheader()
+            writer.writerows(unmapped_rows)
+    except Exception as exc:
+        print(f"load_provided_dataset: note - unable to write unmapped audit CSV: {exc}")
 
     total_loaded = sum(loaded_counts.values())
-    print(f"load_provided_dataset: finished. Loaded: {loaded_counts}, Rejects: {len(rejects)}")
+    print(f"load_provided_dataset: finished. Loaded: {loaded_counts}, Rejects: {len(rejects)}, Unmapped cols: {len(all_unmapped)}")
     return {
         "loaded": total_loaded,
         "counts": loaded_counts,

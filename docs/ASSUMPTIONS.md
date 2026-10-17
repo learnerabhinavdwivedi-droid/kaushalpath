@@ -414,4 +414,35 @@ using the official MoSPI All-India Consumer Price Index (Combined) Base 2012=100
 (2020: 153.8, 2021: 161.3, 2022: 172.1, 2023: 181.4, 2024: 190.2, 2025: 198.8, 2026: 206.5)
 tracked in `backend/app/data/raw/SOURCES.yaml`.
 
+## A47 — MSDE Dataset Ingestion Drill (A-MSDE-DRILL)
+Evaluated live ingestion of deliberately unfamiliar-shaped placement and earnings datasets
+across three distinct formats (`backend/tests/fixtures/msde_dummy_variants/`):
+
+1. **Variant 1 — State DGT Technical Education Extract (`variant_1_state_dgt.csv`):**
+   - **Characteristics:** Scrambled column order, Hindi-transliterated headers (`pradesh_naam`, `zila`,
+     `vyavsay_trade`, `vetan_masik_inr`, `niyojan_pratishat`, `batch_varsh`), unexpected audit
+     columns (`s_no`, `nirikshan_adhikari`, `kaifiyat`), FY format dates (`2024-25`).
+   - **Manual Mapping Effort:** **0 minutes (0 code changes)**. Handled entirely by built-in fuzzy
+     synonyms. Three optional audit columns logged as unmapped; 0 rows rejected.
+
+2. **Variant 2 — Sector Skill Council / Industry CSR Registry (`variant_2_ssc_annual.csv`):**
+   - **Characteristics:** Annual CTC package units (`3.6 Lakhs/year`, `₹2.88 LPA`), DD/MM/YYYY dates
+     (`15/07/2025`), cohort counts (`total_enrolment_count`, `successful_certifications`, `hired_candidates`),
+     missing district column, extra columns (`ssc_partner_code`, `csr_sponsor_name`, `audit_status`).
+   - **Manual Mapping Effort:** **0 minutes (0 code changes)**. Automatic annual-to-monthly salary
+     normalization ($3.6\text{L}/12 = 30{,}000/\text{mo}$, $2.88\text{ LPA}/12 = 24{,}000/\text{mo}$).
+     Three extra columns logged as unmapped; 0 rows rejected.
+
+3. **Variant 3 — PMKVY Special Projects Micro-Portal (`variant_3_pmkvy_special.csv`):**
+   - **Characteristics:** Decimal ratio metrics (`0.85`, `0.10`), ISO-8601 timestamps, NAPS apprentice
+     stipends (`₹9,000`), GPS coordinates (`gps_latitude`, `gps_longitude`), monitoring agency.
+   - **Manual Mapping Effort:** **0 minutes (0 code changes)**. Decimal ratios converted to $0..100$
+     scale ($0.85 \to 85.0\%$). Five extra columns logged as unmapped; 0 rows rejected.
+
+4. **Arbitrary / Unseen Schema Fallback Protocol:**
+   - **Characteristics:** Non-standard column headers with zero substring overlap (`col_trade_key`,
+     `col_geography`, `col_monthly_payout`, `col_hiring_pct`).
+   - **Manual Mapping Effort:** **45 seconds** to write a 6-line `mapping.yaml` file in
+     `backend/app/data/raw/provided/`. Zero Python code modifications. Provenance contract verified
+     (`is_demo=False`, `source='msde_provided_2026'`).
 
