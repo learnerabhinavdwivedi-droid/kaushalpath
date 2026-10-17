@@ -150,7 +150,9 @@ export const AssessmentPage: React.FC = () => {
   }
 
   const current = items[index];
-  const total = Math.max(items.length, 8);
+  // Akinator-style adaptive engine targets ~20-25 total questions
+  // (12 interest + 2 tie-break + 8-12 aptitude)
+  const total = Math.max(items.length, 22);
 
   return (
     <div className="relative min-h-screen bg-page overflow-hidden">

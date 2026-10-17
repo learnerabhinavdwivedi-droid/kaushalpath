@@ -102,6 +102,18 @@ app.include_router(conversations_routes.router)
 app.include_router(admin_routes.router)
 
 
+@app.get("/", tags=["health"])
+async def root() -> dict[str, str]:
+    """Root endpoint confirming service health and docs location."""
+    return {
+        "status": "ok",
+        "app": settings.app_name,
+        "env": settings.app_env,
+        "docs": "/docs",
+        "health": "/health",
+    }
+
+
 @app.get("/health", tags=["health"])
 async def health() -> dict[str, str]:
     """Liveness probe. Acceptance gate: returns {"status":"ok"}."""
