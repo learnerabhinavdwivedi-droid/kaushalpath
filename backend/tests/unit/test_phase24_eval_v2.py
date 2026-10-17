@@ -10,10 +10,16 @@ Tests cover:
 from __future__ import annotations
 
 import hashlib
+import sys
 from pathlib import Path
 
 import pytest
 import yaml
+
+_REPO_ROOT = Path(__file__).resolve().parents[3]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
 from eval.scripts.build_expert_gold import krippendorff_alpha
 from eval.scripts.check_leakage import (
     check_config_integrity,
@@ -24,7 +30,6 @@ from eval.scripts.fairness_coverage import evaluate_data_coverage
 
 from app.services.evidence_svc import shrink_earnings, shrink_rate
 
-_REPO_ROOT = Path(__file__).resolve().parents[3]
 GATES_PATH = _REPO_ROOT / "eval" / "GATES.yaml"
 
 

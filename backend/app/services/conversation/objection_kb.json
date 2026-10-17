@@ -1,5 +1,59 @@
 {
   "income": {
+    "low": {
+      "en": {
+        "template": "Under {scheme_name} at {provider}, eligible low-income students receive 100% tuition waivers and direct stipend support, keeping your net training cost at zero. Upon completion, verified monthly earnings average ₹{median_salary} (typically ₹{p25_salary}–₹{p75_salary}) with immediate placement support.",
+        "followups": [
+          "How do I apply for the full fee waiver?",
+          "What monthly stipend amount is provided during training?",
+          "What is the verified placement percentage in this trade?"
+        ]
+      },
+      "hi": {
+        "template": "{provider} में {scheme_name} के तहत पात्र कम आय वाले विद्यार्थियों को 100% शुल्क-माफी और स्टाइपेंड सहायता मिलती है, जिससे आपका प्रशिक्षण पूरी तरह निःशुल्क रहता है। इसके उपरांत, इस ट्रेड में प्रमाणित औसत मासिक वेतन ₹{median_salary} (शुरुआती ₹{p25_salary} से ₹{p75_salary}) मिलता है।",
+        "followups": [
+          "पूर्ण शुल्क-माफी योजना के लिए कैसे आवेदन करें?",
+          "प्रशिक्षण के दौरान कितना मासिक स्टाइपेंड मिलता है?",
+          "इस ट्रेड में प्लेसमेंट का प्रतिशत क्या है?"
+        ]
+      }
+    },
+    "high": {
+      "en": {
+        "template": "Graduates from {provider} enter structured career progression paths, advancing from NSQF Level 4/5 technician roles into supervisory and private-sector specialist positions with top corporate employers. Placement rates reach {placement_rate}% across {n} graduates, with experienced practitioners commanding earnings well above ₹{p75_salary} per month.",
+        "followups": [
+          "What are the highest-paying private sector roles?",
+          "How quickly can one transition into managerial or supervisory roles?",
+          "Which multinational or Tier-1 employers recruit from this program?"
+        ]
+      },
+      "hi": {
+        "template": "{provider} से उत्तीर्ण छात्र संरचित करियर प्रगति मार्ग पर बढ़ते हैं, जहाँ वे NSQF स्तर 4/5 तकनीशियन से सुपरवाइजरी और निजी क्षेत्र के विशेषज्ञ पदों तक पहुँचते हैं। {n} स्नातकों में {placement_rate}% का सफल प्लेसमेंट रहा है, जहाँ अनुभवी तकनीशियन ₹{p75_salary} से अधिक मासिक वेतन प्राप्त करते हैं।",
+        "followups": [
+          "निजी क्षेत्र में उच्चतम वेतन वाले पद कौन-से हैं?",
+          "सुपरवाइजरी या प्रबंधकीय पदों पर पदोन्नति कितनी जल्दी होती है?",
+          "कौन-सी प्रमुख कॉर्पोरेट कंपनियां सीधे भर्ती करती हैं?"
+        ]
+      }
+    },
+    "mid": {
+      "en": {
+        "template": "Based on verified outcome data from {source} ({source_year}), the median monthly salary for this trade is ₹{median_salary}, with starting wages typically ranging between ₹{p25_salary} and ₹{p75_salary}. In {district}, {provider} has trained {n} students in this trade with structured wage progression.",
+        "followups": [
+          "What is the placement percentage in this trade?",
+          "Are there opportunities for wage progression and promotion?",
+          "What government schemes support free or subsidized training?"
+        ]
+      },
+      "hi": {
+        "template": "{source} ({source_year}) के प्रमाणित आंकड़ों के अनुसार, इस ट्रेड में औसत मासिक वेतन ₹{median_salary} है, तथा शुरुआती वेतन सामान्यतः ₹{p25_salary} से ₹{p75_salary} के बीच रहता है। {district} में {provider} ने {n} छात्रों को प्रशिक्षित कर उद्योग में स्थापित किया है।",
+        "followups": [
+          "इस ट्रेड में प्लेसमेंट का प्रतिशत क्या है?",
+          "आगे चलकर वेतन और पद में पदोन्नति कैसे मिलती है?",
+          "क्या सरकारी योजनाओं में कोई छात्रवृत्ति उपलब्ध है?"
+        ]
+      }
+    },
     "en": {
       "template": "Based on verified outcome data from {source} ({source_year}), the median monthly salary for this trade is ₹{median_salary}, with starting wages typically ranging between ₹{p25_salary} and ₹{p75_salary}. In {district}, {provider} has trained {n} students in this trade with structured wage progression.",
       "followups": [
@@ -36,6 +90,60 @@
     }
   },
   "cost": {
+    "low": {
+      "en": {
+        "template": "Under the {scheme_name} initiative, students from eligible income brackets receive full fee waivers, free toolkits, and monthly stipend assistance at {provider}. Net out-of-pocket tuition is ₹0, ensuring zero upfront financial burden before you start earning.",
+        "followups": [
+          "What documents are needed to apply for the scheme subsidy?",
+          "What are the hostel and travel cost allowances?",
+          "How soon can a student start earning after course completion?"
+        ]
+      },
+      "hi": {
+        "template": "{scheme_name} के अंतर्गत {provider} में पात्र आय वर्ग के छात्रों को पूर्ण शुल्क-माफी, निःशुल्क टूलकिट और मासिक स्टाइपेंड सहायता मिलती है। आपकी जेब से लगने वाला शुद्ध शुल्क ₹0 है, जिससे सीखने में कोई आर्थिक बोझ नहीं पड़ता।",
+        "followups": [
+          "सरकारी योजना में छात्रवृत्ति हेतु कौन-से दस्तावेज चाहिए?",
+          "क्या हॉस्टल या आने-जाने के भत्ते मिलते हैं?",
+          "कोर्स पूरा होने के बाद आमदनी कब से शुरू हो जाती है?"
+        ]
+      }
+    },
+    "high": {
+      "en": {
+        "template": "With a course investment of ₹{fee} at {provider}, learners unlock direct pathways to high-growth private industry roles and NSQF advanced certifications. The verified placement rate of {placement_rate}% and rapid progression to supervisory tiers ensure a rapid return on training investment.",
+        "followups": [
+          "Which multinational corporate employers recruit from this program?",
+          "What advanced certifications can be pursued after this course?",
+          "What starting executive packages do graduates command?"
+        ]
+      },
+      "hi": {
+        "template": "{provider} में ₹{fee} का पाठ्यक्रम निवेश उच्च विकास वाले निजी उद्योगों और उन्नत NSQF प्रमाणन के सीधे रास्ते खोलता है। {placement_rate}% की प्रमाणित प्लेसमेंट दर और सुपरवाइजरी स्तर पर त्वरित पदोन्नति से प्रशिक्षण निवेश का प्रतिफल बहुत शीघ्र मिलता है।",
+        "followups": [
+          "कौन-सी प्रमुख कॉर्पोरेट कंपनियां सीधे भर्ती करती हैं?",
+          "इस कोर्स के बाद कौन-से उन्नत प्रमाणन किए जा सकते हैं?",
+          "उत्तीर्ण छात्रों को किस स्तर का पैकेज मिलता है?"
+        ]
+      }
+    },
+    "mid": {
+      "en": {
+        "template": "Under the {scheme_name} initiative by {source}, eligible students receive subsidized vocational skill training. At {provider}, the nominal course fee is ₹{fee}, and qualifying candidates may receive stipend support.",
+        "followups": [
+          "What documents are needed to apply for the scheme subsidy?",
+          "What are the hostel and travel costs?",
+          "How soon can a student start earning after course completion?"
+        ]
+      },
+      "hi": {
+        "template": "{source} की {scheme_name} के तहत पात्र विद्यार्थियों को रियायती या निःशुल्क व्यावसायिक प्रशिक्षण दिया जाता है। {provider} में अनुमानित पाठ्यक्रम शुल्क ₹{fee} है, तथा पात्र शिक्षार्थियों को स्टाइपेंड सहायता भी मिलती है।",
+        "followups": [
+          "सरकारी योजना में छात्रवृत्ति हेतु कौन-से दस्तावेज चाहिए?",
+          "क्या हॉस्टल या आने-जाने के खर्चे में छूट मिलती है?",
+          "कोर्स पूरा होने के बाद आमदनी कब से शुरू हो जाती है?"
+        ]
+      }
+    },
     "en": {
       "template": "Under the {scheme_name} initiative by {source}, eligible students receive subsidized vocational skill training. At {provider}, the nominal course fee is ₹{fee}, and qualifying candidates may receive stipend support.",
       "followups": [

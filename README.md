@@ -95,6 +95,19 @@ make security     # pip-audit (backend) + npm audit (frontend) -> docs/SECURITY.
 make backup       # consistent SQLite snapshot -> backups/
 ```
 
+## LLM Decision & Offline Reliability (Phase 27)
+
+The demo runs with `LLM_PROVIDER=none` by default: fully offline, deterministic, zero hallucination risk. An optional `LLM_PROVIDER=openai_compat|gemini` path exists for more natural phrasing but is never required, and on any timeout or error in `responder.py:_call_llm_api` or ungrounded numeric claim in `validator.py`, it falls back silently to the template path — the family-facing reply is never blocked by an external API.
+
+To enable the optional richer phrasing mode:
+```bash
+# In .env:
+LLM_PROVIDER=openai_compat   # or "gemini"
+LLM_MODEL=gpt-4o-mini
+LLM_BASE_URL=https://api.openai.com/v1
+LLM_API_KEY=your-api-key-here
+```
+
 ## Frontend: app routes + SparkLab marketing landing
 
 The frontend hosts two UIs side by side on one Vite/React/TS + Tailwind build:

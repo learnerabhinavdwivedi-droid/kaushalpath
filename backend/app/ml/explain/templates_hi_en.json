@@ -54,5 +54,21 @@
   "ELIGIBLE": {
     "en": "Meets all entry eligibility requirements (minimum education: {min_edu})",
     "hi": "प्रवेश की सभी पात्रता शर्तों को पूरा करता है (न्यूनतम शिक्षा: {min_edu})"
+  },
+  "AFFORDABLE_FOR_INCOME_BAND": {
+    "en": "Affordable for your family's {income_band} income band (net fee: INR {net_fee} after scheme benefits)",
+    "hi": "आपके परिवार के {income_band} आय वर्ग के लिए किफ़ायती (योजना लाभ के बाद कुल शुल्क: ₹{net_fee})"
+  },
+  "affordable_for_income_band": {
+    "en": "Affordable for your family's {income_band} income band (net fee: INR {net_fee} after scheme benefits)",
+    "hi": "आपके परिवार के {income_band} आय वर्ग के लिए किफ़ायती (योजना लाभ के बाद कुल शुल्क: ₹{net_fee})"
+  },
+  "HIGH_FEE_RELATIVE_TO_INCOME_BAND": {
+    "en": "Course fee (INR {net_fee}) is high relative to your {income_band} income bracket; explore fee-waiver schemes",
+    "hi": "कोर्स शुल्क (₹{net_fee}) आपके {income_band} आय वर्ग की तुलना में अधिक है; शुल्क-माफी योजनाओं का विकल्प देखें"
+  },
+  "high_fee_relative_to_income_band": {
+    "en": "Course fee (INR {net_fee}) is high relative to your {income_band} income bracket; explore fee-waiver schemes",
+    "hi": "कोर्स शुल्क (₹{net_fee}) आपके {income_band} आय वर्ग की तुलना में अधिक है; शुल्क-माफी योजनाओं का विकल्प देखें"
   }
 }

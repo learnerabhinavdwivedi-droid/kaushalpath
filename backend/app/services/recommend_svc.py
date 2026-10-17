@@ -24,7 +24,7 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.core.budget import get_budget_limit
+from app.core.budget import get_budget_limit, scheme_subsidy_pct
 from app.ml.explain.reason_codes import generate_reason_codes
 from app.ml.ranking.aptitude_fit import aptitude_match
 from app.ml.ranking.features import extract_features
@@ -132,16 +132,7 @@ def _get_family_context(state: str, edu_level: str) -> dict[str, Any] | None:
 
 
 def _scheme_subsidy_pct(income_band: str | None) -> float:
-    if not income_band:
-        return 0.0
-    band = income_band.lower()
-    if band in ("lt_1l", "<1l"):
-        return 1.0  # 100% subsidy
-    if band in ("1l_3l", "1l-3l"):
-        return 0.5  # 50% subsidy
-    if band in ("3l_6l", "3l-6l"):
-        return 0.25  # 25% subsidy
-    return 0.0
+    return scheme_subsidy_pct(income_band)
 
 
 class RecommendService:

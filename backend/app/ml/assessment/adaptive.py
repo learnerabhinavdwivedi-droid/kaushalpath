@@ -1,17 +1,24 @@
-"""Adaptive test engine (Phase 21 - Assessment v2).
+"""Adaptive test engine (Phase 21 - Assessment v2 — Akinator-style).
 
 A session is a plain, JSON-serialisable dict so it can be persisted on
 ``assessments.state_json`` and resumed across API calls. The engine is pure:
 it never touches the DB or FastAPI — `services/assessment_svc.py` wires it up.
 
 Phases:
-1. interest  — adaptive RIASEC selection using calibrated IRT a & b parameters
-2. tie_break — up to 3 forced-choice pairs when top-3 are within 1 SEM
-3. aptitude  — 4-construct test (10+ items per construct across 4 ASER bands)
+1. interest  — adaptive RIASEC with Akinator-style dimension elimination
+2. tie_break — up to 2 forced-choice pairs when top-3 are within 1 SEM
+3. aptitude  — 4-construct adaptive ladder (3 items per construct, stop early)
 
-Stop rules (interest): >=2 items seeded per dimension, then keep asking the
+Akinator strategy (interest): Instead of asking all 6 dimensions equally,
+we seed 1 item per dimension, then focus on dimensions whose rank is
+uncertain (the "boundary" between top-3 and bottom-3). Dimensions that
+are confidently in the top-3 or confidently in the bottom-3 are
+"eliminated" — we stop asking about them, just like Akinator eliminates
+impossible characters. This cuts interest questions from ~24 to ~12-15.
+
+Stop rules (interest): >=1 item seeded per dimension, then keep asking the
 dimension that most sharpens the top-3 ordering until ordering confidence
->= 0.95, or 24 items asked, or the 30-item hard cap.
+>= 0.92, or 12 items asked, or the 18-item hard cap.
 """
 from __future__ import annotations
 
@@ -25,16 +32,25 @@ from app.ml.assessment import scoring
 RIASEC_DIMS = scoring.RIASEC_DIMS
 APTITUDE_DIMS = scoring.APTITUDE_DIMS
 
-SEED_PER_DIM = 2  # minimum items per dimension before adaptivity kicks in
-TARGET_ITEMS = 24  # soft target (spec: avg <= 24)
-HARD_CAP = 30  # never ask more than this for interest + tie-breaks
-CONF_STOP = 0.95  # ordering-confidence threshold to stop early
-MAX_TIE_BREAKS = 3  # maximum forced-choice tie-break pairs
+# --- Akinator-tuned parameters -----------------------------------------------
+SEED_PER_DIM = 1  # just 1 item per dimension to seed (was 2)
+TARGET_ITEMS = 12  # soft target for interest phase (was 24)
+HARD_CAP = 18  # never ask more than this for interest + tie-breaks (was 30)
+CONF_STOP = 0.92  # ordering-confidence threshold (was 0.95, relaxed slightly)
+MAX_TIE_BREAKS = 2  # maximum forced-choice tie-break pairs (was 3)
 _EPS = 1e-6
 
 _BANK_DIR = Path(__file__).parent
 _PRIOR_SD = 0.5  # assumed spread before we see item-to-item variance
-_EVIDENCE_FULL = 4  # items per dimension at which evidence is considered complete
+_EVIDENCE_FULL = 3  # items per dimension at which evidence is considered complete (was 4)
+
+# Dimension elimination thresholds
+_ELIM_CONF = 0.88  # confidence that a dim is NOT in top-3 to eliminate it
+_MIN_ITEMS_BEFORE_ELIM = 2  # need at least 2 answers before eliminating a dim
+
+# Aptitude adaptive parameters
+MAX_APTITUDE_PER_CONSTRUCT = 3  # reduced from 5
+MAX_APTITUDE_SERVED = MAX_APTITUDE_PER_CONSTRUCT * len(APTITUDE_DIMS)  # 12 items (was 20)
 
 
 def load_interest_bank(path: Path | None = None) -> list[dict]:
@@ -77,6 +93,7 @@ def new_state() -> dict[str, Any]:
         "aptitude": {d: 0.0 for d in APTITUDE_DIMS},
         "confidence": 0.0,
         "items_answered": 0,
+        "eliminated_dims": [],  # Akinator-style: dims confidently NOT in top-3
     }
 
 
@@ -123,18 +140,50 @@ def _pair_prob(agg: dict, dim_a: str, dim_b: str) -> float:
     return _phi(margin / se)
 
 
+# --- Akinator-style dimension elimination ------------------------------------
+def _update_eliminated(state: dict, bank: list[dict]) -> None:
+    """Mark dimensions that are confidently NOT in the top-3 — stop asking them.
+
+    Like Akinator eliminates impossible characters, we eliminate dimensions
+    that cannot realistically enter the top-3 code, so we never waste
+    questions on them again.
+    """
+    agg = _aggregates(state, bank)
+    order = sorted(RIASEC_DIMS, key=lambda d: (-agg[d]["mean"], d))
+    eliminated = list(state.get("eliminated_dims", []))
+
+    for dim in order[3:]:  # only bottom-3 candidates for elimination
+        if dim in eliminated:
+            continue
+        if agg[dim]["n"] < _MIN_ITEMS_BEFORE_ELIM:
+            continue
+        # Check: is this dim confidently below ALL current top-3?
+        probs = [_pair_prob(agg, top_d, dim) for top_d in order[:3]]
+        if all(p >= _ELIM_CONF for p in probs):
+            eliminated.append(dim)
+
+    state["eliminated_dims"] = eliminated
+
+
 def ordering_confidence(state: dict, bank: list[dict]) -> float:
     """Confidence in the top-3 Holland code."""
     agg = _aggregates(state, bank)
     total = sum(a["n"] for a in agg.values())
-    if total < SEED_PER_DIM * len(RIASEC_DIMS) - 2:
+    if total < SEED_PER_DIM * len(RIASEC_DIMS) - 1:
         return _clamp(total / (SEED_PER_DIM * len(RIASEC_DIMS)) * 0.5)
     order = sorted(RIASEC_DIMS, key=lambda d: (-agg[d]["mean"], d))
 
     # set separation: the rank-3 dimension above every dimension outside top-3
     set_conf = min(_pair_prob(agg, order[2], d) for d in order[3:])
-    evidence = sum(min(1.0, agg[d]["n"] / _EVIDENCE_FULL) for d in RIASEC_DIMS) / len(RIASEC_DIMS)
-    return _clamp(0.85 * set_conf + 0.15 * evidence)
+
+    # Evidence factor: how many of the active dims have enough data
+    active_dims = [d for d in RIASEC_DIMS if d not in state.get("eliminated_dims", [])]
+    evidence = sum(min(1.0, agg[d]["n"] / _EVIDENCE_FULL) for d in active_dims) / max(len(active_dims), 1)
+
+    # Eliminated dims boost: each eliminated dim adds certainty
+    elim_bonus = len(state.get("eliminated_dims", [])) * 0.03
+
+    return _clamp(0.80 * set_conf + 0.15 * evidence + 0.05 + elim_bonus)
 
 
 def _available(state: dict, bank: list[dict], dim: str) -> list[dict]:
@@ -161,32 +210,69 @@ def _item_discrimination(item: dict) -> float:
     return float(item.get("a", item.get("discrimination", 1.0)))
 
 
-def next_interest_item(state: dict, bank: list[dict]) -> dict | None:
-    """Pick the next interest item using per-item discrimination `a` and difficulty `b`."""
-    agg = _aggregates(state, bank)
+def _information_gain(agg: dict, dim: str, order: list[str]) -> float:
+    """Estimate how much asking another item in `dim` would reduce uncertainty.
 
-    under_seeded = [d for d in RIASEC_DIMS if agg[d]["n"] < SEED_PER_DIM]
+    Higher = more informative = ask this dimension next. This is the core
+    of the Akinator strategy: focus questions where they matter most.
+    """
+    rank = order.index(dim)
+
+    # Boundary dimensions (rank 2 and 3 — the top-3/bottom-3 boundary) are highest value
+    if rank in (2, 3):
+        boundary_value = 3.0
+    elif rank in (1, 4):
+        boundary_value = 1.5
+    else:
+        boundary_value = 0.5
+
+    # High SE = high uncertainty = high info gain
+    se_value = agg[dim]["se"]
+
+    # Fewer items answered = more to learn
+    sparsity = 1.0 / (agg[dim]["n"] + 1)
+
+    return boundary_value * se_value * (1.0 + sparsity)
+
+
+def next_interest_item(state: dict, bank: list[dict]) -> dict | None:
+    """Pick the next interest item using Akinator-style elimination + IRT.
+
+    Strategy:
+    1. Seed phase: ask 1 item per dimension (6 questions)
+    2. Elimination phase: focus on boundary dimensions, skip eliminated ones
+    3. Pick the highest-discrimination item closest to current theta
+    """
+    agg = _aggregates(state, bank)
+    eliminated = set(state.get("eliminated_dims", []))
+
+    # Phase 1: Seed — ensure every non-eliminated dim has at least SEED_PER_DIM
+    under_seeded = [d for d in RIASEC_DIMS if d not in eliminated and agg[d]["n"] < SEED_PER_DIM]
     if under_seeded:
         dim = min(under_seeded, key=lambda d: (agg[d]["n"], d))
     else:
+        # Phase 2: Akinator elimination — focus on the boundary
         order = sorted(RIASEC_DIMS, key=lambda d: (-agg[d]["mean"], d))
-        candidate: str | None = None
-        best_key: tuple[float, float, float] | None = None
-        for i in (0, 1, 2):
-            pair_p = _pair_prob(agg, order[i], order[i + 1])
-            for idx in (i, i + 1):
-                d = order[idx]
-                if not _available(state, bank, d):
-                    continue
-                key = (pair_p, -agg[d]["se"], agg[d]["n"])
-                if best_key is None or key < best_key:
-                    best_key, candidate = key, d
-        if candidate is None:
+        active_dims = [d for d in RIASEC_DIMS if d not in eliminated]
+
+        # Score each active dimension by information gain
+        scored: list[tuple[float, str]] = []
+        for d in active_dims:
+            if not _available(state, bank, d):
+                continue
+            gain = _information_gain(agg, d, order)
+            scored.append((gain, d))
+
+        if not scored:
+            # All active dims exhausted
             avail = [d for d in RIASEC_DIMS if _available(state, bank, d)]
             if not avail:
                 return None
-            candidate = max(avail, key=lambda d: (agg[d]["se"], -agg[d]["n"]))
-        dim = candidate
+            dim = max(avail, key=lambda d: (agg[d]["se"], -agg[d]["n"]))
+        else:
+            # Pick dimension with highest information gain
+            scored.sort(key=lambda x: -x[0])
+            dim = scored[0][1]
 
     items = _available(state, bank, dim)
     if not items:
@@ -337,6 +423,9 @@ def record_interest_answer(
 
     _recompute(state, bank, None)
 
+    # Akinator step: try to eliminate dimensions after each answer
+    _update_eliminated(state, bank)
+
     if is_interest_complete(state, bank):
         # Check if tie-break needed before entering aptitude
         if (
@@ -352,11 +441,31 @@ def record_interest_answer(
 
 
 # --- aptitude ----------------------------------------------------------------
-MAX_APTITUDE_SERVED = 20  # 5 items x 4 constructs
+def _aptitude_difficulty(item: dict) -> int:
+    """Extract ASER band / difficulty tier (1=easiest, 4=hardest)."""
+    return int(item.get("aser_band", item.get("difficulty_tier", 2)))
+
+
+def _should_stop_construct(state: dict, construct: str, aptitude_bank: list[dict]) -> bool:
+    """Adaptive stop: if student got first 2 right → skip 3rd (ceiling).
+    If student got first 2 wrong → skip 3rd (floor). Only stop early
+    when the first 2 answers are consistent (both right or both wrong).
+    """
+    answered_items = []
+    for it in aptitude_bank:
+        c = it.get("construct") or it.get("dimension", "")
+        if c == construct and it["id"] in state["aptitude_responses"]:
+            answered_items.append(state["aptitude_responses"][it["id"]])
+
+    if len(answered_items) >= 2:
+        # If all answers so far agree (all correct or all incorrect), ceiling/floor reached
+        if all(answered_items) or not any(answered_items):
+            return True
+    return False
 
 
 def next_aptitude_item(state: dict, aptitude_bank: list[dict]) -> dict | None:
-    """Serve aptitude ladder items (up to 20 items: 5 per construct); None once done."""
+    """Serve aptitude ladder items adaptively (up to 3 per construct, with early stop)."""
     if len(state["aptitude_responses"]) >= MAX_APTITUDE_SERVED:
         return None
 
@@ -369,12 +478,13 @@ def next_aptitude_item(state: dict, aptitude_bank: list[dict]) -> dict | None:
     for item in aptitude_bank:
         if item["id"] not in state["aptitude_responses"]:
             c = item.get("construct") or item.get("dimension", "")
-            if answered_per_c.get(c, 0) < 5:
+            if answered_per_c.get(c, 0) < MAX_APTITUDE_PER_CONSTRUCT:
+                # Adaptive stop: skip this construct if ceiling/floor reached
+                if _should_stop_construct(state, c, aptitude_bank):
+                    continue
                 return item
 
-    for item in aptitude_bank:
-        if item["id"] not in state["aptitude_responses"]:
-            return item
+    # No more items to serve (all constructs either maxed out or stopped early)
     return None
 
 

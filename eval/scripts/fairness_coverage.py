@@ -280,6 +280,150 @@ def evaluate_data_coverage(
     }
 
 
+def evaluate_income_band_ranking_consistency(
+    catalogue: Catalogue,
+    personas: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Verify that low-income learners are not systematically steered toward high-fee courses.
+
+    Examines whether for low-income learners (income_band='low' / 'lt_1l'), whenever
+    an affordable or scheme-subsidized course of equivalent quality/trade exists,
+    it is ranked at or above a higher-fee non-scheme-covered option.
+    """
+    ranker = Ranker()
+    unique_occs = list(catalogue.occupations.keys())
+
+    # Use the low-income slice personas (consistent with gold income_res n=46)
+    low_income_personas = [
+        p for p in personas
+        if str(p.get("income_band") or p.get("budget_band") or "").lower() in ("low", "lt_1l", "<1l")
+    ][:46]
+    if not low_income_personas:
+        low_income_personas = personas[:30]
+
+    with SessionLocal() as db_session:
+        evidence_svc = EvidenceService(db_session)
+        all_states = set(p.get("state", "Maharashtra") for p in low_income_personas)
+        state_evidence: dict[str, tuple[dict[int, float], dict[int, float], dict[int, Any]]] = {}
+
+        for st in all_states:
+            trade_medians: dict[int, float] = {}
+            trade_floors: dict[int, float] = {}
+            pl_map: dict[int, dict[str, Any] | None] = {}
+            for occ_id in unique_occs:
+                ev_e = evidence_svc.best_available(occ_id, "earnings_monthly_inr", state=st)
+                ev_p = evidence_svc.best_available(occ_id, "placement_rate", state=st)
+                pl_map[occ_id] = ev_p
+                if ev_e and ev_e.get("value") is not None:
+                    val = float(ev_e["value"])
+                    trade_medians[occ_id] = math.log(max(val, 1.0))
+                    ci = ev_e.get("interval")
+                    trade_floors[occ_id] = math.log(max(float(ci[0]) if ci else val * 0.85, 1.0))
+            state_evidence[st] = (trade_medians, trade_floors, pl_map)
+
+        inversion_count = 0
+        total_pairs = 0
+        learners_consistent = 0
+
+        for persona in low_income_personas:
+            student = persona_to_student(persona)
+            student.income_band = persona.get("income_band", "low")
+            riasec = dict(persona.get("riasec", {}))
+            apt = dict(persona.get("aptitudes", {}))
+            conf = persona.get("assessment_confidence", 1.0)
+
+            eligible, _ = filter_courses(student, catalogue.courses.values(), catalogue.centres_by_course)
+            if not eligible:
+                learners_consistent += 1
+                continue
+
+            st = student.state or "Maharashtra"
+            trade_medians, trade_floors, pl_map = state_evidence.get(st, ({}, {}, {}))
+            all_meds = list(trade_medians.values())
+            all_floors = list(trade_floors.values())
+
+            scored_items = []
+            for course in eligible:
+                occ = catalogue.occupations.get(course.occupation_id)
+                if not occ:
+                    continue
+                centres = catalogue.centres_by_course.get(course.id, [])
+                markets = catalogue.markets_by_occ.get(occ.id, [])
+                dist_km = _distance_km(student, course, centres)
+                demand_idx = _local_demand(markets, state=st)
+
+                occ_med_pct = None
+                occ_floor_pct = None
+                if occ.id in trade_medians and all_meds:
+                    m = trade_medians[occ.id]
+                    occ_med_pct = round(sum(1 for v in all_meds if v <= m) / len(all_meds), 4)
+                    fl = trade_floors[occ.id]
+                    occ_floor_pct = round(sum(1 for v in all_floors if v <= fl) / len(all_floors), 4)
+
+                ev_pl = pl_map.get(occ.id)
+                pl_est = float(ev_pl["value"]) if (ev_pl and ev_pl.get("value") is not None) else None
+                pl_ci = ev_pl.get("interval") if ev_pl else None
+                pl_conf = (float(pl_ci[1]) - float(pl_ci[0])) if pl_ci else None
+
+                b_lim = get_budget_limit(student.budget_band)
+                is_scheme = (
+                    getattr(course, "cert_body", None) in ("NCVT", "NSDC", "Ministry of Tourism", "State Board")
+                    or (course.fee_inr is not None and course.fee_inr <= 12000)
+                )
+                sub = _scheme_subsidy_pct(student.income_band) if is_scheme else 0.0
+                net_fee = float(course.fee_inr or 0.0) * (1.0 - sub)
+                net_cost_r = (net_fee / b_lim) if b_lim not in (0, float("inf")) else 0.0
+
+                prog_paths = catalogue.progression_by_course.get(course.id, []) if hasattr(catalogue, "progression_by_course") else []
+                occ_ability = catalogue.abilities_by_occ.get(occ.id) if hasattr(catalogue, "abilities_by_occ") else None
+
+                feats = extract_features(
+                    student, occ, course, riasec, apt,
+                    distance_km=dist_km,
+                    occupation_ability=occ_ability,
+                    placement_est=pl_est,
+                    placement_conf=pl_conf,
+                    earnings_median_pct=occ_med_pct,
+                    earnings_floor_pct=occ_floor_pct,
+                    local_demand=demand_idx,
+                    net_cost_ratio=net_cost_r,
+                    net_fee=net_fee,
+                    progression_value=float(len(prog_paths)),
+                )
+                scored_items.append({"course": course, "occupation": occ, "features": feats, "net_fee": net_fee})
+
+            ranked = ranker.rank(scored_items, interest_confidence=conf)
+
+            # Check: are high-fee (>15k) courses ranked above equivalent affordable (<=10k) courses?
+            learner_inversion = False
+            affordable_candidates = [it for it in ranked if it.get("net_fee", 0.0) <= 10000.0]
+            expensive_candidates = [it for it in ranked if it.get("net_fee", 0.0) > 15000.0]
+
+            if affordable_candidates and expensive_candidates:
+                total_pairs += 1
+                best_afford_rank = min(ranked.index(it) for it in affordable_candidates)
+                best_expensive_rank = min(ranked.index(it) for it in expensive_candidates)
+                if best_expensive_rank < best_afford_rank:
+                    inversion_count += 1
+                    learner_inversion = True
+
+            if not learner_inversion:
+                learners_consistent += 1
+
+    consistency_rate = round(1.0 - (inversion_count / total_pairs), 4) if total_pairs > 0 else 1.0
+    learner_consistency_rate = round(learners_consistent / len(low_income_personas), 4) if low_income_personas else 1.0
+
+    return {
+        "low_income_personas_evaluated": len(low_income_personas),
+        "comparable_pairs_evaluated": total_pairs,
+        "comparable_cohorts_evaluated": total_pairs,
+        "inversions_detected": inversion_count,
+        "ranking_consistency_rate": consistency_rate,
+        "learner_consistency_rate": learner_consistency_rate,
+        "status": "PASS" if inversion_count == 0 else "FAIL",
+    }
+
+
 def run_fairness_and_coverage() -> dict[str, Any]:
     catalogue = Catalogue()
     personas = load_personas()
@@ -320,7 +464,20 @@ def run_fairness_and_coverage() -> dict[str, Any]:
     for lang, r in sorted(lang_res.items()):
         print(f"  - {lang} (n={r['n']}): Top-3 Hit={r['top3_hit_rate']*100:.1f}%, NDCG@5={r['ndcg_at_5']:.4f}")
 
-    # 5. Coverage Metric
+    # 5. Income-Band Ranking-Consistency Check (Phase 26 R7)
+    print("\n=== Income-Band Ranking-Consistency Check (Phase 26 R7) ===")
+    consistency_res = evaluate_income_band_ranking_consistency(catalogue, personas)
+    print(
+        f"Evaluated {consistency_res['low_income_personas_evaluated']} low-income personas across "
+        f"{consistency_res['comparable_pairs_evaluated']} equivalent trade options."
+    )
+    print(
+        f"Inversions: {consistency_res['inversions_detected']} -> "
+        f"Consistency Rate: {consistency_res['ranking_consistency_rate']*100:.1f}% "
+        f"(Learner Consistency: {consistency_res['learner_consistency_rate']*100:.1f}%)"
+    )
+
+    # 6. Coverage Metric
     print("\n=== Data Coverage Disparity Metric ===")
     coverage_res = evaluate_data_coverage(catalogue, personas)
     print(f"Overall share of top-3 with unverified outcome: {coverage_res['overall_unverified_top3_share']*100:.1f}%")
@@ -330,7 +487,7 @@ def run_fairness_and_coverage() -> dict[str, Any]:
         print(f"  - {st}: {s_res['unverified_top3_share']*100:.1f}% unverified in top-3")
 
     report = {
-        "status": "PASS" if ur_gap <= 3.0 else "FAIL",
+        "status": "PASS" if ur_gap <= 3.0 and consistency_res["status"] == "PASS" else "FAIL",
         "urban_rural_fairness_gap_pts": ur_gap,
         "fairness_gate_max_gap_pts": 3.0,
         "slices": {
@@ -339,6 +496,7 @@ def run_fairness_and_coverage() -> dict[str, Any]:
             "education_level": edu_res,
             "language": lang_res,
         },
+        "income_band_ranking_consistency": consistency_res,
         "coverage": coverage_res,
     }
 

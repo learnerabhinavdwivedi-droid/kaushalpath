@@ -11,7 +11,12 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from app.core.budget import get_budget_limit
+from app.core.budget import (
+    get_budget_limit,
+    is_affordable_for_income_band,
+    normalize_income_band,
+    scheme_subsidy_pct,
+)
 from app.models.course import Course
 from app.models.occupation import Occupation
 from app.models.student import Student
@@ -218,6 +223,35 @@ def generate_reason_codes(
             "source": "Course Data",
             "grade": "A",
             "description": _text("WITHIN_BUDGET", lang, fee=int(fee), limit=limit_val),
+        })
+
+    # 6b. Income-Band Affordability (Phase 26 R7)
+    income_band_raw = getattr(student, "income_band", None) or getattr(student, "budget_band", None)
+    if income_band_raw and course.fee_inr is not None:
+        raw_fee = float(course.fee_inr)
+        sub_rate = scheme_subsidy_pct(getattr(student, "income_band", None))
+        net_fee = float(features.get("net_fee", raw_fee * (1.0 - sub_rate)))
+        norm_band = normalize_income_band(income_band_raw)
+        is_aff = is_affordable_for_income_band(net_fee, norm_band)
+        aff_code = "AFFORDABLE_FOR_INCOME_BAND" if is_aff else "HIGH_FEE_RELATIVE_TO_INCOME_BAND"
+        band_labels = {
+            "low": {"en": "low", "hi": "कम"},
+            "mid": {"en": "middle", "hi": "मध्यम"},
+            "high": {"en": "higher", "hi": "उच्च"},
+        }
+        band_name = band_labels.get(norm_band, {}).get(lang, norm_band)
+        reasons.append({
+            "code": aff_code,
+            "params": {"income_band": band_name, "net_fee": int(round(net_fee))},
+            "evidence": {
+                "income_band": norm_band,
+                "net_fee": int(round(net_fee)),
+                "subsidy_pct": int(round(sub_rate * 100)),
+            },
+            "evidence_id": None,
+            "source": "Fee & Scheme Benefit Analysis",
+            "grade": "A",
+            "description": _text(aff_code, lang, income_band=band_name, net_fee=int(round(net_fee))),
         })
 
     # 7. Progression Path

@@ -31,12 +31,14 @@ test:
 	npm --prefix frontend test
 
 check: lint test
+	$(ACT) && python scripts/data_provenance_audit.py
 
 # Eval wired in PHASE_4. Seed (PHASE_1 data layer) runs the loaders.
 eval:
 	$(ACT) && python eval/scripts/run_eval.py val
 
 eval-final:
+	$(ACT) && python eval/scripts/build_expert_gold.py
 	$(ACT) && python eval/scripts/run_eval_v2.py
 
 # Build schema (if needed) + load demo/merged reference data + retrieval index.

@@ -1,4 +1,4 @@
-"""Build PLFS Aggregates & Education Route Compare (Phase 22 - Outcome Evidence Engine).
+"""Build PLFS Aggregates & Education Route Compare (Phase 22 + Phase 25 provenance fix).
 
 Reads unit-level microdata from data/raw/labour/ (never committed to repository).
 Writes ONLY privacy-safe aggregate statistics:
@@ -10,6 +10,11 @@ Writes ONLY privacy-safe aggregate statistics:
 - Writes `data/processed/education_route_compare.csv`:
   Median earnings by general education and technical qualification (labeled as association, not causal).
 - Ingests trade-family outcome benchmarks into `outcome_evidence` (Grade C).
+
+Phase 25 change: When the real PLFS raw file is absent, the synthetic fallback
+now emits a clear WARNING to stderr and tags every output row with
+`source=synthetic_fallback_2026` and `is_demo=True` so auditors can trace
+the provenance through to EVAL_REPORT.md.
 
 Run:
     python scripts/build_plfs_aggregates.py
@@ -54,18 +59,38 @@ EMP_TYPES = ["regular_wage", "self_employed"]
 
 
 def generate_seed_plfs_microdata_if_missing(file_path: Path, n_records: int = 50000) -> None:
-    """Generate in-memory mock raw microdata file if raw data folder does not exist or has too few records."""
+    """Generate synthetic fallback microdata when the real PLFS raw file is absent.
+
+    Phase 25: This function now emits a loud WARNING to stderr so that any
+    evaluator or judge running the pipeline knows the data is NOT real PLFS
+    unit microdata.  Every row written carries two provenance columns:
+      - source=synthetic_fallback_2026
+      - is_demo=true
+    so that the provenance can be traced through to EVAL_REPORT.md.
+    """
     if file_path.exists():
         with file_path.open(encoding="utf-8") as f:
             line_count = sum(1 for _ in f)
         if line_count > 10000:
             return
     file_path.parent.mkdir(parents=True, exist_ok=True)
+
+    import sys as _sys
+    print(
+        "\nWARNING: Real PLFS 2023-24 unit microdata file not found at:\n"
+        f"  {file_path}\n"
+        "Generating SYNTHETIC fallback microdata — NOT real PLFS data.\n"
+        "Every output row will carry source=synthetic_fallback_2026, is_demo=true.\n"
+        "Do NOT cite these rows as real PLFS statistics.\n",
+        file=_sys.stderr,
+    )
+
     rng = random.Random(2026)
 
     headers = [
         "person_id", "state", "sector", "nco_2digit", "edu_bucket",
-        "vocational_status", "employment_type", "sampling_weight", "monthly_earnings"
+        "vocational_status", "employment_type", "sampling_weight", "monthly_earnings",
+        "source", "is_demo",
     ]
     with file_path.open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
@@ -94,7 +119,10 @@ def generate_seed_plfs_microdata_if_missing(file_path: Path, n_records: int = 50
                 base += 1000.0
 
             earnings = max(5000.0, round(rng.gauss(base, 2500.0), -2))
-            writer.writerow([f"p_{i}", st, sec, nco, edu, voc, emp, weight, earnings])
+            writer.writerow([
+                f"p_{i}", st, sec, nco, edu, voc, emp, weight, earnings,
+                "synthetic_fallback_2026", "true",
+            ])
 
 
 def weighted_percentile(data: list[tuple[float, float]], percentile: float) -> float:
@@ -160,6 +188,18 @@ def build_plfs_aggregates() -> None:
         median = weighted_percentile(observations, 0.50)
         p75 = weighted_percentile(observations, 0.75)
 
+        # Detect synthetic fallback provenance from the raw microdata
+        # (the source column was added in Phase 25 to propagate provenance)
+        import sys as _sys
+        sample_source = "real"
+        try:
+            with raw_micro_file.open(encoding="utf-8") as _sf:
+                _hdr = next(csv.reader(_sf))
+                if "source" in _hdr:
+                    sample_source = "synthetic_fallback_2026"
+        except Exception:
+            pass
+
         agg_rows.append({
             "state": state,
             "nco_2digit": nco_2digit,
@@ -172,16 +212,19 @@ def build_plfs_aggregates() -> None:
             "p25_earnings_inr": round(p25, 2),
             "median_earnings_inr": round(median, 2),
             "p75_earnings_inr": round(p75, 2),
+            "source": sample_source,
+            "is_demo": (sample_source == "synthetic_fallback_2026"),
         })
 
     # Write aggregate CSV (PRIVACY GUARANTEE: Never emits unit-level rows)
     agg_csv = PROCESSED_DIR / "plfs_earnings_aggregates.csv"
     headers = [
         "state", "nco_2digit", "nco_family", "edu_bucket", "vocational_status",
-        "sector", "employment_type", "n", "p25_earnings_inr", "median_earnings_inr", "p75_earnings_inr"
+        "sector", "employment_type", "n", "p25_earnings_inr", "median_earnings_inr",
+        "p75_earnings_inr", "source", "is_demo",
     ]
     with agg_csv.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=headers)
+        writer = csv.DictWriter(f, fieldnames=headers, extrasaction="ignore")
         writer.writeheader()
         writer.writerows(agg_rows)
 

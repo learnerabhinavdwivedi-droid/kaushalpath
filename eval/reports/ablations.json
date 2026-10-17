@@ -1,27 +1,27 @@
 {
   "baseline_full_model": {
-    "ndcg_at_5": 0.947,
+    "ndcg_at_5": 0.6428,
     "delta_ndcg": 0.0,
     "description": "Full kaushalpath-rank-0.2.0 model with all empirical features"
   },
   "drop_outcome_features": {
-    "ndcg_at_5": 0.9589,
-    "delta_ndcg": 0.0119,
+    "ndcg_at_5": 0.6428,
+    "delta_ndcg": 0.0,
     "description": "Drop empirical placement rate and earnings floor/median features"
   },
   "drop_aptitude_fit_occ": {
-    "ndcg_at_5": 0.947,
+    "ndcg_at_5": 0.6428,
     "delta_ndcg": 0.0,
     "description": "Drop cognitive and trade ability profile matching"
   },
   "drop_retrieval_candidate_generation": {
-    "ndcg_at_5": 0.947,
+    "ndcg_at_5": 0.6428,
     "delta_ndcg": 0.0,
     "description": "Drop two-stage candidate retrieval boost"
   },
   "swap_india_riasec_for_onet_prior": {
-    "ndcg_at_5": 0.9234,
-    "delta_ndcg": -0.0236,
+    "ndcg_at_5": 0.6137,
+    "delta_ndcg": -0.0291,
     "description": "Replace India-adjusted RIASEC crosswalk with raw US O*NET vectors"
   }
 }

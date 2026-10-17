@@ -368,6 +368,49 @@ def _outcome_coverage_breakdown(session) -> None:
     print(f"  other states with verified earnings: {other_states_covered} (target >= 5)")
 
 
+def _provided_dataset_report(session) -> None:
+    print("\n== Provided Datasets (MSDE / Evaluation) Ingestion ==")
+    # 1. Ingested live rows (source='msde_provided_2026', is_demo=False)
+    m_provided = session.query(func.count(Market.id)).filter(
+        Market.source == "msde_provided_2026", Market.is_demo.is_(False)
+    ).scalar() or 0
+    po_provided = session.query(func.count(ProviderOutcome.id)).filter(
+        ProviderOutcome.source == "msde_provided_2026", ProviderOutcome.is_demo.is_(False)
+    ).scalar() or 0
+    occ_provided = session.query(func.count(Occupation.id)).filter(
+        Occupation.source == "msde_provided_2026", Occupation.is_demo.is_(False)
+    ).scalar() or 0
+    cnt_provided = session.query(func.count(Centre.id)).filter(
+        Centre.source == "msde_provided_2026", Centre.is_demo.is_(False)
+    ).scalar() or 0
+
+    print(f"  ingested provided rows: market={m_provided}, provider_outcomes={po_provided}, occupations={occ_provided}, centres={cnt_provided}")
+
+    # 2. Unmapped columns audit
+    unmapped_csv = PROCESSED_DIR / "provided_unmapped_columns.csv"
+    unmapped_count = 0
+    unmapped_cols = []
+    if unmapped_csv.exists():
+        with unmapped_csv.open(encoding="utf-8") as fh:
+            reader = csv.DictReader(fh)
+            for row in reader:
+                unmapped_cols.append(row.get("column_name", ""))
+            unmapped_count = len(unmapped_cols)
+
+    print(f"  unmapped columns recorded: {unmapped_count}")
+    if unmapped_cols:
+        print(f"    columns: {', '.join(unmapped_cols)}")
+
+    # 3. Rejects audit
+    from _common import RAW_DIR
+    rejects_csv = RAW_DIR / "provided" / "provided_rejects.csv"
+    rejects_count = 0
+    if rejects_csv.exists():
+        with rejects_csv.open(encoding="utf-8") as fh:
+            rejects_count = max(0, len(list(csv.reader(fh))) - 1)
+    print(f"  rejected unparseable rows: {rejects_count}")
+
+
 def main() -> None:
     session = SessionLocal()
     try:
@@ -376,6 +419,7 @@ def main() -> None:
         _trades_and_crosswalk_report(session)
         _coverage(session)
         _outcome_coverage_breakdown(session)
+        _provided_dataset_report(session)
     finally:
         session.close()
 
