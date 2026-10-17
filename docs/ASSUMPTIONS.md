@@ -446,3 +446,9 @@ across three distinct formats (`backend/tests/fixtures/msde_dummy_variants/`):
      `backend/app/data/raw/provided/`. Zero Python code modifications. Provenance contract verified
      (`is_demo=False`, `source='msde_provided_2026'`).
 
+
+
+---
+
+## A48 — A-LLM: LLM-Wiring Decision & Silent Fallback
+The demo runs with `llm_provider=none` by default: fully offline, deterministic, zero hallucination risk. An optional `llm_provider=openai_compat|gemini` path exists for more natural phrasing but is never required, and on any timeout or error in `responder.py:_call_llm_api` it falls back silently to the template path — the family-facing reply is never blocked by an external API.

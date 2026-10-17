@@ -1,15 +1,18 @@
-"""Grounded response builder combining template interpolation, LLM rephrasing, and validation."""
 from __future__ import annotations
 
 import json
+import logging
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
 import httpx
 
+from app.core.budget import normalize_income_band
 from app.core.config import get_settings
 from app.services.conversation.validator import validate_reply
+
+logger = logging.getLogger(__name__)
 
 _CUR_DIR = Path(__file__).resolve().parent
 _KB_PATH = _CUR_DIR / "objection_kb.json"
@@ -29,7 +32,12 @@ def _get_kb() -> dict[str, Any]:
 
 
 def build_template_reply(
-    topic: str, lang: str, facts: list[dict[str, Any]], prev_reply: str | None = None, turn_count: int = 0
+    topic: str,
+    lang: str,
+    facts: list[dict[str, Any]],
+    prev_reply: str | None = None,
+    turn_count: int = 0,
+    income_band: str | None = None,
 ) -> tuple[str, list[str]]:
     """Build deterministic reply by interpolating facts into KB template."""
     INTENT_FALLBACK = {
@@ -49,17 +57,37 @@ def build_template_reply(
             reply = INTENT_FALLBACK[topic][target_lang]
         return reply, []
 
-    kb = _get_kb()
-    topic_data = kb.get(topic) or kb.get("other", {})
-    lang_data = topic_data.get(target_lang) or topic_data.get("en", {})
-
-    template_str: str = lang_data.get("template", "Here are the verified outcomes for this trade.")
-    followups: list[str] = lang_data.get("followups", [])
-
-    # Build substitution mapping from facts
+    # Build substitution mapping from facts first
     mapping: dict[str, Any] = {}
     for f in facts:
         mapping[f["key"]] = f["value"]
+    if "median_earnings" in mapping and "median_salary" not in mapping:
+        mapping["median_salary"] = mapping["median_earnings"]
+    if "earnings_median" in mapping and "median_salary" not in mapping:
+        mapping["median_salary"] = mapping["earnings_median"]
+
+    # Determine income band for rule-based branching (Phase 26 R7)
+    target_income_band = income_band or mapping.get("income_band")
+    norm_income_band = normalize_income_band(target_income_band) if target_income_band else "mid"
+
+    kb = _get_kb()
+    topic_data = kb.get(topic) or kb.get("other", {})
+
+    # Rule-based branch: income and cost objection topics branch on income_band
+    if topic in ("income", "cost") and norm_income_band in topic_data:
+        logger.info(
+            "Rule-based conversation branch applied: topic=%s, income_band=%s, lang=%s",
+            topic,
+            norm_income_band,
+            target_lang,
+        )
+        band_data = topic_data.get(norm_income_band) or {}
+        lang_data = band_data.get(target_lang) or band_data.get("en", {})
+    else:
+        lang_data = topic_data.get(target_lang) or topic_data.get("en", {})
+
+    template_str: str = lang_data.get("template", "Here are the verified outcomes for this trade.")
+    followups: list[str] = lang_data.get("followups", [])
 
     # Provide safe fallbacks for standard template placeholders
     defaults = {
@@ -137,7 +165,9 @@ def _call_llm_api(prompt: str, system_prompt: str) -> str | None:
                 if res.status_code == 200:
                     data = res.json()
                     return data["choices"][0]["message"]["content"].strip()
-        except Exception:
+                logger.warning("LLM API returned non-200 (%s): %s", res.status_code, res.text[:200])
+        except Exception as e:
+            logger.warning("LLM API call failed or timed out (openai_compat): %s; falling back to template", e)
             return None
 
     elif provider == "gemini":
@@ -159,7 +189,9 @@ def _call_llm_api(prompt: str, system_prompt: str) -> str | None:
                         parts = candidates[0].get("content", {}).get("parts", [])
                         if parts:
                             return parts[0].get("text", "").strip()
-        except Exception:
+                logger.warning("LLM API returned non-200 (gemini): %s", res.status_code)
+        except Exception as e:
+            logger.warning("LLM API call failed or timed out (gemini): %s; falling back to template", e)
             return None
 
     return None
@@ -173,6 +205,7 @@ def generate_response(
     history: list[dict[str, str]] | None = None,
     prev_reply: str | None = None,
     turn_count: int = 0,
+    income_band: str | None = None,
 ) -> dict[str, Any]:
     """Generate grounded, validated response.
 
@@ -181,12 +214,30 @@ def generate_response(
             "reply": str,
             "followups": list[str],
             "fallback_used": bool,
+            "income_band": str,
+            "rule_branch": str,
         }
     """
     if history is None:
         history = []
     settings = get_settings()
-    template_reply, followups = build_template_reply(topic=topic, lang=lang, facts=facts, prev_reply=prev_reply, turn_count=turn_count)
+
+    target_income = income_band
+    if not target_income:
+        for f in facts:
+            if f.get("key") == "income_band":
+                target_income = f.get("value")
+                break
+    norm_income = normalize_income_band(target_income) if target_income else "mid"
+
+    template_reply, followups = build_template_reply(
+        topic=topic,
+        lang=lang,
+        facts=facts,
+        prev_reply=prev_reply,
+        turn_count=turn_count,
+        income_band=norm_income,
+    )
 
     candidate_reply: str | None = None
 
@@ -194,7 +245,8 @@ def generate_response(
     if llm_rephraser is not None:
         try:
             candidate_reply = llm_rephraser(template_reply, facts, lang)
-        except Exception:
+        except Exception as e:
+            logger.warning("Custom LLM rephraser failed: %s; falling back to template", e)
             candidate_reply = None
 
     # 2. Configured LLM provider
@@ -219,24 +271,32 @@ def generate_response(
 
     # 3. If an LLM candidate was generated, validate against hallucination
     if candidate_reply:
-        is_valid, _ = validate_reply(candidate_reply, facts)
+        is_valid, reason = validate_reply(candidate_reply, facts)
         if is_valid:
             return {
                 "reply": candidate_reply,
                 "followups": followups,
                 "fallback_used": False,
+                "income_band": norm_income,
+                "rule_branch": f"{topic}_{norm_income}",
             }
         else:
             # Hallucination detected! Reject LLM output and fall back to template
+            logger.warning("LLM candidate rejected by validator (%s); falling back to template", reason)
             return {
                 "reply": template_reply,
                 "followups": followups,
                 "fallback_used": True,
+                "income_band": norm_income,
+                "rule_branch": f"{topic}_{norm_income}",
             }
 
-    # 4. Default template reply
+    # 4. Default template reply (fallback_used = True if an external LLM was requested but failed/timed out)
+    llm_requested = bool(settings.llm_provider != "none" or llm_rephraser is not None)
     return {
         "reply": template_reply,
         "followups": followups,
-        "fallback_used": False,
+        "fallback_used": llm_requested,
+        "income_band": norm_income,
+        "rule_branch": f"{topic}_{norm_income}",
     }
