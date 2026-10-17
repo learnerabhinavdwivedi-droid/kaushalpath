@@ -11,7 +11,13 @@ from __future__ import annotations
 import math
 from typing import Any
 
-from app.core.budget import BUDGET_LIMITS, get_budget_limit
+from app.core.budget import (
+    BUDGET_LIMITS,
+    get_budget_limit,
+    is_affordable_for_income_band,
+    normalize_income_band,
+    scheme_subsidy_pct,
+)
 from app.core.education import EDU_TO_NSQF, resolve_course_nsqf
 from app.models.course import Course
 from app.models.occupation import Occupation
@@ -27,7 +33,10 @@ __all__ = [
     "cosine_similarity",
     "extract_features",
     "get_budget_limit",
+    "is_affordable_for_income_band",
+    "normalize_income_band",
     "resolve_course_nsqf",
+    "scheme_subsidy_pct",
     "to_vector",
 ]
 
@@ -167,6 +176,8 @@ def extract_features(
     net_cost_ratio: float | None = None,
     progression_value: float | None = None,
     learner_se: dict[str, float] | None = None,
+    net_fee: float | None = None,
+    subsidy_rate: float | None = None,
 ) -> dict[str, Any]:
     """Extract the feature dict for one candidate course/occupation.
 
@@ -224,14 +235,34 @@ def extract_features(
     # 5. Cost ratio (fee after scheme eligibility / budget limit; uncapped for explanation)
     budget = get_budget_limit(student.budget_band)
     fee = float(course.fee_inr) if course.fee_inr is not None else 0.0
+
+    if net_fee is not None:
+        calc_net_fee = float(net_fee)
+        subsidy = 1.0 - (calc_net_fee / fee) if fee > 0 else 0.0
+    elif net_cost_ratio is not None and budget > 0 and budget != float("inf"):
+        calc_net_fee = net_cost_ratio * budget
+        subsidy = 1.0 - (calc_net_fee / fee) if fee > 0 else 0.0
+    else:
+        subsidy = subsidy_rate if subsidy_rate is not None else scheme_subsidy_pct(getattr(student, "income_band", None))
+        calc_net_fee = fee * (1.0 - subsidy)
+
     if budget == float("inf"):
         computed_fee_ratio = 0.0
     elif budget > 0:
-        computed_fee_ratio = fee / budget
+        computed_fee_ratio = calc_net_fee / budget
     else:
         computed_fee_ratio = 1.0
 
     cost_ratio = net_cost_ratio if net_cost_ratio is not None else computed_fee_ratio
+    norm_income = normalize_income_band(
+        getattr(student, "income_band", None),
+        getattr(student, "budget_band", None),
+    )
+    affordability_code = (
+        "AFFORDABLE_FOR_INCOME_BAND"
+        if is_affordable_for_income_band(calc_net_fee, getattr(student, "income_band", None), getattr(student, "budget_band", None))
+        else "HIGH_FEE_RELATIVE_TO_INCOME_BAND"
+    )
 
     # 6. Duration fit
     max_dur = student.max_duration_months or 24
@@ -251,6 +282,7 @@ def extract_features(
         "local_demand": demand is not None,
         "progression": bool(progression_value is not None and progression_value > 0),
         "distance": distance is not None,
+        "affordability": True,
     }
 
     return {
@@ -266,6 +298,10 @@ def extract_features(
         "local_demand_index": demand,  # alias
         "net_cost_ratio": cost_ratio,
         "fee_ratio": cost_ratio,  # alias
+        "net_fee": calc_net_fee,
+        "subsidy_rate": subsidy,
+        "income_band": norm_income,
+        "affordability_code": affordability_code,
         "distance_km": distance,
         "progression_value": progression_value,
         "nsqf_gap": nsqf_gap,

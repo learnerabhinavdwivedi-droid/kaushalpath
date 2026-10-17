@@ -1,192 +1,201 @@
 {
   "status": "PASS",
-  "urban_rural_fairness_gap_pts": 0.0,
+  "urban_rural_fairness_gap_pts": 0.89,
   "fairness_gate_max_gap_pts": 3.0,
   "slices": {
     "urban_rural": {
       "urban": {
-        "n": 72,
-        "top3_hit_rate": 1.0,
+        "n": 112,
+        "top3_hit_rate": 0.9911,
         "top3_hit_ci_95": [
-          1.0,
+          0.9732,
           1.0
         ],
-        "ndcg_at_5": 0.9551,
+        "ndcg_at_5": 0.7078,
         "ndcg_ci_95": [
-          0.929,
-          0.9765
+          0.6662,
+          0.7488
         ]
       },
       "rural": {
-        "n": 9,
+        "n": 27,
         "top3_hit_rate": 1.0,
         "top3_hit_ci_95": [
           1.0,
           1.0
         ],
-        "ndcg_at_5": 0.9028,
+        "ndcg_at_5": 0.5912,
         "ndcg_ci_95": [
-          0.8224,
-          0.9777
+          0.5036,
+          0.6774
         ]
       }
     },
     "income_band": {
       "low": {
-        "n": 26,
+        "n": 46,
+        "top3_hit_rate": 0.9783,
+        "top3_hit_ci_95": [
+          0.9348,
+          1.0
+        ],
+        "ndcg_at_5": 0.6643,
+        "ndcg_ci_95": [
+          0.602,
+          0.7265
+        ]
+      },
+      "mid": {
+        "n": 46,
         "top3_hit_rate": 1.0,
         "top3_hit_ci_95": [
           1.0,
           1.0
         ],
-        "ndcg_at_5": 0.9457,
+        "ndcg_at_5": 0.6435,
         "ndcg_ci_95": [
-          0.8971,
-          0.9865
+          0.5785,
+          0.7084
         ]
       },
       "high": {
+        "n": 47,
+        "top3_hit_rate": 1.0,
+        "top3_hit_ci_95": [
+          1.0,
+          1.0
+        ],
+        "ndcg_at_5": 0.7463,
+        "ndcg_ci_95": [
+          0.6743,
+          0.8119
+        ]
+      }
+    },
+    "education_level": {
+      "graduate": {
+        "n": 28,
+        "top3_hit_rate": 1.0,
+        "top3_hit_ci_95": [
+          1.0,
+          1.0
+        ],
+        "ndcg_at_5": 0.7146,
+        "ndcg_ci_95": [
+          0.6111,
+          0.8072
+        ]
+      },
+      "10th": {
         "n": 29,
         "top3_hit_rate": 1.0,
         "top3_hit_ci_95": [
           1.0,
           1.0
         ],
-        "ndcg_at_5": 0.9642,
+        "ndcg_at_5": 0.7227,
         "ndcg_ci_95": [
-          0.9358,
-          0.9874
-        ]
-      },
-      "mid": {
-        "n": 26,
-        "top3_hit_rate": 1.0,
-        "top3_hit_ci_95": [
-          1.0,
-          1.0
-        ],
-        "ndcg_at_5": 0.9363,
-        "ndcg_ci_95": [
-          0.8908,
-          0.9737
-        ]
-      }
-    },
-    "education_level": {
-      "graduate": {
-        "n": 13,
-        "top3_hit_rate": 1.0,
-        "top3_hit_ci_95": [
-          1.0,
-          1.0
-        ],
-        "ndcg_at_5": 0.9531,
-        "ndcg_ci_95": [
-          0.9016,
-          0.9983
-        ]
-      },
-      "diploma": {
-        "n": 14,
-        "top3_hit_rate": 1.0,
-        "top3_hit_ci_95": [
-          1.0,
-          1.0
-        ],
-        "ndcg_at_5": 0.95,
-        "ndcg_ci_95": [
-          0.8616,
-          1.0
+          0.6405,
+          0.7899
         ]
       },
       "12th": {
-        "n": 16,
+        "n": 27,
         "top3_hit_rate": 1.0,
         "top3_hit_ci_95": [
           1.0,
           1.0
         ],
-        "ndcg_at_5": 0.9275,
+        "ndcg_at_5": 0.6418,
         "ndcg_ci_95": [
-          0.8721,
-          0.9761
+          0.5437,
+          0.7391
         ]
       },
-      "10th": {
-        "n": 20,
+      "diploma": {
+        "n": 24,
         "top3_hit_rate": 1.0,
         "top3_hit_ci_95": [
           1.0,
           1.0
         ],
-        "ndcg_at_5": 0.9477,
+        "ndcg_at_5": 0.6815,
         "ndcg_ci_95": [
-          0.8989,
-          0.9881
+          0.5836,
+          0.7708
         ]
       },
       "ITI": {
-        "n": 18,
-        "top3_hit_rate": 1.0,
+        "n": 31,
+        "top3_hit_rate": 0.9677,
         "top3_hit_ci_95": [
-          1.0,
+          0.9032,
           1.0
         ],
-        "ndcg_at_5": 0.967,
+        "ndcg_at_5": 0.664,
         "ndcg_ci_95": [
-          0.9281,
-          0.9951
+          0.5895,
+          0.7385
         ]
       }
     },
     "language": {
       "en": {
-        "n": 39,
+        "n": 67,
         "top3_hit_rate": 1.0,
         "top3_hit_ci_95": [
           1.0,
           1.0
         ],
-        "ndcg_at_5": 0.9574,
+        "ndcg_at_5": 0.7345,
         "ndcg_ci_95": [
-          0.9223,
-          0.9852
+          0.6788,
+          0.7883
         ]
       },
       "hi": {
-        "n": 42,
-        "top3_hit_rate": 1.0,
+        "n": 72,
+        "top3_hit_rate": 0.9861,
         "top3_hit_ci_95": [
-          1.0,
+          0.9583,
           1.0
         ],
-        "ndcg_at_5": 0.9418,
+        "ndcg_at_5": 0.6393,
         "ndcg_ci_95": [
-          0.9097,
-          0.9688
+          0.587,
+          0.6892
         ]
       }
     }
   },
+  "income_band_ranking_consistency": {
+    "low_income_personas_evaluated": 46,
+    "comparable_pairs_evaluated": 0,
+    "comparable_cohorts_evaluated": 0,
+    "inversions_detected": 0,
+    "ranking_consistency_rate": 1.0,
+    "learner_consistency_rate": 1.0,
+    "status": "PASS"
+  },
   "coverage": {
-    "overall_unverified_top3_share": 0.0545,
+    "overall_unverified_top3_share": 1.0,
     "by_state": {
       "MH": {
         "n": 257,
-        "unverified_top3_share": 0.0545
+        "unverified_top3_share": 1.0
       }
     },
     "by_sector": {
       "urban": {
         "n": 205,
-        "unverified_top3_share": 0.0537
+        "unverified_top3_share": 1.0
       },
       "rural": {
         "n": 52,
-        "unverified_top3_share": 0.0577
+        "unverified_top3_share": 1.0
       }
     },
-    "urban_rural_coverage_gap_pts": 0.4,
+    "urban_rural_coverage_gap_pts": 0.0,
     "exceeds_10pt_threshold": false
   }
 }

@@ -6,6 +6,7 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.budget import normalize_income_band
 from app.models import Course, Occupation, Student
 from app.services.outcome_svc import OutcomeService
 
@@ -24,12 +25,12 @@ def ground_facts(
       {"key": str, "label": str, "value": Any, "unit": str, "source": str,
        "source_year": int, "is_demo": bool}
     """
-    if student_id and (not state or not district):
+    if student_id:
         student = db.get(Student, student_id)
         if student:
             state = state or student.state
             district = district or student.district
-            income_band = income_band or student.budget_band
+            income_band = income_band or student.income_band or student.budget_band
 
     outcome_svc = OutcomeService(db)
     try:
@@ -222,6 +223,15 @@ def ground_facts(
             "source": source,
             "source_year": source_year,
             "is_demo": is_demo,
+        },
+        {
+            "key": "income_band",
+            "label": "Household Income Band",
+            "value": normalize_income_band(income_band),
+            "unit": "",
+            "source": "Student Profile",
+            "source_year": 2026,
+            "is_demo": False,
         },
     ]
 
