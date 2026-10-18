@@ -178,24 +178,24 @@
     "status": "PASS"
   },
   "coverage": {
-    "overall_unverified_top3_share": 1.0,
+    "overall_unverified_top3_share": 0.2101,
     "by_state": {
       "MH": {
         "n": 257,
-        "unverified_top3_share": 1.0
+        "unverified_top3_share": 0.2101
       }
     },
     "by_sector": {
       "urban": {
         "n": 205,
-        "unverified_top3_share": 1.0
+        "unverified_top3_share": 0.2293
       },
       "rural": {
         "n": 52,
-        "unverified_top3_share": 1.0
+        "unverified_top3_share": 0.1346
       }
     },
-    "urban_rural_coverage_gap_pts": 0.0,
+    "urban_rural_coverage_gap_pts": 9.47,
     "exceeds_10pt_threshold": false
   }
 }

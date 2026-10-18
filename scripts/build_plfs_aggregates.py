@@ -190,7 +190,6 @@ def build_plfs_aggregates() -> None:
 
         # Detect synthetic fallback provenance from the raw microdata
         # (the source column was added in Phase 25 to propagate provenance)
-        import sys as _sys
         sample_source = "real"
         try:
             with raw_micro_file.open(encoding="utf-8") as _sf:

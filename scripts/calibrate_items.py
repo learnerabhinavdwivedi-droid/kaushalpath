@@ -19,7 +19,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import sys
 from pathlib import Path
 from typing import Any
@@ -72,7 +71,7 @@ class TwoPLCalibrator:
         a = np.ones(J, dtype=np.float64) if priors_a is None else np.array(priors_a, dtype=np.float64)
         b = np.zeros(J, dtype=np.float64) if priors_b is None else np.array(priors_b, dtype=np.float64)
 
-        for iteration in range(max_iter):
+        for _iteration in range(max_iter):
             old_params = np.concatenate([a, b])
 
             # --- E-step: Posterior P(theta_k | Y_i) ---
@@ -115,7 +114,7 @@ class TwoPLCalibrator:
                 f_k = np.sum(w_obs, axis=0)          # shape (K,)
 
                 # --- M-step: Newton / L-BFGS for item j ---
-                def neg_log_lik(params):
+                def neg_log_lik(params, r_k=r_k, f_k=f_k):
                     aj, bj = params
                     p_k = sigmoid(aj * (self.theta_nodes - bj))
                     p_k = np.clip(p_k, 1e-7, 1.0 - 1e-7)

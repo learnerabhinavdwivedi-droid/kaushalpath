@@ -22,14 +22,11 @@ from __future__ import annotations
 from unittest.mock import MagicMock, patch
 
 import httpx
-import pytest
 
 from app.core.config import get_settings
 from app.models.occupation import Occupation
-from app.services.conversation.responder import _call_llm_api, generate_response
+from app.services.conversation.responder import generate_response
 from app.services.conversation.validator import (
-    DEV_DIGIT_MAP,
-    extract_allowable_numbers,
     extract_numbers_from_text,
     validate_reply,
 )

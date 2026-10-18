@@ -186,6 +186,12 @@ make eval-final
 python scripts/data_provenance_audit.py
 ```
 """
+    if EVAL_REPORT_MD.exists():
+        existing_text = EVAL_REPORT_MD.read_text(encoding="utf-8")
+        if "## Changelog" in existing_text:
+            changelog_part = existing_text[existing_text.index("## Changelog"):]
+            report_content = report_content.rstrip() + "\n\n---\n\n" + changelog_part
+
     EVAL_REPORT_MD.parent.mkdir(parents=True, exist_ok=True)
     EVAL_REPORT_MD.write_text(report_content, encoding="utf-8")
     print(f"\nSUCCESS: Wrote updated 3-Tier Evaluation Report to {EVAL_REPORT_MD}")

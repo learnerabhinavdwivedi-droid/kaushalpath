@@ -24,7 +24,6 @@ from typing import Any
 # Ensure backend imports resolve
 import _common  # noqa: F401
 import httpx
-
 from app.db import Base, engine
 from app.main import app
 

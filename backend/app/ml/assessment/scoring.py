@@ -46,7 +46,7 @@ def interest_scores(
     xs: dict[str, list[float]] = defaultdict(list)
     for item in bank:
         value = responses.get(item["id"])
-        if value is None or not isinstance(value, (int, float)):
+        if value is None or not isinstance(value, int | float):
             continue
         xs[item["dimension"]].append(signed(value, item.get("reverse", False)))
 

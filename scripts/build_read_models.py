@@ -34,7 +34,6 @@ def rebuild_read_models() -> None:
     try:
         evidence_svc = EvidenceService(session)
         occupations = session.query(Occupation).all()
-        courses = session.query(Course).all()
         centres = session.query(Centre).all()
 
         # States with active vocational centres or demand

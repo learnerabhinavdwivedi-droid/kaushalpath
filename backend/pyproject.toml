@@ -18,6 +18,7 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]
 
 [tool.ruff.lint.per-file-ignores]
 # Alembic auto-generates these; long sa.Column lines are expected.
@@ -25,6 +26,8 @@ select = ["E", "F", "I", "UP", "B"]
 # FastAPI idiom: Depends()/Query()/body defaults live in the signature.
 "app/api/routes/*" = ["B008"]
 "app/api/deps.py" = ["B008"]
+"tests/*" = ["E402"]
+"scripts/*" = ["E402"]
 
 [tool.mypy]
 python_version = "3.12"

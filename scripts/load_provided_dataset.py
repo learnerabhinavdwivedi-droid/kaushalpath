@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import csv
 import re
+from datetime import UTC
 from pathlib import Path
 from typing import Any
 
@@ -505,8 +506,8 @@ def main(get_session=SessionLocal, base_dir: Path | None = None) -> dict[str, An
 
     # Save unmapped columns audit record in PROCESSED_DIR
     try:
-        from datetime import datetime, timezone
-        now_iso = datetime.now(timezone.utc).isoformat()
+        from datetime import datetime
+        now_iso = datetime.now(UTC).isoformat()
         unmapped_csv = PROCESSED_DIR / "provided_unmapped_columns.csv"
         PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
         unmapped_rows = [{"column_name": c, "logged_at": now_iso} for c in all_unmapped]
