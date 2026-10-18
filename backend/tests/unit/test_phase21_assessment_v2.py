@@ -12,19 +12,23 @@ Covers all Phase 21 requirements:
 from __future__ import annotations
 
 import json
-from pathlib import Path
 import sys
-import pytest
+from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from app.ml.assessment import adaptive, scoring
+from app.ml.assessment import adaptive
 from app.ml.ranking.aptitude_fit import aptitude_match
 from scripts.calibrate_items import run_parameter_recovery_test
-from scripts.check_items import check_interest_items, check_aptitude_items
-from scripts.validity_studies import generate_fixture_data, evaluate_reliability, evaluate_convergent, evaluate_known_groups
+from scripts.check_items import check_aptitude_items, check_interest_items
+from scripts.validity_studies import (
+    evaluate_convergent,
+    evaluate_known_groups,
+    evaluate_reliability,
+    generate_fixture_data,
+)
 
 ITEMS_V2_DIR = REPO_ROOT / "backend" / "app" / "ml" / "assessment" / "items_v2"
 
@@ -120,7 +124,6 @@ def test_forced_choice_tie_break_trigger_and_resolution() -> None:
     assert tb_item["id"].startswith("PAIR_")
 
     # Record preference for A
-    prior_riasec = dict(state["riasec"])
     adaptive.record_interest_answer(state, bank, tb_item["id"], "A")
     assert state["tie_breaks_asked"] == 1
     # Chosen dimension score is boosted

@@ -103,11 +103,10 @@ def _aggregates(state: dict, bank: list[dict]) -> dict[str, dict[str, float]]:
     xs: dict[str, list[float]] = {d: [] for d in RIASEC_DIMS}
     for item in bank:
         value = state["interest_responses"].get(item["id"])
-        if value is not None and isinstance(value, (int, float)):
+        if value is not None and isinstance(value, int | float):
             xs[item["dimension"]].append(scoring.signed(value, item.get("reverse", False)))
     agg: dict[str, dict[str, float]] = {}
     pair_adj = state.get("pair_adjustments", {})
-    prior_var = _PRIOR_SD ** 2
     for dim, vals in xs.items():
         n = len(vals)
         base_mean = sum(vals) / n if n else 0.0

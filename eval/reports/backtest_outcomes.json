@@ -1,7 +1,7 @@
 {
   "status": "PASS",
-  "total_transitions_evaluated": 832,
-  "overall_80pct_interval_coverage": 0.762,
+  "total_transitions_evaluated": 834,
+  "overall_80pct_interval_coverage": 0.7626,
   "target_interval_coverage": "[0.70, 0.90]",
   "by_metric": {
     "placement_rate": {
@@ -23,13 +23,13 @@
       "interval_coverage_80": 1.0
     },
     "pass_rate": {
-      "n_transitions": 1,
-      "mae_raw": 0.02,
-      "mae_shrunk": 0.02,
+      "n_transitions": 2,
+      "mae_raw": 0.03,
+      "mae_shrunk": 0.03,
       "interval_coverage_80": 1.0
     },
     "admission_rate": {
-      "n_transitions": 1,
+      "n_transitions": 2,
       "mae_raw": 0.04,
       "mae_shrunk": 0.04,
       "interval_coverage_80": 1.0
@@ -45,7 +45,7 @@
       "interval_coverage_80": 0.7785
     },
     "A": {
-      "n_transitions": 2,
+      "n_transitions": 4,
       "interval_coverage_80": 1.0
     }
   }

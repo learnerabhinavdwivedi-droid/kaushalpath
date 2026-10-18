@@ -226,7 +226,7 @@ def generate_reason_codes(
         })
 
     # 6b. Income-Band Affordability (Phase 26 R7)
-    income_band_raw = getattr(student, "income_band", None) or getattr(student, "budget_band", None)
+    income_band_raw = getattr(student, "income_band", None)
     if income_band_raw and course.fee_inr is not None:
         raw_fee = float(course.fee_inr)
         sub_rate = scheme_subsidy_pct(getattr(student, "income_band", None))

@@ -13,7 +13,6 @@ import csv
 import sys
 from pathlib import Path
 
-import pytest
 from sqlalchemy.orm import Session
 
 _BACKEND_DIR = Path(__file__).resolve().parents[2]
@@ -27,6 +26,7 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
 import load_provided_dataset  # noqa: E402
+
 from app.models import Centre, Course, Market, Occupation, ProviderOutcome  # noqa: E402
 
 

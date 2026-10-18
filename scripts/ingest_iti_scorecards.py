@@ -137,7 +137,6 @@ def ingest_iti_scorecards() -> int:
         centres = session.query(Centre).all()
 
         for sc in ITI_SCORECARDS:
-            iti_name = sc["name"].lower()
             iti_dist = sc["district"].lower()
 
             # Match to centre by name and district

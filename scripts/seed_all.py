@@ -48,6 +48,17 @@ def main() -> None:
     load_progression.main()
     load_schemes.main()
 
+    # Outcome evidence panels (DGT STRIVE, PLFS, PMKVY, ITI Scorecards)
+    import build_plfs_aggregates
+    import ingest_iti_scorecards
+    import ingest_pmkvy
+    import ingest_tracer_studies
+
+    ingest_tracer_studies.ingest_tracer_studies()
+    build_plfs_aggregates.build_plfs_aggregates()
+    ingest_pmkvy.ingest_pmkvy()
+    ingest_iti_scorecards.ingest_iti_scorecards()
+
     # Phase 19 Data Foundation: canonical LGD geo and trade resolution
     import resolve_trades
     from app.db.session import SessionLocal

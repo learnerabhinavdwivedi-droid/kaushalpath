@@ -353,14 +353,20 @@ def test_geo_resolution_rejects_unknown() -> None:
 # ---------------------------------------------------------------------------
 # 4. MIGRATION UP / DOWN TEST
 # ---------------------------------------------------------------------------
-def test_alembic_migration_up_and_down() -> None:
+def test_alembic_migration_up_and_down(tmp_path: pathlib.Path) -> None:
     from alembic import command
     from alembic.config import Config
 
     backend_dir = pathlib.Path(__file__).resolve().parents[2]
     alembic_ini = backend_dir / "alembic.ini"
     cfg = Config(str(alembic_ini))
+    cfg.attributes["configure_logger"] = False
     cfg.set_main_option("script_location", str(backend_dir / "app" / "db" / "migrations"))
+    test_db = tmp_path / "migration_test.db"
+    cfg.set_main_option("sqlalchemy.url", f"sqlite:///{test_db.as_posix()}")
+
+    # First upgrade clean test db to head
+    command.upgrade(cfg, "head")
 
     # Test downgrade to cdbe195361f9
     command.downgrade(cfg, "cdbe195361f9")

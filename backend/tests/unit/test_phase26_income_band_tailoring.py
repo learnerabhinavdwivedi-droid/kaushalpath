@@ -15,23 +15,12 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import Any
 
 import pytest
 
-from app.core.budget import (
-    INCOME_AFFORDABILITY_THRESHOLDS,
-    is_affordable_for_income_band,
-    normalize_income_band,
-    scheme_subsidy_pct,
-)
 from app.ml.explain.reason_codes import generate_reason_codes
 from app.ml.ranking.features import extract_features
-from app.models.course import Course
-from app.models.occupation import Occupation
-from app.models.student import Student
-from app.services.conversation.grounder import ground_facts
-from app.services.conversation.responder import build_template_reply, generate_response
+from app.services.conversation.responder import generate_response
 
 
 class DummyStudent:

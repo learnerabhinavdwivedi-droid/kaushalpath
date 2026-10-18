@@ -4,6 +4,7 @@ Learner + Guest Parent (two separate sessions/profiles), Counsellor, and Scheme 
 """
 import sys
 import time
+
 import httpx
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -156,8 +157,9 @@ def run_dry_run():
     assert r_turn1.status_code == 200, f"Turn 1 failed: {r_turn1.text}"
     turn1_data = r_turn1.json()
     reply1 = turn1_data.get("reply", "")
-    print(f"  -> Engine reply (Hindi): {reply1[:80]}...")
+    assert len(reply1) > 0
     facts = turn1_data.get("facts", {})
+    assert isinstance(facts, dict)
     print(f"  -> Grounded Facts returned: topic={turn1_data.get('topic')}, intent={turn1_data.get('intent')}")
     timings["Beat 4: FactCard Grounding"] = time.perf_counter() - b4_start
     print(f"  -> Beat 4 Completed in {timings['Beat 4: FactCard Grounding']:.2f}s")

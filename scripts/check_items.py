@@ -61,8 +61,8 @@ def count_words(text: str) -> int:
 def compute_text_embeddings(texts: list[str]) -> list[list[float]] | None:
     """Compute normalized embeddings via fast, offline-safe TF-IDF."""
     try:
-        from sklearn.feature_extraction.text import TfidfVectorizer
         import numpy as np
+        from sklearn.feature_extraction.text import TfidfVectorizer
 
         vec = TfidfVectorizer(ngram_range=(1, 2))
         X = vec.fit_transform(texts).toarray()
@@ -74,7 +74,7 @@ def compute_text_embeddings(texts: list[str]) -> list[list[float]] | None:
 
 
 def dot_product(u: list[float], v: list[float]) -> float:
-    return sum(a * b for a, b in zip(u, v))
+    return sum(a * b for a, b in zip(u, v, strict=False))
 
 
 def check_interest_items(items: list[dict]) -> list[str]:
