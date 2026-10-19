@@ -270,5 +270,8 @@ def ingest_pmkvy_data(records: list[dict] | None = None) -> int:
         session.close()
 
 
+ingest_pmkvy = ingest_pmkvy_data
+
+
 if __name__ == "__main__":
     ingest_pmkvy_data()

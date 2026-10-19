@@ -65,6 +65,7 @@ class Settings(BaseSettings):
     cors_origins: str = (
         "http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174"
     )
+    cors_origin_regex: str | None = r"^https:\/\/.*\.vercel\.app$"
 
     # ML Models
     embedder_model_name: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"

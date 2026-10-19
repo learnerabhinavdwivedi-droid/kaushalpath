@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: kaushalpath-backend
+    runtime: python
+    buildCommand: "./render-build.sh"
+    startCommand: "./render-start.sh"
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: APP_NAME
+        value: KaushalPath
+      - key: APP_ENV
+        value: prod
+      - key: DEBUG
+        value: "false"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:///./kaushalpath.db
+      - key: CORS_ORIGINS
+        value: "http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174"
+      - key: CORS_ORIGIN_REGEX
+        value: "^https://.*\\.vercel\\.app$"
+      - key: LLM_PROVIDER
+        value: "none"
