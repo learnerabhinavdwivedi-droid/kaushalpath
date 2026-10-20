@@ -2,6 +2,7 @@ services:
   - type: web
     name: kaushalpath-backend
     runtime: python
+    plan: free
     buildCommand: "./render-build.sh"
     startCommand: "./render-start.sh"
     healthCheckPath: /health
@@ -22,8 +23,8 @@ services:
       - key: DATABASE_URL
         value: sqlite:///./kaushalpath.db
       - key: CORS_ORIGINS
-        value: "http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174"
+        value: "http://localhost:5173,http://localhost:5174,http://127.0.0.1:5173,http://127.0.0.1:5174,https://kaushalpath-phi.vercel.app,https://kaushalpath-alpha.vercel.app"
       - key: CORS_ORIGIN_REGEX
-        value: "^https://.*\\.vercel\\.app$"
+        value: ^https://.*\.vercel\.app$
       - key: LLM_PROVIDER
         value: "none"
